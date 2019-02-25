@@ -56,8 +56,10 @@ class MobileIdAuthenticationHashToSign extends HashToSign
         }
 
         $dataToHash = self::getRandomBytes($hashType->getLengthInBytes());
+        echo 'datatohash: '.$dataToHash;
         return MobileIdAuthenticationHashToSign::newBuilder()
             ->withDataToHash($dataToHash)
+            ->withHash(DigestCalculator::calculateDigest($dataToHash, $hashType))
             ->withHashType($hashType)
             ->build();
     }
