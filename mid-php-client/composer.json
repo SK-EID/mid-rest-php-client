@@ -1,0 +1,12 @@
+{
+  "name": "sk-id-solutions/mobile-id-php-client",
+  "type": "library",
+  "description": "Mobile-ID Relying Party PHP Api v5 client",
+  "require": {
+    "php": "^7.3",
+    "ext-openssl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8"
+  }
+}
