@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/../../ee.sk.mid/rest/MobileIdConnector.php';
+
 /**
  * Created by PhpStorm.
  * User: mikks
