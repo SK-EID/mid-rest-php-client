@@ -27,15 +27,37 @@
 
 use phpDocumentor\Reflection\Types\This;
 
-require_once 'HashToSign.php';
+
 require_once 'HashType.php';
-class MobileIdAuthenticationHashToSign extends HashToSign
+class MobileIdAuthenticationHashToSign
 {
     const DEFAULT_HASH_TYPE = HashType::SHA256;
 
+
+    private $hash;
+    private $hashType;
+
+
     public function __construct($builder)
     {
-        parent::__construct($builder);
+        $this->hashType = $builder->getHashType();
+        $this->hash = openssl_random_pseudo_bytes($builder->getHashType()->getLengthInBytes());
+    }
+
+
+    public function getHashInBase64()
+    {
+        return base64_encode($this->hash);
+    }
+
+    public function getHashType()
+    {
+        return $this->hashType;
+    }
+
+    public function calculateVerificationCode()
+    {
+        return VerificationCodeCalculator::calculateMobileIdVerificationCode($this->hash);
     }
 
     public static function generateRandomHashOfDefaultType()
@@ -55,9 +77,7 @@ class MobileIdAuthenticationHashToSign extends HashToSign
             $hashType = new Sha512();
         }
 
-        $dataToHash = self::getRandomBytes($hashType->getLengthInBytes());
         return MobileIdAuthenticationHashToSign::newBuilder()
-            ->withDataToHash($dataToHash)
             ->withHashType($hashType)
             ->build();
     }
@@ -67,36 +87,26 @@ class MobileIdAuthenticationHashToSign extends HashToSign
         return new MobileIdAuthenticationHashToSignBuilder();
     }
 
-    private static function getRandomBytes($lengthInBytes)
-    {
-        return openssl_random_pseudo_bytes($lengthInBytes);
-    }
 }
 
-class MobileIdAuthenticationHashToSignBuilder extends HashToSignBuilder
+class MobileIdAuthenticationHashToSignBuilder
 {
-    public function withDataToHash($dataToHash)
-    {
-        parent::withDataToHash($dataToHash);
-        return $this;
-    }
 
-    public function withHash($hash)
-    {
-        parent::withHash($hash);
-        return $this;
-    }
-
-    public function withHashInBase64($hashInBase64)
-    {
-        parent::withHashInBase64($hashInBase64);
-        return $this;
-    }
+    private $hashType;
 
     public function withHashType($hashType)
     {
-        parent::withHashType($hashType);
+        $this->hashType = $hashType;
         return $this;
+    }
+
+    function validateFields()
+    {
+        if (is_null($this->hashType))
+        {
+            throw new ParameterMissingException("Missing hash type");
+        }
+
     }
 
     public function build()
