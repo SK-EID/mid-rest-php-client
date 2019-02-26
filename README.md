@@ -1,1 +1,1 @@
-# mid-rest-php-client
+# Mobile-ID (MID) PHP Rest Client
