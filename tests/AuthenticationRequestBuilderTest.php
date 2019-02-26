@@ -186,7 +186,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
  * @test
- * @expectedException ExpiredException
+ * @expectedException CertificateRevokedException
  */
     public function authenticate_withMSSPTransactionExpired_shouldThrowException()
     {

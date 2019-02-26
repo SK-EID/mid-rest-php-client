@@ -30,7 +30,7 @@ require_once __DIR__ . '/../exception/TechnicalErrorException.php';
 require_once __DIR__ . '/../exception/SessionTimeoutException.php';
 require_once __DIR__ . '/../exception/ResponseRetrievingException.php';
 require_once __DIR__ . '/../exception/NotMIDClientException.php';
-require_once __DIR__ . '/../exception/ExpiredException.php';
+require_once __DIR__ . '/../exception/CertificateRevokedException.php';
 require_once __DIR__ . '/../exception/UserCancellationException.php';
 require_once __DIR__ . '/../exception/MIDNotReadyException.php';
 require_once __DIR__ . '/../exception/SimNotAvailableException.php';
@@ -123,7 +123,7 @@ class SessionStatusPoller
             throw new NotMIDClientException();
         } else if (strcasecmp('EXPIRED_TRANSACTION', $result) == 0) {
             $this->logger->error('MSSP transaction timed out');
-            throw new ExpiredException();
+            throw new CertificateRevokedException();
         } else if (strcasecmp('USER_CANCELLED', $result) == 0) {
             $this->logger->error('User cancelled the operation');
             throw new UserCancellationException();

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/CertificateRequest.php';
 require_once __DIR__ . '/../ee.sk.mid/rest/dao/response/CertificateChoiceResponse.php';
 
 require_once __DIR__ . '/../ee.sk.mid/exception/CertificateNotPresentException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/ExpiredException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/CertificateRevokedException.php';
 require_once __DIR__ . '/../ee.sk.mid/exception/ParameterMissingException.php';
 require_once __DIR__ . '/../ee.sk.mid/exception/TechnicalErrorException.php';
 
@@ -118,7 +118,7 @@ class CertificateRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ExpiredException
+     * @expectedException CertificateRevokedException
      */
     public function getCertificate_withInactiveCertificateFound_shouldThrowException()
     {

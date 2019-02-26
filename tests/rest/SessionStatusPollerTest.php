@@ -101,7 +101,7 @@ class SessionStatusPollerTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException ExpiredException
+     * @expectedException CertificateRevokedException
      */
     public function getMSSSPTransactionExpiredResponse_shouldThrowException()
     {

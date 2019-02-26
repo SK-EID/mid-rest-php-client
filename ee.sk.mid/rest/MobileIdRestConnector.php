@@ -28,11 +28,13 @@ require_once __DIR__ . '/../util/Logger.php';
 require_once __DIR__ . '/../util/Curl.php';
 require_once __DIR__ . '/../exception/SessionNotFoundException.php';
 require_once __DIR__ . '/../exception/MobileIdException.php';
+require_once __DIR__ . '/../exception/NotMIDClientException.php';
 require_once __DIR__ . '/dao/response/CertificateChoiceResponse.php';
 require_once __DIR__ . '/dao/response/AuthenticationResponse.php';
 require_once __DIR__ . '/dao/SessionStatus.php';
 require_once 'MobileIdConnector.php';
 require_once 'MobileIdRestConnectorBuilder.php';
+
 class MobileIdRestConnector implements MobileIdConnector
 {
 
@@ -74,10 +76,29 @@ class MobileIdRestConnector implements MobileIdConnector
         $this->logger->debug('Getting certificate for phone number: ' . $request->getPhoneNumber());
         $uri = $this->endpointUrl . '/mid-api/certificate';
 
-        echo 'posting to uri ' . $uri;
+        $certificateResponse = $this->postCertificateRequest($uri, $request);
 
-        return $this->postCertificateRequest($uri, $request);
+        self::validateCertificateResult($certificateResponse->result);
+
+        return $certificateResponse;
     }
+
+
+    private function validateCertificateResult($result)
+    {
+
+        if (strcasecmp("NOT_FOUND", $result) == 0) {
+            $this->logger->error("No certificate for the user was found");
+            throw new NotMIDClientException();
+        } else if (strcasecmp("NOT_ACTIVE", $result) == 0) {
+            $this->logger->error("Certificate was found but is not active");
+            throw new CertificateRevokedException("Inactive certificate found");
+        } else if (strcasecmp("OK", $result) != 0) {
+            $this->logger->error("Session status end result is '" . $result . "'");
+            throw new TechnicalErrorException("Session status end result is '" . $result . "'");
+        }
+    }
+
 
     public function sign($request)
     {
@@ -91,7 +112,7 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
         $url = $this->endpointUrl . '/mid-api/authentication';
-        echo 'url: '.$url;
+        echo 'url: ' . $url;
         return $this->postAuthenticationRequest($url, $request);
     }
 
@@ -113,17 +134,14 @@ class MobileIdRestConnector implements MobileIdConnector
 
     public function getSessionStatus($request, $path)
     {
-        $url = rtrim( $this->endpointUrl, '/' ) . self::SESSION_STATUS_URI;
-        $url = str_replace( '{sessionId}', $request->getSessionId(), $url );
-        try
-        {
+        $url = rtrim($this->endpointUrl, '/') . self::SESSION_STATUS_URI;
+        $url = str_replace('{sessionId}', $request->getSessionId(), $url);
+        try {
             // Kuna demo ei aktsepteeri displayTextFormatit.
             unset($request->toArray()['displayTextFormat']);
-            $sessionStatus = $this->getRequest( $url, $request->toArray(), SessionStatus::class );
+            $sessionStatus = $this->getRequest($url, $request->toArray(), SessionStatus::class);
             return $sessionStatus;
-        }
-        catch ( Exception $e )
-        {
+        } catch (Exception $e) {
             throw new SessionNotFoundException();
         }
     }
@@ -163,35 +181,34 @@ class MobileIdRestConnector implements MobileIdConnector
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        'Content-Type: application/json',
-                        'Content-Length: ' . strlen($json))
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($json))
         );
 
         $result = curl_exec($ch);
         echo 'result ' . $result;
 
-        return json_decode($result);
+        return json_decode($result); // TODO cast to correct response type
 
- //       return $result;
+        //       return $result;
 
 
-
-/*
-        try {
-            $this->curl = new Curl();
-//            $this->setNetworkInterface($params);
-            echo '<pre>';
-            print_r($params);
-            echo '</pre>';
-            echo 'json of request: <json>'. $json. '</json>';
-            $this->curl->curlPost($url, array(), $json);
-            echo 'ok2';
-            $this->curl->setCurlParam(CURLOPT_HTTPHEADER, array('content-type: application/json',));
-            return $this->request($url, $responseType);
-        } catch (Exception $e) {
-            return $e;
-        }
-*/
+        /*
+                try {
+                    $this->curl = new Curl();
+        //            $this->setNetworkInterface($params);
+                    echo '<pre>';
+                    print_r($params);
+                    echo '</pre>';
+                    echo 'json of request: <json>'. $json. '</json>';
+                    $this->curl->curlPost($url, array(), $json);
+                    echo 'ok2';
+                    $this->curl->setCurlParam(CURLOPT_HTTPHEADER, array('content-type: application/json',));
+                    return $this->request($url, $responseType);
+                } catch (Exception $e) {
+                    return $e;
+                }
+        */
     }
 
     public static function newBuilder()
@@ -222,12 +239,12 @@ class MobileIdRestConnector implements MobileIdConnector
         return $response;
     }
 
-    private function getRequest( $url, array $params, $responseType )
+    private function getRequest($url, array $params, $responseType)
     {
         $this->curl = new Curl();
-        $this->setNetworkInterface( $params );
-        $this->curl->curlGet( $url, $params );
-        return $this->request( $url, $responseType );
+        $this->setNetworkInterface($params);
+        $this->curl->curlGet($url, $params);
+        return $this->request($url, $responseType);
     }
 
     private function getResponse($rawResponse, $responseType)

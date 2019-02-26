@@ -25,7 +25,7 @@
  * #L%
  */
 require_once 'MobileIdException.php';
-class ExpiredException extends MobileIdException {
+class CertificateRevokedException extends MobileIdException {
 
     public function __construct($message = null)
     {

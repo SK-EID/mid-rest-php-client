@@ -27,7 +27,7 @@
 require_once __DIR__ . '/util/Logger.php';
 require_once __DIR__ . '/rest/SessionStatusPoller.php';
 require_once __DIR__ . '/exception/CertificateNotPresentException.php';
-require_once __DIR__ . '/exception/ExpiredException.php';
+require_once __DIR__ . '/exception/CertificateRevokedException.php';
 require_once __DIR__ . '/exception/TechnicalErrorException.php';
 require_once __DIR__ . '/rest/MobileIdRestConnector.php';
 require_once 'MobileIdSignature.php';
@@ -135,7 +135,7 @@ class MobileIdClient
             throw new CertificateNotPresentException('No certificate for the user was found');
         } else if (strcasecmp('NOT_ACTIVE', $result) == 0) {
             self::$logger->error('Inactive certificate found');
-            throw new ExpiredException('Inactive certificate found');
+            throw new CertificateRevokedException('Inactive certificate found');
         } else if (!strcasecmp('OK', $result) == 0) {
             self::$logger->error("Session status end result is '".$result."'");
             throw new TechnicalErrorException("Session status end result is '".$result."'");
