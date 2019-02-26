@@ -72,7 +72,10 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
         $this->logger->debug('Getting certificate for phone number: ' . $request->getPhoneNumber());
-        $uri = $this->endpointUrl . '/certificate';
+        $uri = $this->endpointUrl . '/mid-api/certificate';
+
+        echo 'posting to uri ' . $uri;
+
         return $this->postCertificateRequest($uri, $request);
     }
 
@@ -150,22 +153,45 @@ class MobileIdRestConnector implements MobileIdConnector
         return $this->postRequest($uri, $request->toArray(), AuthenticationResponse::class);
     }
 
-    private function postRequest($url, array $params, $responseType)
+    private function postRequest($url, $params, $responseType)
     {
+        $json = json_encode($params);
+
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($json))
+        );
+
+        $result = curl_exec($ch);
+        echo 'result ' . $result;
+
+        return json_decode($result);
+
+ //       return $result;
+
+
+
+/*
         try {
             $this->curl = new Curl();
-            $this->setNetworkInterface($params);
+//            $this->setNetworkInterface($params);
             echo '<pre>';
             print_r($params);
             echo '</pre>';
-            echo json_encode($params);
-            $this->curl->curlPost($url, array(), json_encode($params));
+            echo 'json of request: <json>'. $json. '</json>';
+            $this->curl->curlPost($url, array(), $json);
             echo 'ok2';
             $this->curl->setCurlParam(CURLOPT_HTTPHEADER, array('content-type: application/json',));
             return $this->request($url, $responseType);
         } catch (Exception $e) {
             return $e;
         }
+*/
     }
 
     public static function newBuilder()

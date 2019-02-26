@@ -26,7 +26,7 @@
  */
 require_once 'AbstractRequest.php';
 require_once 'CertificateRequestBuilder.php';
-class CertificateRequest extends AbstractRequest
+class CertificateRequest extends AbstractRequest implements JsonSerializable
 {
 
     private $phoneNumber;
@@ -68,5 +68,13 @@ class CertificateRequest extends AbstractRequest
         return new CertificateRequestBuilder();
     }
 
+    public function jsonSerialize() {
+        return [
+                'phoneNumber' => $this->getPhoneNumber(),
+                'nationalIdentityNumber' => $this->getNationalIdentityNumber(),
+                'relyingPartyUUID' => $this->getRelyingPartyUUID(),
+                'relyingPartyName' => $this->getRelyingPartyName()
+        ];
+    }
 
 }

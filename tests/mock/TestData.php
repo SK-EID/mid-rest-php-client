@@ -32,7 +32,7 @@ class TestData
     const WRONG_PHONE = "0000";
     const WRONG_NAT_IDENTITY = "0000";
 
-    //public static final byte[] DATA_TO_SIGN = "HACKERMAN".getBytes(StandardCharsets.UTF_8);
+    const DATA_TO_SIGN = "HACKERMAN";
     //public static final byte[] HASH_TO_SIGN = "HACKERMAN".getBytes(StandardCharsets.UTF_8);
     const SHA256_HASH_IN_BASE64 = "AE7S1QxYjqtVv+Tgukv2bMMi9gDCbc9ca2vy/iIG6ug=";
     const SHA384_HASH_IN_BASE64 = "tciNHij/GJQovJJFEvpOOnanZQjpys2PoAooHxooR6EopvGvsTfXJAwpqOKZC2sV";

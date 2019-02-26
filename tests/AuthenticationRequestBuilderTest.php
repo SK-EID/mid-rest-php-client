@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/mock/MobileIdConnectorSpy.php';
 require_once __DIR__ . '/mock/SessionStatusDummy.php';
+require_once __DIR__ . '/mock/TestData.php.php';
 require_once __DIR__ . '/../ee.sk.mid/rest/dao/response/AuthenticationResponse.php';
 use PHPUnit\Framework\TestCase;
 

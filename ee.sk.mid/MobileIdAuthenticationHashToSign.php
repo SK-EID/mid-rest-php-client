@@ -29,6 +29,8 @@ use phpDocumentor\Reflection\Types\This;
 
 
 require_once 'HashType.php';
+require_once 'VerificationCodeCalculator.php';
+
 class MobileIdAuthenticationHashToSign
 {
     const DEFAULT_HASH_TYPE = HashType::SHA256;
@@ -40,10 +42,9 @@ class MobileIdAuthenticationHashToSign
 
     public function __construct($builder)
     {
-        $this->hashType = $builder->getHashType();
-        $this->hash = openssl_random_pseudo_bytes($builder->getHashType()->getLengthInBytes());
+        $this->hashType = $builder->hashType;
+        $this->hash = openssl_random_pseudo_bytes($builder->hashType->getLengthInBytes());
     }
-
 
     public function getHashInBase64()
     {
@@ -87,18 +88,39 @@ class MobileIdAuthenticationHashToSign
         return new MobileIdAuthenticationHashToSignBuilder();
     }
 
+    public static function strToHashType($hashTypeStr) {
+
+        switch ($hashTypeStr) {
+            case 'sha256':
+                return new Sha256();
+            case  'sha384':
+                return new Sha384();
+            case 'sha512':
+                return new Sha512();
+        }
+
+    }
+
 }
 
 class MobileIdAuthenticationHashToSignBuilder
 {
 
-    private $hashType;
+    public $hashType;
+
 
     public function withHashType($hashType)
     {
-        $this->hashType = $hashType;
+        if (is_string($hashType)) {
+            $this->hashType = MobileIdAuthenticationHashToSign::strToHashType($hashType);
+
+        }
+        else {
+            $this->hashType = $hashType;
+        }
         return $this;
     }
+
 
     function validateFields()
     {

@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../ee.sk.mid/AuthenticationResponseValidator.php';
+require_once __DIR__ . '/mock/TestData.php.php';
+
 use PHPUnit\Framework\TestCase;
 
 /**

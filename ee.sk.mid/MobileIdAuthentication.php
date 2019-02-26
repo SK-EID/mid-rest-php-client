@@ -24,6 +24,11 @@
  * THE SOFTWARE.
  * #L%
  */
+
+
+require_once 'exception/InvalidBase64CharacterException.php';
+require_once 'VerificationCodeCalculator.php';
+
 class MobileIdAuthentication
 {
     private $result;

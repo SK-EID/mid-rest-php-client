@@ -26,6 +26,10 @@
  */
 class DisplayTextFormat
 {
+
+    const GSM7 = "GSM7";
+    const UCS2 = "UCS2";
+
     private $gsm7;
     private $ucs2;
 

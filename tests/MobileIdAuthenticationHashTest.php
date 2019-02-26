@@ -2,6 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
+
 /**
  * Created by PhpStorm.
  * User: mikks
@@ -18,8 +20,8 @@ class MobileIdAuthenticationHashTest extends TestCase
     public function shouldGenerateRandomHashOfDefaultType_hasSHA256HashType()
     {
         $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
-        $this->assertEquals(HashType::SHA256, $mobileIdAuthenticationHash->getHashType());
-        $this->assertEquals(44, $mobileIdAuthenticationHash->getHashInBase64());
+        $this->assertEquals(new Sha256(), $mobileIdAuthenticationHash->getHashType());
+        $this->assertEquals(44, strlen($mobileIdAuthenticationHash->getHashInBase64()));
     }
 
     /**
@@ -29,8 +31,8 @@ class MobileIdAuthenticationHashTest extends TestCase
     public function shouldGenerateRandomHashOfType_SHA256_hashHasCorrectTypeAndLength()
     {
         $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType(HashType::SHA256);
-        $this->assertEquals(HashType::SHA256, $mobileIdAuthenticationHash->getHashType());
-        $this->assertEquals(44, $mobileIdAuthenticationHash->getHashInBase64());
+        $this->assertEquals(new Sha256(), $mobileIdAuthenticationHash->getHashType());
+        $this->assertEquals(44, strlen($mobileIdAuthenticationHash->getHashInBase64()));
     }
 
     /**
@@ -39,9 +41,9 @@ class MobileIdAuthenticationHashTest extends TestCase
      */
     public function shouldGenerateRandomHashOfType_SHA384_hashHasCorrectTypeAndLength()
     {
-        $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType(HashType::SHA384);
-        $this->assertEquals(HashType::SHA384, $mobileIdAuthenticationHash->getHashType());
-        $this->assertEquals(64, $mobileIdAuthenticationHash->getHashInBase64());
+        $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfType(HashType::SHA384);
+        $this->assertEquals(new Sha384(), $mobileIdAuthenticationHash->getHashType());
+        $this->assertEquals(64, strlen($mobileIdAuthenticationHash->getHashInBase64()));
     }
 
     /**
@@ -50,32 +52,13 @@ class MobileIdAuthenticationHashTest extends TestCase
      */
     public function shouldGenerateRandomHashOfType_SHA512_hashHasCorrectTypeAndLength()
     {
-        $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType(HashType::SHA512);
-        $this->assertEquals(HashType::SHA512, $mobileIdAuthenticationHash->getHashType());
-        $this->assertEquals(88, $mobileIdAuthenticationHash->getHashInBase64());
+        $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfType(HashType::SHA512);
+        $this->assertEquals(new Sha512(), $mobileIdAuthenticationHash->getHashType());
+        $this->assertEquals(88, strlen($mobileIdAuthenticationHash->getHashInBase64()));
     }
 
-    /**
-     * @test
-     * @expectedException ParameterMissingException
-     */
-    public function authenticate_withHashType_withoutHash_shouldThrowException()
-    {
-        MobileIdAuthenticationHashToSign::newBuilder()
-            ->withHashType(HashType::SHA512)
-            ->build();
-    }
 
-    /**
-     * @test
-     * @expectedException ParameterMissingException
-     */
-    public function authenticate_withHashInBase64_withoutHashType_shouldThrowException()
-    {
-        MobileIdAuthenticationHashToSign::newBuilder()
-            ->withHashInBase64(HashType::SHA512_HASH_IN_BASE64)
-            ->build();
-    }
+
 
     /**
      * @test
@@ -83,7 +66,6 @@ class MobileIdAuthenticationHashTest extends TestCase
     public function calculateVerificationCode_notNull()
     {
         $authenticationHash = MobileIdAuthenticationHashToSign::newBuilder()
-            ->withHashInBase64(TestData::SHA512_HASH_IN_BASE64)
             ->withHashType(HashType::SHA512)
             ->build();
 

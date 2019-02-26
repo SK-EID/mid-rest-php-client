@@ -26,7 +26,7 @@
  */
 require_once 'AbstractRequest.php';
 require_once 'AuthenticationRequestBuilder.php';
-class AuthenticationRequest extends AbstractRequest
+class AuthenticationRequest extends AbstractRequest implements JsonSerializable
 {
     private $phoneNumber;
 
@@ -156,6 +156,19 @@ class AuthenticationRequest extends AbstractRequest
     public static function newBuilder()
     {
         return new AuthenticationRequestBuilder();
+    }
+
+    public function jsonSerialize() {
+        return [
+                'phoneNumber' => $this->getPhoneNumber(),
+                'nationalIdentityNumber' => $this->getNationalIdentityNumber(),
+                'relyingPartyUUID' => $this->getRelyingPartyUUID(),
+                'relyingPartyName' => $this->getRelyingPartyName(),
+                'hash' => $this->getHash(),
+                'hashType' => $this->getHashType(),
+                'displayText' => $this->getDisplayText(),
+                'displayTextFormat' => $this->getDisplayTextFormat()
+        ];
     }
 
 }

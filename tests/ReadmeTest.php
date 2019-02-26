@@ -2,6 +2,16 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../ee.sk.mid/AuthenticationResponseValidator.php';
+require_once __DIR__ . '/../ee.sk.mid/Language.php';
+require_once __DIR__ . '/../ee.sk.mid/DisplayTextFormat.php';
+require_once __DIR__ . '/../ee.sk.mid/MobileIdClient.php';
+require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
+require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/CertificateRequest.php';
+require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationResult.php';
+
+
 /**
  * Created by PhpStorm.
  * User: mikks
@@ -27,7 +37,6 @@ class ReadmeTest extends TestCase
         $sessionStatus = new SessionStatus();
         $authenticationHash = MobileIdAuthenticationHashToSign::newBuilder()
             ->withHashType(HashType::SHA512)
-            ->withHashInBase64("XXX")
             ->build();
 
         $authentication = MobileIdAuthentication::newBuilder()->build();
@@ -44,6 +53,8 @@ class ReadmeTest extends TestCase
             ->withRelyingPartyUUID("00000000-0000-0000-0000-000000000000")
             ->withRelyingPartyName("DEMO")
             ->build();
+
+        $this->assertNotNull($client);
     }
 
     /**
@@ -54,6 +65,8 @@ class ReadmeTest extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withPollingSleepTimeoutSeconds(60)
             ->build();
+
+        $this->assertNotNull($client);
     }
 
     /**
@@ -71,35 +84,7 @@ class ReadmeTest extends TestCase
         $certificate = $this->client->createMobileIdCertificate($response);
     }
 
-    /**
-     * @test
-     */
-    public function documentCreateSignatureFromExistingHash()
-    {
-        $hashToSign = HashToSign::newBuilder()
-            ->withHashInBase64("AE7S1QxYjqtVv+Tgukv2bMMi9gDCbc9ca2vy/iIG6ug=")
-            ->withHashType(HashType::SHA256)
-            ->build();
 
-
-        $verificationCode = $hashToSign->calculateVerificationCode();
-
-        $request = SignatureRequest::newBuilder()
-            ->withPhoneNumber("+37200000766")
-            ->withNationalIdentityNumber("60001019906")
-            ->withHashToSign($hashToSign)
-            ->withLanguage(Language::ENG)
-            ->build();
-
-        $response = $this->client->getMobileIdConnector()->sign($request);
-
-        $sessionStatus = $this->client->getSessionStatusPoller()->fetchFinalSessionStatus(
-            $response->getSessionID(),
-            "/mid-api/signature/session/{sessionId}"
-        );
-
-        $signature = $this->client->createMobileIdSignature($sessionStatus);
-    }
 
     /**
      * @test

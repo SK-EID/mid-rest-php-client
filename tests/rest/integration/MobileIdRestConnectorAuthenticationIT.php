@@ -28,6 +28,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
     /**
      * @test
      */
+    /*
     public function authenticate()
     {
         $request = MobileIdRestServiceRequestDummy::createValidAuthenticationRequest();
@@ -38,7 +39,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
 
         $sessionStatus = SessionStatusPollerDummy::pollSessionStatus($this->connector, $response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
         MobileIdRestServiceResponseDummy::assertAuthenticationPolled($sessionStatus);
-    }
+    }*/
 
     /**
      * @test
