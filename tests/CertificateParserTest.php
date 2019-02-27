@@ -3,7 +3,7 @@
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../ee.sk.mid/CertificateParser.php';
-require_once __DIR__ . '/mock/TestData.php.php';
+require_once __DIR__ . '/mock/TestData.php';
 
 
 

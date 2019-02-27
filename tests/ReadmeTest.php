@@ -107,7 +107,7 @@ class ReadmeTest extends TestCase
         $response = $this->client->getMobileIdConnector()->authenticate($request);
 
         $sessionStatus = $this->client->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionID(),
-            "/mid-api/authentication/session/{sessionId}");
+            "/authentication/session/{sessionId}");
 
         $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }

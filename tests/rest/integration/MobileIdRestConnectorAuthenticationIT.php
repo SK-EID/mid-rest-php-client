@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MobileIdRestConnectorAuthenticationIT extends TestCase
 {
-    const AUTHENTICATION_SESSION_PATH = "/mid-api/authentication/session/{sessionId}";
+    const AUTHENTICATION_SESSION_PATH = "/authentication/session/{sessionId}";
 
     private $connector;
 
@@ -51,9 +51,9 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
         MobileIdRestServiceRequestDummy::assertCorrectAuthenticationRequestMade($request);
 
         $response = $this->connector->authenticate($request);
-        assert(!is_null($response->getSessionId()) && !empty($response->getSessionId()));
+        assert(!is_null($response->sessionId) && !empty($response->sessionId));
 
-        $sessionStatus = SessionStatusPollerDummy::pollSessionStatus($this->connector, $response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
+        $sessionStatus = SessionStatusPollerDummy::pollSessionStatus($this->connector, $response->sessionId, TestData::AUTHENTICATION_SESSION_PATH);
         MobileIdRestServiceResponseDummy::assertAuthenticationPolled($sessionStatus);
     }
 

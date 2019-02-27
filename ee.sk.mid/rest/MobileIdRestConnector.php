@@ -76,7 +76,6 @@ class MobileIdRestConnector implements MobileIdConnector
         $uri = $this->endpointUrl . '/certificate';
 
         $certificateResponse = $this->postCertificateRequest($uri, $request);
-
         self::validateCertificateResult($certificateResponse->result);
 
         return $certificateResponse;
@@ -134,13 +133,15 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $url = $this->endpointUrl.$path;
         $url = str_replace('{sessionId}', $request->getSessionId(), $url);
+
         if ($request->getSessionStatusResponseSocketTimeoutMs() != null) {
             $url = $url . '?timeoutMs='.$request->getSessionStatusResponseSocketTimeoutMs();
         }
+
         $this->logger->debug('Sending get request to ' . $url);
         try {
-            $responseArray = $this->getRequest($url);
-            return new SessionStatus($responseArray);
+            $responseAsArray = $this->getRequest($url);
+            return new SessionStatus($responseAsArray);
         } catch (Exception $e) {
             throw new SessionNotFoundException();
         }
@@ -219,16 +220,18 @@ class MobileIdRestConnector implements MobileIdConnector
 
     private function getRequest($url)
     {
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json')
+                        'Content-Type: application/json')
         );
         $result = curl_exec($ch);
-        $this->logger->debug('Result is '. $result);
-        return json_decode($result, true);
 
+        $this->logger->debug('Result is '. $result);
+
+        return json_decode($result, true);
     }
 
     private function getResponse($rawResponse, $responseType)

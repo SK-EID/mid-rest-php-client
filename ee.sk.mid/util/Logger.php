@@ -61,20 +61,20 @@ class Logger
 
     public function error($errorMessage)
     {
-        echo $this->debug_to_console($this->className.' error: '.$errorMessage);
+        echo $this->debug_to_console(date("H:i:s").' '.$this->className.' error: '.$errorMessage);
     }
 
     public function debug($debugMessage)
     {
-        echo $this->debug_to_console($this->className.' debug: '.$debugMessage);
+        echo $this->debug_to_console(date("H:i:s").' '.$this->className.' debug: '.$debugMessage);
     }
 
     public function trace($traceMessage)
     {
-        echo $this->debug_to_console($this->className.' trace: '.$traceMessage);
+        echo $this->debug_to_console(date("H:i:s").' '.$this->className.' trace: '.$traceMessage);
     }
 
     private function debug_to_console( $message ) {
-        return $message.PHP_EOL."<br/>";
+        return $message.PHP_EOL;
     }
 }

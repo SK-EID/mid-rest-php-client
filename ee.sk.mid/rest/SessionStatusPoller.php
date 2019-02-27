@@ -58,12 +58,12 @@ class SessionStatusPoller
         return $this->fetchFinalSessionStatus($sessionId, self::SIGNATURE_SESSION_PATH, $longPollSeconds);
     }
 
-    public function fetchFinalAuthenticationSession($sessionId, $longPollSeconds = 6)
+    public function fetchFinalAuthenticationSession($sessionId, $longPollSeconds = 20)
     {
         return $this->fetchFinalSessionStatus($sessionId, self::AUTHENTICATION_SESSION_PATH, $longPollSeconds);
     }
 
-    public function fetchFinalSessionStatus($sessionId, $path, $longPollSeconds)
+    public function fetchFinalSessionStatus($sessionId, $path, $longPollSeconds = null)
     {
         $this->logger->debug('Starting to poll session status for session ' . $sessionId);
         $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $path, $longPollSeconds);
@@ -71,16 +71,16 @@ class SessionStatusPoller
         return $sessionStatus;
     }
 
-    private function pollForFinalSessionStatus($sessionId, $path,  $longPollSeconds = 20)
+    private function pollForFinalSessionStatus($sessionId, $path, $longPollSeconds = 20)
     {
         $sessionStatus = null;
-
 
         while ($sessionStatus == null || strcasecmp($sessionStatus->getState(), 'RUNNING') == 0) {
             $sessionStatus = $this->pollSessionStatus($sessionId, $path, $longPollSeconds);
             if ($sessionStatus->isComplete()) {
                 return $sessionStatus;
             }
+
             $this->logger->debug('Sleeping for ' . $this->pollingSleepTimeoutSeconds . ' seconds');
             sleep($this->pollingSleepTimeoutSeconds);
         }
@@ -93,13 +93,12 @@ class SessionStatusPoller
     {
         $this->logger->debug('Polling session status');
         $request = $this->createSessionStatusRequest($sessionId, $longPollSeconds);
-
         return $this->connector->getSessionStatus($request, $path);
     }
 
     private function createSessionStatusRequest($sessionId, $longPollSeconds)
     {
-        return  new SessionStatusRequest($sessionId, $longPollSeconds);
+        return new SessionStatusRequest($sessionId, $longPollSeconds);
     }
 
     private function validateResult($sessionStatus)

@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
+require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../../mock/TestData.php';
 require_once __DIR__ . '/../../mock/TestData.php';
+require_once __DIR__ . '/../../../ee.sk.mid/rest/MobileIdRestConnector.php';
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -38,10 +40,10 @@ class MobileIdRestConnectorCertificateIT extends TestCase
 
         assert(!is_null($response));
         try {
-            $this->assertEquals("OK", $response->getResult());
+            $this->assertEquals("OK", $response->result);
         } catch (Exception $e) {
         }
-        assert(!is_null($response->getCert()) && !empty($response->getCert()));
+        assert(!is_null($response->cert) && !empty($response->cert));
     }
 
     /**

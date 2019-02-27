@@ -44,10 +44,11 @@ class SessionStatus
         }
         if (isset($values['signature'])) {
             $this->signature = MobileIdSignature::newBuilder()
-                ->withAlgorithmName($values['signature']['algorithm'])
-                ->withValueInBase64($values['signature']['value'])
-                ->build();
+                    ->withAlgorithmName($values['signature']['algorithm'])
+            ->withValueInBase64($values['signature']['value'])
+            ->build();
         }
+
     }
 
     public function getState()

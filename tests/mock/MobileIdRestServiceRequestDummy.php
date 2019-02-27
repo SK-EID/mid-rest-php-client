@@ -3,10 +3,11 @@
 require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
 require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/CertificateRequest.php';
 require_once __DIR__ . '/../../ee.sk.mid/HashType.php';
+require_once __DIR__ . '/../../ee.sk.mid/Language.php';
 require_once __DIR__ . '/../../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
 require_once __DIR__ . '/TestData.php';
 
-
+use PHPUnit\Framework\TestCase;
 
 /*
 require_once __DIR__ . '/mock/MobileIdConnectorSpy.php';
@@ -21,8 +22,6 @@ require_once __DIR__ . '/../ee.sk.mid/exception/ExpiredException.php';
 require_once __DIR__ . '/../ee.sk.mid/exception/ParameterMissingException.php';
 require_once __DIR__ . '/../ee.sk.mid/exception/TechnicalErrorException.php';
 */
-use PHPUnit\Framework\TestCase;
-
 /**
  * Created by PhpStorm.
  * User: mikks
@@ -33,7 +32,7 @@ class MobileIdRestServiceRequestDummy
 {
     public static function createValidAuthenticationRequest()
     {
-        return MobileIdRestServiceRequestDummy::createAuthenticationRequest(TestData::DEMO_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, null, null);
+        return MobileIdRestServiceRequestDummy::createAuthenticationRequest(TestData::DEMO_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY);
     }
 
     public static function createAuthenticationRequest($UUID, $name, $phoneNumber, $nationalIdentityNumber)
@@ -134,7 +133,6 @@ class MobileIdRestServiceRequestDummy
         $digestValue = new Sha512();
         $digestValue->calculateDigest(TestData::DATA_TO_SIGN);
         return MobileIdAuthenticationHashToSign::newBuilder()
-            ->withHashInBase64(base64_encode($digestValue))
             ->withHashType(HashType::SHA512)
             ->build();
     }
@@ -142,11 +140,11 @@ class MobileIdRestServiceRequestDummy
     public static function assertCorrectCertificateRequestMade($request)
     {
         try {
-            assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
+            TestCase::assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(TestData::VALID_NAT_IDENTITY, $request->getNationalIdentityNumber());
+            TestCase::assertEquals(TestData::VALID_NAT_IDENTITY, $request->getNationalIdentityNumber());
         } catch (Exception $e) {
         }
     }
@@ -154,23 +152,23 @@ class MobileIdRestServiceRequestDummy
     public static function assertMadeCorrectAuthenticationRequesWithSHA256($request)
     {
         try {
-            assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
+            TestCase::assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(TestData::VALID_NAT_IDENTITY, $request->getNationalIdentityNumber());
+            TestCase::assertEquals(TestData::VALID_NAT_IDENTITY, $request->getNationalIdentityNumber());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(TestData::SHA256_HASH_IN_BASE64, $request->getHash());
+            TestCase::assertEquals(TestData::SHA256_HASH_IN_BASE64, $request->getHash());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(HashType::SHA256, $request->getHashType());
+            TestCase::assertEquals(HashType::SHA256, $request->getHashType());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(Language::EST, $request->getLanguage());
+            TestCase::assertEquals(Language::EST, $request->getLanguage());
         } catch (Exception $e) {
         }
     }
@@ -178,23 +176,23 @@ class MobileIdRestServiceRequestDummy
     public static function assertCorrectAuthenticationRequestMade($request)
     {
         try {
-            assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
+            TestCase::assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(TestData::VALID_NAT_IDENTITY, $request->getNationalIdentityNumber());
+            TestCase::assertEquals(TestData::VALID_NAT_IDENTITY, $request->getNationalIdentityNumber());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(TestData::SHA512_HASH_IN_BASE64, $request->getHash());
+            TestCase::assertEquals(TestData::SHA512_HASH_IN_BASE64, $request->getHash());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(HashType::SHA512, $request->getHashType());
+            TestCase::assertEquals(HashType::SHA512, $request->getHashType());
         } catch (Exception $e) {
         }
         try {
-            assertEquals(Language::EST, $request->getLanguage());
+            TestCase::assertEquals(Language::EST, $request->getLanguage());
         } catch (Exception $e) {
         }
     }

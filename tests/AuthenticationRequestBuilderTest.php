@@ -1,8 +1,25 @@
 <?php
 require_once __DIR__ . '/mock/MobileIdConnectorSpy.php';
 require_once __DIR__ . '/mock/SessionStatusDummy.php';
-require_once __DIR__ . '/mock/TestData.php.php';
+require_once __DIR__ . '/mock/TestData.php';
+
+require_once __DIR__ . '/../ee.sk.mid/exception/CertificateNotPresentException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/CertificateRevokedException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/ParameterMissingException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/SessionTimeoutException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/TechnicalErrorException.php';
+
+require_once __DIR__ . '/../ee.sk.mid/Language.php';
+require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../ee.sk.mid/MobileIdClient.php';
+require_once __DIR__ . '/../ee.sk.mid/rest/MobileIdRestConnector.php';
+require_once __DIR__ . '/../ee.sk.mid/rest/SessionStatusPoller.php';
+require_once __DIR__ . '/../ee.sk.mid/rest/dao/SessionSignature.php';
+require_once __DIR__ . '/../ee.sk.mid/rest/dao/SessionStatus.php';
+require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
 require_once __DIR__ . '/../ee.sk.mid/rest/dao/response/AuthenticationResponse.php';
+
+
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -306,7 +323,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withHostUrl(TestData::LOCALHOST_URL)
             ->build();
 
-        $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
+        $client->createMobileIdAuthentication($sessionStatus, $authenticationHash->getHashInBase64(), $authenticationHash->getHashType());
     }
 
     private static function createDummyAuthenticationSessionStatus()

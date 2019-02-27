@@ -58,7 +58,7 @@ class MobileIdCertificateIT extends TestCase
 
     /**
      * @test
-     * @expectedException CertificateRevokedException
+     * @expectedException NotMIDClientException
      */
     public function getCertificate_certificateNotActive_shouldThrowNotMIDClientException()
     {
