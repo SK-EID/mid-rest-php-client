@@ -37,6 +37,7 @@ require_once __DIR__ . '/../exception/SimNotAvailableException.php';
 require_once __DIR__ . '/../exception/DeliveryException.php';
 require_once __DIR__ . '/../exception/InvalidCardResponseException.php';
 require_once __DIR__ . '/../exception/SignatureHashMismatchException.php';
+
 class SessionStatusPoller
 {
 
@@ -54,13 +55,12 @@ class SessionStatusPoller
 
     public function fetchFinalSignatureSessionStatus($sessionId)
     {
-        return $this->fetchFinalSessionStatus($sessionId, self::SIGNATURE_SESSION_PATH);
+        return $this->fetchFinalSessionStatus($sessionId, self::SIGNATURE_SESSION_PATH, null);
     }
 
     public function fetchFinalAuthenticationSession($sessionId)
     {
-        echo 'you';
-        return $this->fetchFinalSessionStatus($sessionId, self::AUTHENTICATION_SESSION_PATH);
+        return $this->fetchFinalSessionStatus($sessionId, self::AUTHENTICATION_SESSION_PATH, null);
     }
 
     public function fetchFinalSessionStatus($sessionId, $path)
@@ -77,8 +77,9 @@ class SessionStatusPoller
 
         while ($sessionStatus == null || strcasecmp($sessionStatus->getState(), 'RUNNING') == 0) {
             $sessionStatus = $this->pollSessionStatus($sessionId, $path);
-            if (strcasecmp('COMPLETE', $sessionStatus->getState()) == 0) break;
-
+            if (strcasecmp("COMPLETE", $sessionStatus->getState()) == 0) {
+                return $sessionStatus;
+            }
             $this->logger->debug('Sleeping for ' . $this->pollingSleepTimeoutSeconds . ' seconds');
             sleep($this->pollingSleepTimeoutSeconds);
         }
@@ -96,7 +97,7 @@ class SessionStatusPoller
 
     private function createSessionStatusRequest($sessionId)
     {
-        return new SessionStatusRequest($sessionId);
+        return  new SessionStatusRequest($sessionId);
     }
 
     private function validateResult($sessionStatus)

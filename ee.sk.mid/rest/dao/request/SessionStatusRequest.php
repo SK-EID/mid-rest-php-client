@@ -68,6 +68,7 @@ class SessionStatusRequest
     public function toArray()
     {
         $requiredArray = array();
+        $requiredArray['sessionId'] = $this->sessionId;
 
         if ( $this->isSessionStatusResponseSocketTimeoutSet() )
         {

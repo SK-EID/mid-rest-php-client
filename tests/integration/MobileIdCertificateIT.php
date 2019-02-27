@@ -27,10 +27,7 @@ class MobileIdCertificateIT extends TestCase
             ->withPhoneNumber("+37200000766")
             ->build();
 
-        $resp = $this->client->getMobileIdConnector()->getCertificate($certRequest);
-
-        echo 'result' . $resp->result;
-        echo 'cert:' . $resp->cert;
+        $resp = $client->getMobileIdConnector()->getCertificate($certRequest);
 
         $this->assertEquals('OK', $resp->result);
         $this->assertNotNull($resp->cert);

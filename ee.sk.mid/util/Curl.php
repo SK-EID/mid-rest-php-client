@@ -58,7 +58,6 @@ class Curl
         {
             $url .= '?' . $this->generatePostFields( $params );
         }
-
         $this->setCurlParam( CURLOPT_URL, $url );
         $this->requestMethod = self::GET;
 

@@ -42,7 +42,6 @@ class MobileIdRestConnector implements MobileIdConnector
     const CERTIFICATE_PATH = '/certificate';
     const SIGNATURE_PATH = '/signature';
     const AUTHENTICATION_PATH = '/authentication';
-    const SESSION_STATUS_URI = '/session/{sessionId}';
 
     const RESPONSE_ERROR_CODES = array(
         503 => 'Limit exceeded',
@@ -112,7 +111,6 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
         $url = $this->endpointUrl . '/mid-api/authentication';
-        echo 'url: ' . $url;
         return $this->postAuthenticationRequest($url, $request);
     }
 
@@ -134,11 +132,9 @@ class MobileIdRestConnector implements MobileIdConnector
 
     public function getSessionStatus($request, $path)
     {
-        $url = rtrim($this->endpointUrl, '/') . self::SESSION_STATUS_URI;
+        $url = $this->endpointUrl.$path;
         $url = str_replace('{sessionId}', $request->getSessionId(), $url);
         try {
-            // Kuna demo ei aktsepteeri displayTextFormatit.
-            unset($request->toArray()['displayTextFormat']);
             $sessionStatus = $this->getRequest($url, $request->toArray(), SessionStatus::class);
             return $sessionStatus;
         } catch (Exception $e) {
@@ -186,29 +182,8 @@ class MobileIdRestConnector implements MobileIdConnector
         );
 
         $result = curl_exec($ch);
-        echo 'result ' . $result;
 
         return json_decode($result); // TODO cast to correct response type
-
-        //       return $result;
-
-
-        /*
-                try {
-                    $this->curl = new Curl();
-        //            $this->setNetworkInterface($params);
-                    echo '<pre>';
-                    print_r($params);
-                    echo '</pre>';
-                    echo 'json of request: <json>'. $json. '</json>';
-                    $this->curl->curlPost($url, array(), $json);
-                    echo 'ok2';
-                    $this->curl->setCurlParam(CURLOPT_HTTPHEADER, array('content-type: application/json',));
-                    return $this->request($url, $responseType);
-                } catch (Exception $e) {
-                    return $e;
-                }
-        */
     }
 
     public static function newBuilder()
@@ -219,7 +194,6 @@ class MobileIdRestConnector implements MobileIdConnector
     private function request($url, $responseType)
     {
         $rawResponse = $this->curl->fetch();
-
         if (false !== ($error = $this->curl->getError())) {
             throw new MobileIdException($error);
         }
@@ -241,10 +215,15 @@ class MobileIdRestConnector implements MobileIdConnector
 
     private function getRequest($url, array $params, $responseType)
     {
-        $this->curl = new Curl();
-        $this->setNetworkInterface($params);
-        $this->curl->curlGet($url, $params);
-        return $this->request($url, $responseType);
+
+        try {
+            $this->curl = new Curl();
+            $this->curl->curlGet($url, $params);
+            return $this->request($url, $responseType);
+        } catch (Exception $e) {
+            return $e;
+        }
+
     }
 
     private function getResponse($rawResponse, $responseType)

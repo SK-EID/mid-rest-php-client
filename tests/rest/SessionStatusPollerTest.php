@@ -1,4 +1,7 @@
 <?php
+
+use PHPUnit\Framework\TestCase;
+
 require __DIR__ . '/../../vendor/autoload.php';
 
 require_once __DIR__ . '/../mock/SessionStatusDummy.php';
@@ -12,7 +15,7 @@ require_once __DIR__ . '/../../ee.sk.mid/rest/SessionStatusPoller.php';
  * Date: 2/21/2019
  * Time: 2:33 PM
  */
-class SessionStatusPollerTest extends PHPUnit_Framework_TestCase
+class SessionStatusPollerTest extends TestCase
 {
     private $connector;
     private $poller;
