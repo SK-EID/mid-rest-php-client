@@ -58,12 +58,12 @@ class SessionStatusPoller
         return $this->fetchFinalSessionStatus($sessionId, self::SIGNATURE_SESSION_PATH, $longPollSeconds);
     }
 
-    public function fetchFinalAuthenticationSession($sessionId, $longPollSeconds = 6)
+    public function fetchFinalAuthenticationSession($sessionId, $longPollSeconds = 20)
     {
         return $this->fetchFinalSessionStatus($sessionId, self::AUTHENTICATION_SESSION_PATH, $longPollSeconds);
     }
 
-    public function fetchFinalSessionStatus($sessionId, $path, $longPollSeconds)
+    public function fetchFinalSessionStatus($sessionId, $path, $longPollSeconds = null)
     {
         $this->logger->debug('Starting to poll session status for session ' . $sessionId);
         $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $path, $longPollSeconds);
