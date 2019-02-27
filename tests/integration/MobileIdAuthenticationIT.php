@@ -1,6 +1,8 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../../ee.sk.mid/util/Logger.php';
+
 require_once __DIR__ . '/../mock/TestData.php';
 require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
 require_once __DIR__ . '/../../ee.sk.mid/Language.php';
@@ -9,7 +11,6 @@ require_once __DIR__ . '/../../ee.sk.mid/MobileIdClient.php';
 require_once __DIR__ . '/../../ee.sk.mid/exception/NotMIDClientException.php';
 
 class MobileIdAuthenticationIT extends TestCase{
-
 
     /**
      * @test
@@ -41,12 +42,13 @@ class MobileIdAuthenticationIT extends TestCase{
 
         $sessionIdObject = self::generateSessionId($client);
 
-        $sessionStatus = $client->getSessionStatusPoller()->fetchFinalSessionStatus(
-            $sessionIdObject->sessionId,
-            '/mid-api/authentication/session/{sessionId}'
-        );
+        $sessionStatus = $client->getSessionStatusPoller()->fetchFinalAuthenticationSession($sessionIdObject->sessionId);
 
         $this->assertEquals(true, !is_null($sessionStatus));
+
+        $this->assertThat($sessionStatus->getResult(), $this->equalTo('OK'));
+        $this->assertThat($sessionStatus->getState(), $this->equalTo('COMPLETE'));
+        $this->assertThat($sessionStatus->getSignature()->getAlgorithmName(), $this->equalTo('SHA256WithECEncryption'));
     }
 
     /**

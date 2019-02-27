@@ -33,9 +33,13 @@ class SessionStatusRequest
 
     private $networkInterface;
 
-    public function __construct( $sessionId )
+    public function __construct( $sessionId, $longPollSeconds = null )
     {
         $this->sessionId = $sessionId;
+
+        if ($longPollSeconds != null) {
+            $this->sessionStatusResponseSocketTimeoutMs = $longPollSeconds * 1000;
+        }
     }
 
     public function getSessionId()
@@ -82,4 +86,6 @@ class SessionStatusRequest
 
         return $requiredArray;
     }
+
+
 }

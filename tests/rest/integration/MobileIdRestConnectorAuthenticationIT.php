@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MobileIdRestConnectorAuthenticationIT extends TestCase
 {
-    const AUTHENTICATION_SESSION_PATH = "/mid-api/authentication/session/{sessionId}";
+    const AUTHENTICATION_SESSION_PATH = "/authentication/session/{sessionId}";
 
     private $connector;
 
