@@ -73,7 +73,7 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
         $this->logger->debug('Getting certificate for phone number: ' . $request->getPhoneNumber());
-        $uri = $this->endpointUrl . '/mid-api/certificate';
+        $uri = $this->endpointUrl . '/certificate';
 
         $certificateResponse = $this->postCertificateRequest($uri, $request);
 
@@ -110,7 +110,7 @@ class MobileIdRestConnector implements MobileIdConnector
     public function authenticate($request)
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
-        $url = $this->endpointUrl . '/mid-api/authentication';
+        $url = $this->endpointUrl . '/authentication';
         return $this->postAuthenticationRequest($url, $request);
     }
 
@@ -134,9 +134,13 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $url = $this->endpointUrl.$path;
         $url = str_replace('{sessionId}', $request->getSessionId(), $url);
+        if ($request->getSessionStatusResponseSocketTimeoutMs() != null) {
+            $url = $url . '?timeoutMs='.$request->getSessionStatusResponseSocketTimeoutMs();
+        }
+        $this->logger->debug('Sending get request to ' . $url);
         try {
-            $sessionStatus = $this->getRequest($url, $request->toArray(), SessionStatus::class);
-            return $sessionStatus;
+            $responseArray = $this->getRequest($url);
+            return new SessionStatus($responseArray);
         } catch (Exception $e) {
             throw new SessionNotFoundException();
         }
@@ -144,12 +148,12 @@ class MobileIdRestConnector implements MobileIdConnector
 
     public function getAuthenticationSessionStatus($request)
     {
-        return $this->getSessionStatus($request, '/mid-api/authentication/session/');
+        return $this->getSessionStatus($request, '/authentication/session/');
     }
 
     public function getSignatureSessionStatus($request)
     {
-        return $this->getSessionStatus($request, '/mid-api/signature/session/');
+        return $this->getSessionStatus($request, '/signature/session/');
     }
 
     private function postCertificateRequest($uri, $request)
@@ -213,16 +217,17 @@ class MobileIdRestConnector implements MobileIdConnector
         return $response;
     }
 
-    private function getRequest($url, array $params, $responseType)
+    private function getRequest($url)
     {
-
-        try {
-            $this->curl = new Curl();
-            $this->curl->curlGet($url, $params);
-            return $this->request($url, $responseType);
-        } catch (Exception $e) {
-            return $e;
-        }
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json')
+        );
+        $result = curl_exec($ch);
+        $this->logger->debug('Result is '. $result);
+        return json_decode($result, true);
 
     }
 

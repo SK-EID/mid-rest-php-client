@@ -49,35 +49,36 @@ class SessionStatusPoller
 
     public function __construct($connector)
     {
-        $this->logger = new Logger('SessionStatuspoller');
+        $this->logger = new Logger('SessionStatusPoller');
         $this->connector = $connector;
     }
 
-    public function fetchFinalSignatureSessionStatus($sessionId)
+    public function fetchFinalSignatureSessionStatus($sessionId, $longPollSeconds = 20)
     {
-        return $this->fetchFinalSessionStatus($sessionId, self::SIGNATURE_SESSION_PATH, null);
+        return $this->fetchFinalSessionStatus($sessionId, self::SIGNATURE_SESSION_PATH, $longPollSeconds);
     }
 
-    public function fetchFinalAuthenticationSession($sessionId)
+    public function fetchFinalAuthenticationSession($sessionId, $longPollSeconds = 6)
     {
-        return $this->fetchFinalSessionStatus($sessionId, self::AUTHENTICATION_SESSION_PATH, null);
+        return $this->fetchFinalSessionStatus($sessionId, self::AUTHENTICATION_SESSION_PATH, $longPollSeconds);
     }
 
-    public function fetchFinalSessionStatus($sessionId, $path)
+    public function fetchFinalSessionStatus($sessionId, $path, $longPollSeconds)
     {
         $this->logger->debug('Starting to poll session status for session ' . $sessionId);
-        $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $path);
+        $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $path, $longPollSeconds);
         $this->validateResult($sessionStatus);
         return $sessionStatus;
     }
 
-    private function pollForFinalSessionStatus($sessionId, $path)
+    private function pollForFinalSessionStatus($sessionId, $path,  $longPollSeconds = 20)
     {
         $sessionStatus = null;
 
+
         while ($sessionStatus == null || strcasecmp($sessionStatus->getState(), 'RUNNING') == 0) {
-            $sessionStatus = $this->pollSessionStatus($sessionId, $path);
-            if (strcasecmp("COMPLETE", $sessionStatus->getState()) == 0) {
+            $sessionStatus = $this->pollSessionStatus($sessionId, $path, $longPollSeconds);
+            if ($sessionStatus->isComplete()) {
                 return $sessionStatus;
             }
             $this->logger->debug('Sleeping for ' . $this->pollingSleepTimeoutSeconds . ' seconds');
@@ -88,16 +89,17 @@ class SessionStatusPoller
         return $sessionStatus;
     }
 
-    private function pollSessionStatus($sessionId, $path)
+    private function pollSessionStatus($sessionId, $path, $longPollSeconds = null)
     {
         $this->logger->debug('Polling session status');
-        $request = $this->createSessionStatusRequest($sessionId);
+        $request = $this->createSessionStatusRequest($sessionId, $longPollSeconds);
+
         return $this->connector->getSessionStatus($request, $path);
     }
 
-    private function createSessionStatusRequest($sessionId)
+    private function createSessionStatusRequest($sessionId, $longPollSeconds)
     {
-        return  new SessionStatusRequest($sessionId);
+        return  new SessionStatusRequest($sessionId, $longPollSeconds);
     }
 
     private function validateResult($sessionStatus)
@@ -143,9 +145,6 @@ class SessionStatusPoller
         } else if (strcasecmp('SIGNATURE_HASH_MISMATCH', $result) == 0) {
             $this->logger->error('Hash does not match with certificate type');
             throw new SignatureHashMismatchException();
-        } else if (strcasecmp('OK', $result) == 0) {
-            $this->logger->error("Session status end result is '" . $result . "'");
-            throw new TechnicalErrorException("Session status end result is '" . $result . "'");
         }
     }
 

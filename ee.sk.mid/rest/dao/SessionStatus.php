@@ -31,8 +31,23 @@ class SessionStatus
     private $signature;
     private $cert;
 
-    public function __construct()
+    public function __construct(array $values = array())
     {
+        if (isset($values['state'])) {
+            $this->state = $values['state'];
+        }
+        if (isset($values['result'])) {
+            $this->result = $values['result'];
+        }
+        if (isset($values['cert'])) {
+            $this->cert = $values['cert'];
+        }
+        if (isset($values['signature'])) {
+            $this->signature = MobileIdSignature::newBuilder()
+                ->withAlgorithmName($values['signature']['algorithm'])
+                ->withValueInBase64($values['signature']['value'])
+                ->build();
+        }
     }
 
     public function getState()
@@ -73,6 +88,10 @@ class SessionStatus
     public function setCert($cert)
     {
         $this->cert = $cert;
+    }
+
+    public function isComplete() {
+        return strcasecmp("COMPLETE", $this->getState()) == 0;
     }
 
     public function toString()
