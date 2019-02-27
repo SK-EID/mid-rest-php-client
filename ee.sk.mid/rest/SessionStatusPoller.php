@@ -144,6 +144,9 @@ class SessionStatusPoller
         } else if (strcasecmp('SIGNATURE_HASH_MISMATCH', $result) == 0) {
             $this->logger->error('Hash does not match with certificate type');
             throw new SignatureHashMismatchException();
+        } else if (!strcasecmp('OK', $result) == 0) {
+            $this->logger->error("Session status end result is '" . $result . "'");
+            throw new TechnicalErrorException("Session status end result is '" . $result . "'");
         }
     }
 
