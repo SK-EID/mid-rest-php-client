@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../../mock/TestData.php';
 require_once __DIR__ . '/../../mock/TestData.php';
 require_once __DIR__ . '/../../../ee.sk.mid/rest/MobileIdRestConnector.php';
+
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -143,12 +144,6 @@ class MobileIdRestConnectorCertificateIT extends TestCase
         $request->setNationalIdentityNumber(TestData::VALID_NAT_IDENTITY);
         $connector->getCertificate($request);
     }
-
-
-
-
-
-
 
 
 }

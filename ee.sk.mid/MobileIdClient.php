@@ -120,7 +120,7 @@ class MobileIdClient
         return MobileIdAuthentication::newBuilder()
             ->withResult($sessionStatus->getResult())
             ->withSignatureValueInBase64($sessionSignature->getValue())
-            ->withAlgorithmName($sessionSignature->getAlgorithm())
+            ->withAlgorithmName($sessionSignature->getAlgorithmName())
             ->withCertificate($certificate)
             ->withSignedHashInBase64($hashInBase64)
             ->withHashType($hashType)

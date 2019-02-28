@@ -72,6 +72,7 @@ class MobileIdRestConnector implements MobileIdConnector
     public function getCertificate($request)
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
+
         $this->logger->debug('Getting certificate for phone number: ' . $request->getPhoneNumber());
         $uri = $this->endpointUrl . '/certificate';
 
@@ -84,7 +85,6 @@ class MobileIdRestConnector implements MobileIdConnector
 
     private function validateCertificateResult($result)
     {
-
         if (strcasecmp("NOT_FOUND", $result) == 0) {
             $this->logger->error("No certificate for the user was found");
             throw new NotMIDClientException();
@@ -176,7 +176,6 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $json = json_encode($params);
 
-
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
@@ -187,7 +186,6 @@ class MobileIdRestConnector implements MobileIdConnector
         );
 
         $result = curl_exec($ch);
-
         return json_decode($result); // TODO cast to correct response type
     }
 
