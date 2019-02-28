@@ -283,7 +283,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException ParameterMissingException
      */
     public function authenticate_withCertificateBlankInResponse_shouldThrowException()
     {
@@ -293,7 +293,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException ParameterMissingException
      */
     public function authenticate_withCertificateMissingInResponse_shouldThrowException()
     {

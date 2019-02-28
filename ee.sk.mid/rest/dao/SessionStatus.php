@@ -83,6 +83,9 @@ class SessionStatus
 
     public function getCert()
     {
+        if (empty($this->cert) || is_null($this->cert)) {
+            throw new ParameterMissingException("Certificate must be set.");
+        }
         return $this->cert;
     }
 

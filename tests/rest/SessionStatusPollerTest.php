@@ -35,7 +35,7 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getFirstCompleteResponse()
     {
-        $this->connector->getResponse()->add(SessionStatusDummy::createCompleteSessionStatus());
+        $this->connector->getResponses()->add(SessionStatusDummy::createCompleteSessionStatus());
         $sessionStatus = $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
         $this->assertEquals(TestData::SESSION_ID, $this->connector->getSessionIdUsed());
         $this->assertEquals(1, $this->connector->getResponseNumber());

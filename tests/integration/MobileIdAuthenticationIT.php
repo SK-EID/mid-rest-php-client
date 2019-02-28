@@ -91,6 +91,22 @@ class MobileIdAuthenticationIT extends TestCase
      * @test
      * @expectedException ParameterMissingException
      */
+    public function mobileAuthenticate_relyingPartyNameEmpty_shouldThrowParameterMissingException()
+    {
+        $client = MobileIdClient::newBuilder()
+            ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
+            ->withRelyingPartyName("")
+            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->build();
+
+
+        $resp = self::generateSessionId($client);
+    }
+
+    /**
+     * @test
+     * @expectedException ParameterMissingException
+     */
     public function mobileAuthenticate_noRelyingPartyUUID_shouldThrowParameterMissingException()
     {
         $client = MobileIdClient::newBuilder()
@@ -102,6 +118,22 @@ class MobileIdAuthenticationIT extends TestCase
         $resp = self::generateSessionId($client);
     }
 
+
+    /**
+     * @test
+     * @expectedException ParameterMissingException
+     */
+    public function mobileAuthenticate_relyingPartyUUID_shouldThrowParameterMissingException()
+    {
+        $client = MobileIdClient::newBuilder()
+            ->withRelyingPartyUUID("")
+            ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
+            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->build();
+
+
+        $resp = self::generateSessionId($client);
+    }
 
     private static function generateSessionId(MobileIdClient $client)
     {

@@ -77,53 +77,55 @@ class AuthenticationResponseValidator
 
     function constructAuthenticationIdentity($certificate)
     {
+        // TODO tuleb ümber teha.
         $identity = new AuthenticationIdentity();
-        $ln = new LdapName($certificate->getSubjectDN()->getName());
-        $var4 = $ln->getRdns()->iterator();
-        while ($var4->hasNext())
-        {
-            $rdn = $var4->next();
-            $type = $rdn->getType()->getUpperCase();
-            $var8 = -1;
-            switch ($type->hashCode())
-            {
-                case -1135010629:
-                    if ($type == "SURNAME") {
-                        $var8 = 1;
-                    }
-                    break;
-                case -977765827:
-                    if ($type == "SERIALNUMBER") {
-                        $var8 = 2;
-                    }
-                    break;
-                case -38372504:
-                    if ($type == "GIVENNAME") {
-                        $var8 = 0;
-                    }
-                    break;
-                case 67:
-                    if ($type == "C") {
-                        $var8 = 3;
-                    }
-            }
-
-            switch ($var8)
-            {
-                case 0:
-                    $identity->setGivenName($rdn->getValue()->toString());
-                    break;
-                case 1:
-                    $identity->setSurName($rdn->getValue()->toString());
-                    break;
-                case 2:
-                    $identity->setIdentityCode($this->getIdentityNumber($rdn->getValue()->toString()));
-                    break;
-                case 3:
-                    $identity->setCountry($rdn->getValue()->toString());
-            }
-        }
-        return $identity;
+//        $identity = new AuthenticationIdentity();
+//        $ln = new LdapName($certificate->getSubjectDN()->getName());
+//        $var4 = $ln->getRdns()->iterator();
+//        while ($var4->hasNext())
+//        {
+//            $rdn = $var4->next();
+//            $type = $rdn->getType()->getUpperCase();
+//            $var8 = -1;
+//            switch ($type->hashCode())
+//            {
+//                case -1135010629:
+//                    if ($type == "SURNAME") {
+//                        $var8 = 1;
+//                    }
+//                    break;
+//                case -977765827:
+//                    if ($type == "SERIALNUMBER") {
+//                        $var8 = 2;
+//                    }
+//                    break;
+//                case -38372504:
+//                    if ($type == "GIVENNAME") {
+//                        $var8 = 0;
+//                    }
+//                    break;
+//                case 67:
+//                    if ($type == "C") {
+//                        $var8 = 3;
+//                    }
+//            }
+//
+//            switch ($var8)
+//            {
+//                case 0:
+//                    $identity->setGivenName($rdn->getValue()->toString());
+//                    break;
+//                case 1:
+//                    $identity->setSurName($rdn->getValue()->toString());
+//                    break;
+//                case 2:
+//                    $identity->setIdentityCode($this->getIdentityNumber($rdn->getValue()->toString()));
+//                    break;
+//                case 3:
+//                    $identity->setCountry($rdn->getValue()->toString());
+//            }
+//        }
+//        return $identity;
     }
 
     private function getIdentityNumber($serialNumber)
