@@ -24,12 +24,30 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once 'AbstractResponse.php';
-class AuthenticationResponse extends AbstractResponse
+class AuthenticationResponse
 {
 
-    public function __construct($sessionId = null)
+    private $sessionId;
+
+    public function __construct(array $responseJson)
     {
-        parent::__construct($sessionId);
+        $this->sessionId = $responseJson['sessionID'] ?? $responseJson['sessionId'];
     }
+
+
+    public function getSessionId()
+    {
+        return $this->sessionId;
+    }
+
+    public function setSessionId($sessionId)
+    {
+        $this->sessionId = $sessionId;
+    }
+
+    public function toString()
+    {
+        return  "AuthenticationResponse{sessionID='" . $this->sessionId . '}';
+    }
+
 }

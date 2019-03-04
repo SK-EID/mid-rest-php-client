@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../../ee.sk.mid/rest/MobileIdConnector.php';
+require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
+
 
 /**
  * Created by PhpStorm.
@@ -112,7 +114,7 @@ class MobileIdConnectorSpy implements MobileIdConnector
         return $this->signatureResponseToRespond;
     }
 
-    public function authenticate($request)
+    public function authenticate(AuthenticationRequest $request)
     {
         $this->authenticationRequestUsed = $request;
         return $this->authenticationResponseToRespond;
@@ -129,8 +131,4 @@ class MobileIdConnectorSpy implements MobileIdConnector
         return $this->getSessionStatus($request, SessionStatusPoller::AUTHENTICATION_SESSION_PATH);
     }
 
-    public function getSignatureSessionStatus($request)
-    {
-        return $this->getSessionStatus($request, SessionStatusPoller::SIGNATURE_SESSION_PATH);
-    }
 }

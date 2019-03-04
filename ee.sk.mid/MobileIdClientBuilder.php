@@ -105,7 +105,7 @@ class MobileIdClientBuilder
         return $this;
     }
 
-    public function build()
+    public function build() : MobileIdClient
     {
         return new MobileIdClient($this);
     }

@@ -72,7 +72,7 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
         return $this->hash;
     }
 
-    public function setHash($hash)
+    public function setHash(string $hash)
     {
         $this->hash = $hash;
     }
@@ -122,53 +122,32 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
         return "AuthenticationRequest{<br/>phoneNumber=" . $this->phoneNumber . ",<br/> nationalIdentityNumber=" . $this->nationalIdentityNumber . ",<br/> hash=" . $this->hash . ",<br/> hashType=" . $this->hashType->getHashTypeName() . ",<br/> language=" . $this->language . ",<br/>displayText=" . $this->displayText  . ",<br/> displayTextFormat=" . $this->displayTextFormat . "<br/>}<br/><br/>";
     }
 
-    public function toArray()
-    {
-        $requiredaArray = array(
-            'relyingPartyUUID' => parent::getRelyingPartyUUID(),
-            'relyingPartyName' => parent::getRelyingPartyName(),
-        );
-        if (isset($this->phoneNumber)) {
-            $requiredaArray['phoneNumber'] = $this->phoneNumber;
-        }
-        if (isset($this->nationalIdentityNumber)) {
-            $requiredaArray['nationalIdentityNumber'] = $this->nationalIdentityNumber;
-        }
-        if (isset($this->hash)) {
-            $requiredaArray['hash'] = $this->hash;
-        }
-        if (isset($this->hashType)) {
-            $requiredaArray['hashType'] = $this->hashType->getHashTypeName();
-        }
-        if (isset($this->language)) {
-            $requiredaArray['language'] = $this->language;
-        }
-        if (isset($this->displayText)) {
-            $requiredaArray['displayText'] = $this->displayText;
-        }
-        if (isset($this->displayTextFormat)) {
-            $requiredaArray['displayTextFormat'] = $this->displayTextFormat;
-        }
-        return $requiredaArray;
-
-    }
-
     public static function newBuilder()
     {
         return new AuthenticationRequestBuilder();
     }
 
     public function jsonSerialize() {
-        return [
+        $params = [
                 'phoneNumber' => $this->getPhoneNumber(),
                 'nationalIdentityNumber' => $this->getNationalIdentityNumber(),
                 'relyingPartyUUID' => $this->getRelyingPartyUUID(),
                 'relyingPartyName' => $this->getRelyingPartyName(),
                 'hash' => $this->getHash(),
                 'hashType' => $this->getHashType(),
-                'displayText' => $this->getDisplayText(),
-                'displayTextFormat' => $this->getDisplayTextFormat()
+                'language' => $this->getLanguage()
         ];
+
+        if (null !== $this->getDisplayText()) {
+            $params['displayText'] = $this->getDisplayText();
+
+            if (null !== $this->getDisplayTextFormat()) {
+                $params['displayTextFormat'] = $this->getDisplayTextFormat();
+            }
+        }
+        return $params;
+
+
     }
 
 }

@@ -29,8 +29,10 @@ class CertificateChoiceResponse
     private $result;
     private $cert;
 
-    public function __construct()
+    public function __construct(array $responseJson)
     {
+        $this->result = $responseJson['result'];
+        $this->cert = $responseJson['cert'];
     }
 
     public function getResult()

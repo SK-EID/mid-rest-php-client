@@ -41,31 +41,31 @@ class CertificateRequestBuilder
         self::$logger = new Logger('CertificateRequestBuilder');
     }
 
-    public function withRelyingPartyUUID($relyingPartyUUID)
+    public function withRelyingPartyUUID(string $relyingPartyUUID)
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName($relyingPartyName)
+    public function withRelyingPartyName(string $relyingPartyName)
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;
     }
 
-    public function withPhoneNumber($phoneNumber)
+    public function withPhoneNumber(string $phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
         return $this;
     }
 
-    public function withNationalIdentityNumber($nationalIdentityNumber)
+    public function withNationalIdentityNumber(string $nationalIdentityNumber)
     {
         $this->nationalIdentityNumber = $nationalIdentityNumber;
         return $this;
     }
 
-    public function build()
+    public function build() : CertificateRequest
     {
         $this->validateParameters();
         $request = new CertificateRequest();

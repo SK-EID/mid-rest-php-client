@@ -24,17 +24,19 @@
  * THE SOFTWARE.
  * #L%
  */
+
+require_once __DIR__ . '/dao/request/AuthenticationRequest.php';
+require_once __DIR__ . '/dao/request/CertificateRequest.php';
+require_once __DIR__ . '/dao/request/SessionStatusRequest.php';
+require_once __DIR__ . '/dao/response/CertificateChoiceResponse.php';
+
 interface MobileIdConnector
 {
-    public function getCertificate($request);
 
-    public function sign($request);
+    public function authenticate(AuthenticationRequest $request);
 
-    public function authenticate($request);
+    public function getAuthenticationSessionStatus(SessionStatusRequest $request);
 
-    public function getSessionStatus($request, $path);
+    public function getCertificate(CertificateRequest $request) : CertificateChoiceResponse;
 
-    public function getAuthenticationSessionStatus($request);
-
-    public function getSignatureSessionStatus($request);
 }

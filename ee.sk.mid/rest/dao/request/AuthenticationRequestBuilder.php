@@ -24,89 +24,154 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once 'AbstractAuthSignRequestBuilder.php';
-class AuthenticationRequestBuilder extends AbstractAuthSignRequestBuilder
+require_once __DIR__ . '/../../../MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../../../util/Logger.php';
+require_once __DIR__ . '/../../../exception/ParameterMissingException.php';
+require_once __DIR__ . '/../../../exception/ParameterMissingException.php';
+
+class AuthenticationRequestBuilder
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    private $relyingPartyName;
+    private $relyingPartyUUID;
+    private $phoneNumber;
+    private $nationalIdentityNumber;
+    private $hashToSign;
+    private $language;
+    private $displayText;
+    private $displayTextFormat;
 
-    public function withRelyingPartyUUID($relyingPartyUUID)
+
+    public function withRelyingPartyUUID(string $relyingPartyUUID)
     {
-        parent::withRelyingPartyUUID($relyingPartyUUID);
+        $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName($relyingPartyName)
+    public function withRelyingPartyName(string $relyingPartyName)
     {
-        parent::withRelyingPartyName($relyingPartyName);
+        $this->relyingPartyName = $relyingPartyName;
         return $this;
     }
 
-    public function withPhoneNumber($phoneNumber)
+    public function withPhoneNumber(string $phoneNumber)
     {
-        parent::withPhoneNumber($phoneNumber);
+        $this->phoneNumber = $phoneNumber;
         return $this;
     }
 
-    public function withNationalIdentityNumber($nationalIdentityNumber)
+    public function withNationalIdentityNumber(string $nationalIdentityNumber)
     {
-        parent::withNationalIdentityNumber($nationalIdentityNumber);
+        $this->nationalIdentityNumber = $nationalIdentityNumber;
         return $this;
     }
 
-    public function withHashToSign($mobileIdAuthenticationHash)
+    public function withHashToSign(MobileIdAuthenticationHashToSign $hashToSign)
     {
-        parent::withHashToSign($mobileIdAuthenticationHash);
+        $this->hashToSign = $hashToSign;
         return $this;
     }
 
-    public function withLanguage($language)
+    public function withLanguage(string $language)
     {
-        parent::withLanguage($language);
+        $this->language = $language;
         return $this;
     }
 
-    public function withDisplayText($displayText)
+    public function withDisplayText(string $displayText)
     {
-        parent::withDisplayText($displayText);
+        $this->displayText = $displayText;
         return $this;
     }
 
-    public function withDisplayTextFormat($displayTextFormat)
+    public function withDisplayTextFormat(string $displayTextFormat)
     {
-        parent::withDisplayTextFormat($displayTextFormat);
+        $this->displayTextFormat = $displayTextFormat;
         return $this;
     }
 
     public function build()
     {
         $this->validateParameters();
-        return $this->createAuthenticationRequest();
-    }
 
-    private function createAuthenticationRequest()
-    {
         $request = new AuthenticationRequest();
         $request->setRelyingPartyUUID($this->getRelyingPartyUUID());
         $request->setRelyingPartyName($this->getRelyingPartyName());
         $request->setPhoneNumber($this->getPhoneNumber());
         $request->setNationalIdentityNumber($this->getNationalIdentityNumber());
-        $request->setHash($this->getHashInBase64());
-        $request->setHashType($this->getHashType());
+        $request->setHash($this->getHashToSign()->getHashInBase64());
+        $request->setHashType($this->getHashToSign()->getHashType()->getHashTypeName());
         $request->setLanguage($this->getLanguage());
         $request->setDisplayText($this->getDisplayText());
         $request->setDisplayTextFormat($this->getDisplayTextFormat());
         return $request;
+
     }
 
-    protected function validateParameters()
+
+    private function validateParameters()
     {
-        parent::validateParameters();
-        parent::validateExtraParameters();
+
+        if (empty($this->phoneNumber) || empty($this->nationalIdentityNumber)) {
+            throw new ParameterMissingException('Phone number and national identity must be set');
+        }
+
+        if (is_null($this->hashToSign)) {
+            throw new ParameterMissingException("hashToSign must be set");
+        }
+
+        if (is_null($this->language)) {
+            throw new ParameterMissingException("Language for user dialog in mobile phone must be set");
+        }
     }
 
+    private function getHashToSign() : MobileIdAuthenticationHashToSign {
+        return $this->hashToSign;
+    }
+
+    private function getRelyingPartyName()
+    {
+        return $this->relyingPartyName;
+    }
+
+    private function getRelyingPartyUUID()
+    {
+        return $this->relyingPartyUUID;
+    }
+
+    private function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    private function getNationalIdentityNumber(): string
+    {
+        return $this->nationalIdentityNumber;
+    }
+
+    protected function getHashType()
+    {
+        return $this->getHashToSign()->getHashType();
+    }
+
+    protected function getHashInBase64()
+    {
+        return $this->getHashToSign()->getHashInBase64();
+    }
+
+    private function getLanguage() : string
+    {
+        return $this->language;
+    }
+
+    private function getDisplayText()
+    {
+        return $this->displayText;
+    }
+
+    private function getDisplayTextFormat()
+    {
+        return $this->displayTextFormat;
+    }
 
 }

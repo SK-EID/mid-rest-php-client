@@ -16,6 +16,7 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
+     * @throws Exception
      */
     public function mobileAuthenticateTest()
     {
@@ -28,11 +29,12 @@ class MobileIdAuthenticationIT extends TestCase
 
         $resp = self::generateSessionId($client);
 
-        $this->assertEquals(36, strlen($resp->sessionId));
+        $this->assertEquals(36, strlen($resp->getSessionId()));
     }
 
     /**
      * @test
+     * @throws Exception
      */
     public function mobileAuthenticate_usingCorrectSessionId_getCorrectSessionStatus()
     {
@@ -42,12 +44,11 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
-        $resp = self::generateSessionId($client);
+        $authenticationResponse = self::generateSessionId($client);
 
-        $sessionStatus = $client->getSessionStatusPoller()->fetchFinalAuthenticationSession($resp->sessionId);
+        $sessionStatus = $client->getSessionStatusPoller()->fetchFinalAuthenticationSession($authenticationResponse->getSessionId());
 
-        $this->assertEquals(true, !is_null($sessionStatus));
-
+        $this->assertThat($sessionStatus, $this->logicalNot($this->isNull()));
         $this->assertThat($sessionStatus->getResult(), $this->equalTo('OK'));
         $this->assertThat($sessionStatus->getState(), $this->equalTo('COMPLETE'));
         $this->assertThat($sessionStatus->getSignature()->getAlgorithmName(), $this->equalTo('SHA256WithECEncryption'));
@@ -55,6 +56,7 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
+     * @throws Exception
      */
     public function mobileAuthenticate_usingCorrectSessionStatus_getCorrectMobileIdAuthentication()
     {
@@ -66,9 +68,14 @@ class MobileIdAuthenticationIT extends TestCase
 
         $resp = self::generateSessionId($client);
 
-        $sessionStatus = $client->getSessionStatusPoller()->fetchFinalAuthenticationSession($resp->sessionId);
+        $sessionStatus = $client->getSessionStatusPoller()->fetchFinalAuthenticationSession($resp->getSessionId());
 
-        $authentication = $client->createMobileIdAuthentication($sessionStatus, TestData::SHA256_HASH_IN_BASE64, 'SHA256');
+        $hashToSign = MobileIdAuthenticationHashToSign::newBuilder()
+                ->withHashType(HashType::SHA256)
+                ->withHashInBase64(TestData::SHA256_HASH_IN_BASE64)
+                ->build();
+
+        $authentication = $client->createMobileIdAuthentication($sessionStatus, $hashToSign);
         $this->assertEquals(true, !is_null($authentication));
     }
 
@@ -82,7 +89,6 @@ class MobileIdAuthenticationIT extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
-
 
         $resp = self::generateSessionId($client);
     }
@@ -99,7 +105,6 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
-
         $resp = self::generateSessionId($client);
     }
 
@@ -113,7 +118,6 @@ class MobileIdAuthenticationIT extends TestCase
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
-
 
         $resp = self::generateSessionId($client);
     }
@@ -131,11 +135,10 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
-
         $resp = self::generateSessionId($client);
     }
 
-    private static function generateSessionId(MobileIdClient $client)
+    private static function generateSessionId(MobileIdClient $client) : AuthenticationResponse
     {
         $authenticationRequest = AuthenticationRequest::newBuilder()
             ->withNationalIdentityNumber(60001019906)
@@ -147,6 +150,5 @@ class MobileIdAuthenticationIT extends TestCase
         $resp = $client->getMobileIdConnector()->authenticate($authenticationRequest);
         return $resp;
     }
-
 
 }

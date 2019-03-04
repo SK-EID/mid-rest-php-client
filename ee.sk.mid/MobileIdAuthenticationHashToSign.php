@@ -43,7 +43,14 @@ class MobileIdAuthenticationHashToSign
     public function __construct($builder)
     {
         $this->hashType = $builder->hashType;
-        $this->hash = openssl_random_pseudo_bytes($builder->hashType->getLengthInBytes());
+
+        if (null !== $builder->hash) {
+            $this->hash = $builder->hash;
+        }
+        else {
+            $this->hash = openssl_random_pseudo_bytes($builder->hashType->getLengthInBytes());
+        }
+
     }
 
     public function getHashInBase64()
@@ -51,7 +58,7 @@ class MobileIdAuthenticationHashToSign
         return base64_encode($this->hash);
     }
 
-    public function getHashType()
+    public function getHashType() : HashType
     {
         return $this->hashType;
     }
@@ -61,12 +68,12 @@ class MobileIdAuthenticationHashToSign
         return VerificationCodeCalculator::calculateMobileIdVerificationCode($this->hash);
     }
 
-    public static function generateRandomHashOfDefaultType()
+    public static function generateRandomHashOfDefaultType() : MobileIdAuthenticationHashToSign
     {
         return self::generateRandomHashOfType(self::DEFAULT_HASH_TYPE);
     }
 
-    public static function generateRandomHashOfType($hashTypeName)
+    public static function generateRandomHashOfType($hashTypeName) : MobileIdAuthenticationHashToSign
     {
         if ($hashTypeName == 'sha256') {
             $hashType = new Sha256();
@@ -88,7 +95,7 @@ class MobileIdAuthenticationHashToSign
         return new MobileIdAuthenticationHashToSignBuilder();
     }
 
-    public static function strToHashType($hashTypeStr) {
+    public static function strToHashType($hashTypeStr) : HashType {
 
         switch ($hashTypeStr) {
             case 'sha256':
@@ -107,6 +114,7 @@ class MobileIdAuthenticationHashToSignBuilder
 {
 
     public $hashType;
+    public $hash;
 
 
     public function withHashType($hashType)
@@ -121,6 +129,12 @@ class MobileIdAuthenticationHashToSignBuilder
         return $this;
     }
 
+    public function withHashInBase64($hash)
+    {
+        $this->hash = $hash;
+        return $this;
+    }
+
 
     function validateFields()
     {
@@ -131,7 +145,7 @@ class MobileIdAuthenticationHashToSignBuilder
 
     }
 
-    public function build()
+    public function build() : MobileIdAuthenticationHashToSign
     {
         $this->validateFields();
         return new MobileIdAuthenticationHashToSign($this);

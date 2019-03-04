@@ -46,7 +46,7 @@ class MobileIdClient
     private $connector;
     private $sessionStatusPoller;
 
-    public function __construct($builder)
+    public function __construct(MobileIdClientBuilder $builder)
     {
         self::$logger = new Logger('MobileIdClient');
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
@@ -58,7 +58,7 @@ class MobileIdClient
         $this->createSessionStatusPoller();
     }
 
-    public function getMobileIdConnector()
+    public function getMobileIdConnector() : MobileIdConnector
     {
         if (is_null($this->connector))
         {
@@ -72,22 +72,22 @@ class MobileIdClient
         return $this->connector;
     }
 
-    public function getSessionStatusPoller()
+    public function getSessionStatusPoller() : SessionStatusPoller
     {
         return $this->sessionStatusPoller;
     }
 
-    public function getRelyingPartyUUID()
+    public function getRelyingPartyUUID() : string
     {
         return $this->relyingPartyUUID;
     }
 
-    public function getRelyingPartyName()
+    public function getRelyingPartyName() : string
     {
         return $this->relyingPartyName;
     }
 
-    private function createSessionStatusPoller()
+    private function createSessionStatusPoller() : SessionStatusPoller
     {
         $sessionStatusPoller = new SessionStatusPoller($this->getMobileIdConnector());
         $sessionStatusPoller->setPollingSleepTimeSeconds($this->pollingSleepTimeoutSeconds);
@@ -95,24 +95,14 @@ class MobileIdClient
         return $sessionStatusPoller;
     }
 
-    public function createMobileIdCertificate($certificateChoiceResponse)
+    public function createMobileIdCertificate(CertificateChoiceResponse $certificateChoiceResponse)
     {
         $this->validateCertificateResult($certificateChoiceResponse->getResult());
         $this->validateCertificateResponse($certificateChoiceResponse);
         return CertificateParser::parseX509Certificate($certificateChoiceResponse->getCert());
     }
 
-    public function createMobileIdSignature($sessionStatus)
-    {
-        $this->validateResponse($sessionStatus);
-        $sessionSignature = $sessionStatus->getSignature();
-        return MobileIdSignature::newBuilder()
-            ->withValueInBase64($sessionSignature->getValue())
-            ->withAlgorithmName($sessionSignature->getAlgorithm())
-            ->build();
-    }
-
-    public function createMobileIdAuthentication($sessionStatus, $hashInBase64, $hashType)
+    public function createMobileIdAuthentication(SessionStatus $sessionStatus, MobileIdAuthenticationHashToSign $hash) : MobileIdAuthentication
     {
         $this->validateResponse($sessionStatus);
         $sessionSignature = $sessionStatus->getSignature();
@@ -122,8 +112,8 @@ class MobileIdClient
             ->withSignatureValueInBase64($sessionSignature->getValue())
             ->withAlgorithmName($sessionSignature->getAlgorithmName())
             ->withCertificate($certificate)
-            ->withSignedHashInBase64($hashInBase64)
-            ->withHashType($hashType)
+            ->withSignedHashInBase64($hash->getHashInBase64())
+            ->withHashType($hash->getHashType())
             ->build();
 
     }

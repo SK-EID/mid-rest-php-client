@@ -12,6 +12,7 @@ class MobileIdCertificateIT extends TestCase
 
     /**
      * @test
+     * @throws Exception
      */
     public function getCertificateTest()
     {
@@ -29,11 +30,9 @@ class MobileIdCertificateIT extends TestCase
 
         $resp = $client->getMobileIdConnector()->getCertificate($certRequest);
 
-        $this->assertEquals('OK', $resp->result);
-        $this->assertNotNull($resp->cert);
+        $this->assertEquals('OK', $resp->getResult());
+        $this->assertNotNull($resp->getCert());
 
-    //    $certificate = MobileIdRestServiceRequestDummy::getCertificate($this->client);
-//        MobileIdRestServiceRequestDummy::assertCertificateCreated($certificate);
     }
 
     /**

@@ -35,7 +35,7 @@ class MobileIdAuthenticationResult
     {
     }
 
-    public function getAuthenticationIdentity()
+    public function getAuthenticationIdentity() : AuthenticationIdentity
     {
         return $this->authenticationIdentity;
     }

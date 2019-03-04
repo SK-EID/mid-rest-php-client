@@ -29,6 +29,7 @@ require_once __DIR__ . '/../util/Curl.php';
 require_once __DIR__ . '/../exception/SessionNotFoundException.php';
 require_once __DIR__ . '/../exception/MobileIdException.php';
 require_once __DIR__ . '/../exception/NotMIDClientException.php';
+require_once __DIR__ . '/dao/request/AuthenticationRequest.php';
 require_once __DIR__ . '/dao/response/CertificateChoiceResponse.php';
 require_once __DIR__ . '/dao/response/AuthenticationResponse.php';
 require_once __DIR__ . '/dao/SessionStatus.php';
@@ -60,7 +61,7 @@ class MobileIdRestConnector implements MobileIdConnector
     private $relyingPartyName;
     private $curl;
 
-    public function __construct($builder)
+    public function __construct(MobileIdRestConnectorBuilder $builder)
     {
         $this->logger = new Logger('MobileIdRestConnector');
         $this->endpointUrl = $builder->getEndpointUrl();
@@ -69,15 +70,16 @@ class MobileIdRestConnector implements MobileIdConnector
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
     }
 
-    public function getCertificate($request)
+    public function getCertificate(CertificateRequest $request) : CertificateChoiceResponse
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
 
-        $this->logger->debug('Getting certificate for phone number: ' . $request->getPhoneNumber());
+        $this->logger->debug('Getting certificate for phone number: ' . $request->toString());
         $uri = $this->endpointUrl . '/certificate';
+        $this->logger->debug('From uri: ' . $uri);
 
         $certificateResponse = $this->postCertificateRequest($uri, $request);
-        self::validateCertificateResult($certificateResponse->result);
+        self::validateCertificateResult($certificateResponse->getResult());
 
         return $certificateResponse;
     }
@@ -98,22 +100,14 @@ class MobileIdRestConnector implements MobileIdConnector
     }
 
 
-    public function sign($request)
-    {
-        $this->setRequestRelyingPartyDetailsIfMissing($request);
-        $this->logger->debug('Signing for phone number: ' . $request->getPhoneNumber());
-        $uri = $this->endpointUrl . '/signature';
-        return $this->postSignatureRequest($uri, $request);
-    }
-
-    public function authenticate($request)
+    public function authenticate(AuthenticationRequest $request) : AuthenticationResponse
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
         $url = $this->endpointUrl . '/authentication';
         return $this->postAuthenticationRequest($url, $request);
     }
 
-    private function setRequestRelyingPartyDetailsIfMissing($request)
+    private function setRequestRelyingPartyDetailsIfMissing(AbstractRequest $request)
     {
         if (is_null($request->getRelyingPartyUUID())) {
             $request->setRelyingPartyUUID($this->relyingPartyUUID);
@@ -129,10 +123,9 @@ class MobileIdRestConnector implements MobileIdConnector
         }
     }
 
-    public function getSessionStatus($request, $path)
+    public function getAuthenticationSessionStatus(SessionStatusRequest $request)
     {
-        $url = $this->endpointUrl.$path;
-        $url = str_replace('{sessionId}', $request->getSessionId(), $url);
+        $url = $this->endpointUrl. '/authentication/session/' . $request->getSessionId();
 
         if ($request->getSessionStatusResponseSocketTimeoutMs() != null) {
             $url = $url . '?timeoutMs='.$request->getSessionStatusResponseSocketTimeoutMs();
@@ -147,34 +140,22 @@ class MobileIdRestConnector implements MobileIdConnector
         }
     }
 
-    public function getAuthenticationSessionStatus($request)
+
+    private function postCertificateRequest($uri, CertificateRequest $request) : CertificateChoiceResponse
     {
-        return $this->getSessionStatus($request, '/authentication/session/');
+        return new CertificateChoiceResponse($this->postRequest($uri, $request));
     }
 
-    public function getSignatureSessionStatus($request)
+
+    private function postAuthenticationRequest($uri, $request) : AuthenticationResponse
     {
-        return $this->getSessionStatus($request, '/signature/session/');
+        return new AuthenticationResponse($this->postRequest($uri, $request));
     }
 
-    private function postCertificateRequest($uri, $request)
+    private function postRequest($url, AbstractRequest $paramsForJson) : array
     {
-        return $this->postRequest($uri, $request, CertificateChoiceResponse::class);
-    }
-
-    private function postSignatureRequest($uri, $request)
-    {
-        return $this->postRequest($uri, $request, SignatureResponse::class);
-    }
-
-    private function postAuthenticationRequest($uri, $request)
-    {
-        return $this->postRequest($uri, $request->toArray(), AuthenticationResponse::class);
-    }
-
-    private function postRequest($url, $params, $responseType)
-    {
-        $json = json_encode($params);
+        $json = json_encode($paramsForJson);
+        $this->logger->debug('POST '.$url.' contents: ' . $json);
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -186,7 +167,11 @@ class MobileIdRestConnector implements MobileIdConnector
         );
 
         $result = curl_exec($ch);
-        return json_decode($result); // TODO cast to correct response type
+
+        $this->logger->debug('Response was '.$result);
+
+
+        return json_decode($result, true);
     }
 
     public static function newBuilder()
@@ -194,27 +179,6 @@ class MobileIdRestConnector implements MobileIdConnector
         return new MobileIdRestConnectorBuilder();
     }
 
-    private function request($url, $responseType)
-    {
-        $rawResponse = $this->curl->fetch();
-        if (false !== ($error = $this->curl->getError())) {
-            throw new MobileIdException($error);
-        }
-
-        $httpCode = $this->curl->getCurlInfo(CURLINFO_HTTP_CODE);
-
-        $this->curl->closeRequest();
-
-        if (array_key_exists($httpCode, self::RESPONSE_ERROR_CODES)) {
-            throw new MobileIdException(self::RESPONSE_ERROR_CODES[$httpCode], $httpCode);
-        }
-
-        if (404 == $httpCode) {
-            throw new MobileIdException('User account not found for URI ' . $url);
-        }
-        $response = $this->getResponse($rawResponse, $responseType);
-        return $response;
-    }
 
     private function getRequest($url)
     {
@@ -238,11 +202,5 @@ class MobileIdRestConnector implements MobileIdConnector
         return new $responseType($preparedResponse);
     }
 
-    private function setNetworkInterface(array &$params)
-    {
-        if (isset($params['networkInterface'])) {
-            $this->curl->setCurlParam(CURLOPT_INTERFACE, $params['networkInterface']);
-            unset($params['networkInterface']);
-        }
-    }
+
 }

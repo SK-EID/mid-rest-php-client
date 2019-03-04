@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
-class AbstractRequest
+abstract class AbstractRequest
 {
     private $relyingPartyUUID;
 

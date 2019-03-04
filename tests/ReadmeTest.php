@@ -29,7 +29,7 @@ class ReadmeTest extends TestCase
     protected function setUp()
     {
         $this->client = MobileIdClient::newBuilder()
-            ->withHostUrl("https://tsp->demo->sk->ee")
+            ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
             ->withRelyingPartyUUID("00000000-0000-0000-0000-000000000000")
             ->withRelyingPartyName("DEMO")
             ->build();
@@ -41,6 +41,18 @@ class ReadmeTest extends TestCase
 
         $authentication = MobileIdAuthentication::newBuilder()->build();
         $authenticationResult = new MobileIdAuthenticationResult();
+    }
+
+    private function getClient() : MobileIdClient {
+        return $this->client;
+    }
+
+    private function getAuthenticationResult() : MobileIdAuthenticationResult {
+        return $this->authenticationResult;
+    }
+
+    private function getAuthentication() : AuthenticationResponse {
+        return $this->authentication;
     }
 
     /**
@@ -79,9 +91,9 @@ class ReadmeTest extends TestCase
             ->withNationalIdentityNumber("60001019906")
             ->build();
 
-        $response = $this->client->getMobileIdConnector()->getCertificate($request);
+        $response = $this->getClient()->getMobileIdConnector()->getCertificate($request);
 
-        $certificate = $this->client->createMobileIdCertificate($response);
+        $certificate = $this->getClient()->createMobileIdCertificate($response);
     }
 
 
@@ -104,12 +116,12 @@ class ReadmeTest extends TestCase
             ->withDisplayTextFormat(DisplayTextFormat::GSM7)
             ->build();
 
-        $response = $this->client->getMobileIdConnector()->authenticate($request);
+        $response = $this->getClient()->getMobileIdConnector()->authenticate($request);
 
-        $sessionStatus = $this->client->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionID(),
+        $sessionStatus = $this->getClient()->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionID(),
             "/authentication/session/{sessionId}");
 
-        $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
+        $authentication = $this->getClient()->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }
 
     /**
@@ -132,7 +144,7 @@ class ReadmeTest extends TestCase
      */
     public function documentGettingErrors()
     {
-        $errors = $this->authenticationResult->getErrors();
+        $errors = $this->getAuthenticationResult()->getErrors();
     }
 
     /**
@@ -141,7 +153,7 @@ class ReadmeTest extends TestCase
      */
     public function documentAuthenticationIdentityUsage()
     {
-        $authenticationIdentity = $this->authenticationResult->getAuthenticationIdentity();
+        $authenticationIdentity = $this->getAuthenticationResult()->getAuthenticationIdentity();
         $givenName = $authenticationIdentity->getGivenName();
         $surName = $authenticationIdentity->getSurName();
         $identityCode = $authenticationIdentity->getIdentityCode();

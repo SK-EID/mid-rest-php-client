@@ -25,6 +25,7 @@
  * #L%
  */
 require_once __DIR__ . '/../util/Logger.php';
+require_once __DIR__ . '/dao/SessionStatus.php';
 require_once __DIR__ . '/dao/request/SessionStatusRequest.php';
 require_once __DIR__ . '/../exception/TechnicalErrorException.php';
 require_once __DIR__ . '/../exception/SessionTimeoutException.php';
@@ -68,10 +69,11 @@ class SessionStatusPoller
         $this->logger->debug('Starting to poll session status for session ' . $sessionId);
         $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $path, $longPollSeconds);
         $this->validateResult($sessionStatus);
+        $this->logger->debug('Session status is ' . $sessionStatus->getResult());
         return $sessionStatus;
     }
 
-    private function pollForFinalSessionStatus($sessionId, $path, $longPollSeconds = 20)
+    private function pollForFinalSessionStatus($sessionId, $path, $longPollSeconds = 20) : SessionStatus
     {
         $sessionStatus = null;
 
@@ -89,11 +91,11 @@ class SessionStatusPoller
         return $sessionStatus;
     }
 
-    private function pollSessionStatus($sessionId, $path, $longPollSeconds = null)
+    private function pollSessionStatus($sessionId, $path, $longPollSeconds = null) : SessionStatus
     {
         $this->logger->debug('Polling session status');
         $request = $this->createSessionStatusRequest($sessionId, $longPollSeconds);
-        return $this->connector->getSessionStatus($request, $path);
+        return $this->connector->getAuthenticationSessionStatus($request, $path);
     }
 
     private function createSessionStatusRequest($sessionId, $longPollSeconds)
@@ -101,7 +103,7 @@ class SessionStatusPoller
         return new SessionStatusRequest($sessionId, $longPollSeconds);
     }
 
-    private function validateResult($sessionStatus)
+    private function validateResult(SessionStatus $sessionStatus)
     {
         $result = $sessionStatus->getResult();
         if ($result == null) {
