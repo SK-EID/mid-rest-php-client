@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../ee.sk.mid/rest/MobileIdRestConnector.php';
+require_once __DIR__ . '/../../../ee.sk.mid/rest/SessionStatusPoller.php';
 require_once __DIR__ . '/../../mock/TestData.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceResponseDummy.php';
@@ -18,7 +19,8 @@ class MobileIdRestConnectorSessionIT extends TestCase
     protected function setUp()
     {
         $this->connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::DEMO_HOST_URL);
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
+            ->build();
     }
 
     /**

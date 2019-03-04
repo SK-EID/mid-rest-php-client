@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../ee.sk.mid/rest/MobileIdRestConnector.php';
+require_once __DIR__ . '/../../../ee.sk.mid/exception/UnAuthorizedException.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceResponseDummy.php';
 require_once __DIR__ . '/../../mock/TestData.php';
@@ -28,22 +29,6 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
     /**
      * @test
      */
-    /*
-    public function authenticate()
-    {
-        $request = MobileIdRestServiceRequestDummy::createValidAuthenticationRequest();
-        MobileIdRestServiceRequestDummy::assertCorrectAuthenticationRequestMade($request);
-
-        $response = $this->connector->authenticate($request);
-        assert(!is_null($response->getSessionId()) && !empty($response->getSessionId()));
-
-        $sessionStatus = SessionStatusPollerDummy::pollSessionStatus($this->connector, $response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
-        MobileIdRestServiceResponseDummy::assertAuthenticationPolled($sessionStatus);
-    }*/
-
-    /**
-     * @test
-     */
     public function authenticate_withDisplayText()
     {
         $request = MobileIdRestServiceRequestDummy::createValidAuthenticationRequest();
@@ -51,15 +36,15 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
         MobileIdRestServiceRequestDummy::assertCorrectAuthenticationRequestMade($request);
 
         $response = $this->connector->authenticate($request);
-        assert(!is_null($response->sessionId) && !empty($response->sessionId));
+        assert(!is_null($response->getSessionId()) && !empty($response->getSessionId()));
 
-        $sessionStatus = SessionStatusPollerDummy::pollSessionStatus($this->connector, $response->sessionId, TestData::AUTHENTICATION_SESSION_PATH);
+        $sessionStatus = SessionStatusPollerDummy::pollSessionStatus($this->connector, $response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
         MobileIdRestServiceResponseDummy::assertAuthenticationPolled($sessionStatus);
     }
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException UnAuthorizedException
      */
     public function authenticate_withWrongPhoneNumber_shouldThrowException()
     {
@@ -71,7 +56,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException UnAuthorizedException
      */
     public function authenticate_withWrongNationalIdentityNumber_shouldThrowException()
     {
@@ -83,7 +68,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException UnAuthorizedException
      */
     public function authenticate_withWrongRelyingPartyUUID_shouldThrowException()
     {
@@ -95,7 +80,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException UnAuthorizedException
      */
     public function authenticate_withWrongRelyingPartyName_shouldThrowException()
     {

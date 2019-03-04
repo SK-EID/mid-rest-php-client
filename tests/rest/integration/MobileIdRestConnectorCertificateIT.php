@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
+require_once __DIR__ . '/../../../ee.sk.mid/exception/UnAuthorizedException.php';
 require_once __DIR__ . '/../../mock/TestData.php';
 require_once __DIR__ . '/../../mock/TestData.php';
 require_once __DIR__ . '/../../../ee.sk.mid/rest/MobileIdRestConnector.php';
@@ -41,15 +42,15 @@ class MobileIdRestConnectorCertificateIT extends TestCase
 
         assert(!is_null($response));
         try {
-            $this->assertEquals("OK", $response->result);
+            $this->assertEquals("OK", $response->getResult());
         } catch (Exception $e) {
         }
-        assert(!is_null($response->cert) && !empty($response->cert));
+        assert(!is_null($response->getCert()) && !empty($response->getCert()));
     }
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException UnAuthorizedException
      */
     public function getCertificate_withWrongPhoneNumber_shouldThrowException()
     {
@@ -62,7 +63,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException UnAuthorizedException
      */
     public function getCertificate_withWrongNationalIdentityNumber_shouldThrowException()
     {
@@ -75,7 +76,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException UnAuthorizedException
      */
     public function getCertificate_withWrongRelyingPartyUUID_shouldThrowException()
     {

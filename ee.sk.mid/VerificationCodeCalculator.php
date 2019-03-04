@@ -32,7 +32,7 @@ class VerificationCodeCalculator
     {
     }
 
-    public static function calculateMobileIdVerificationCode(string $hash) : string
+    public static function calculateMobileIdVerificationCode(?string $hash) : string
     {
         $binary = self::hexToBinary($hash);
         $sixLeftBits = substr($binary, 0, 6);
@@ -47,7 +47,7 @@ class VerificationCodeCalculator
         return !is_null($hash) && strlen($hash) >= self::MINIMUM_HASH_LENGTH;
     }
 
-    private static function hexToBinary(string $hash) : string {
+    private static function hexToBinary(?string $hash) : string {
         $bin = "";
         $array = str_split($hash);
         foreach ($array as $char) {

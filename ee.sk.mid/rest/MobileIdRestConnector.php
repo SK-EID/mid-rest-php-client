@@ -87,26 +87,8 @@ class MobileIdRestConnector implements MobileIdConnector
         $this->logger->debug('From uri: ' . $uri);
 
         $certificateResponse = $this->postCertificateRequest($uri, $request);
-        self::validateCertificateResult($certificateResponse->getResult());
-
         return $certificateResponse;
     }
-
-
-    private function validateCertificateResult(string $result)
-    {
-        if (strcasecmp("NOT_FOUND", $result) == 0) {
-            $this->logger->error("No certificate for the user was found");
-            throw new NotMIDClientException();
-        } else if (strcasecmp("NOT_ACTIVE", $result) == 0) {
-            $this->logger->error("Certificate was found but is not active");
-            throw new CertificateRevokedException("Inactive certificate found");
-        } else if (strcasecmp("OK", $result) != 0) {
-            $this->logger->error("Session status end result is '" . $result . "'");
-            throw new TechnicalErrorException("Session status end result is '" . $result . "'");
-        }
-    }
-
 
     public function authenticate(AuthenticationRequest $request) : AuthenticationResponse
     {
@@ -140,24 +122,42 @@ class MobileIdRestConnector implements MobileIdConnector
         }
 
         $this->logger->debug('Sending get request to ' . $url);
-        try {
-            $responseAsArray = $this->getRequest($url);
-            return new SessionStatus($responseAsArray);
-        } catch (Exception $e) {
-            throw new SessionNotFoundException();
-        }
+        $responseAsArray = $this->getRequest($url);
+        if (isset($responseAsArray['error'])) throw new SessionNotFoundException();
+        return new SessionStatus($responseAsArray);
     }
 
 
     private function postCertificateRequest(string $uri, CertificateRequest $request) : CertificateChoiceResponse
     {
+        $responseJson = $this->postRequest($uri, $request);
+        if (isset($responseJson['error'])) {
+            throw new UnAuthorizedException();
+        } else {
+            $this->validateCertificateResult($responseJson['result']);
+        }
         return new CertificateChoiceResponse($this->postRequest($uri, $request));
     }
 
+    private function validateCertificateResult(string $result)
+    {
+        if (strcasecmp("NOT_FOUND", $result) == 0) {
+            $this->logger->error("No certificate for the user was found");
+            throw new NotMIDClientException();
+        } else if (strcasecmp("NOT_ACTIVE", $result) == 0) {
+            $this->logger->error("Certificate was found but is not active");
+            throw new CertificateRevokedException("Inactive certificate found");
+        } else if (strcasecmp("OK", $result) != 0) {
+            $this->logger->error("Session status end result is '" . $result . "'");
+            throw new TechnicalErrorException("Session status end result is '" . $result . "'");
+        }
+    }
 
     private function postAuthenticationRequest(string $uri, AuthenticationRequest $request) : AuthenticationResponse
     {
-        return new AuthenticationResponse($this->postRequest($uri, $request));
+        $responseJson = $this->postRequest($uri, $request);
+        if (!isset($responseJson['sessionId'])) throw new UnAuthorizedException();
+        return new AuthenticationResponse($responseJson);
     }
 
     private function postRequest(string $url, AbstractRequest $paramsForJson) : array

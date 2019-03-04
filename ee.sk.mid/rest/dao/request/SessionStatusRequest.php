@@ -49,7 +49,7 @@ class SessionStatusRequest
         return $this->sessionId;
     }
 
-    public function getSessionStatusResponseSocketTimeoutMs() : int
+    public function getSessionStatusResponseSocketTimeoutMs() : ?int
     {
         return $this->sessionStatusResponseSocketTimeoutMs;
     }

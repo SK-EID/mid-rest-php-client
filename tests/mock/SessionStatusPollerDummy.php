@@ -8,15 +8,16 @@ require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/SessionStatusRequest.p
  */
 class SessionStatusPollerDummy
 {
-    public static function pollSessionStatus($connector, $sessionId, $path)
+    public static function pollSessionStatus($connector, $sessionId)
     {
         $sessionStatus = null;
-        while ($sessionStatus == null || strcasecmp("RUNNING", $sessionStatus->getState()))
+        while ($sessionStatus == null || strcasecmp("RUNNING", $sessionStatus->getState()) == 0)
         {
             $request = new SessionStatusRequest($sessionId);
-            $sessionStatus = $connector->getSessionStatus($request, $path);
+            $sessionStatus = $connector->getAuthenticationSessionStatus($request);
             sleep(1);
         }
+        echo 'status: '.$sessionStatus->getState(),PHP_EOL;
         assert($sessionStatus->getState() == "COMPLETE");
         return $sessionStatus;
     }

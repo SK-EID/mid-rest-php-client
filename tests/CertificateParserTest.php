@@ -22,7 +22,7 @@ class CertificateParserTest extends TestCase
     public function parseCertificate()
     {
         $X509Certificate = CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE);
-        $this->assertEquals(TestData::AUTH_CERTIFICATE_EE, base64_encode($X509Certificate->getEncoded()));
+        $this->assertEquals(TestData::AUTH_CERTIFICATE_EE, base64_encode($X509Certificate));
     }
 
     /**
