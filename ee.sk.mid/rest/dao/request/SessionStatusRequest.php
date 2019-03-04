@@ -26,14 +26,16 @@
  */
 class SessionStatusRequest
 {
-
+    /** @var string $sessionId */
     private $sessionId;
 
+    /** @var int $sessionStatusResponseSocketTimeoutMs */
     private $sessionStatusResponseSocketTimeoutMs;
 
+    /** @var string $networkInterface */
     private $networkInterface;
 
-    public function __construct( $sessionId, $longPollSeconds = null )
+    public function __construct(string $sessionId, int $longPollSeconds = null )
     {
         $this->sessionId = $sessionId;
 
@@ -42,34 +44,34 @@ class SessionStatusRequest
         }
     }
 
-    public function getSessionId()
+    public function getSessionId() : string
     {
         return $this->sessionId;
     }
 
-    public function getSessionStatusResponseSocketTimeoutMs()
+    public function getSessionStatusResponseSocketTimeoutMs() : int
     {
         return $this->sessionStatusResponseSocketTimeoutMs;
     }
 
-    public function setSessionStatusResponseSocketTimeoutMs( $sessionStatusResponseSocketTimeoutMs )
+    public function setSessionStatusResponseSocketTimeoutMs(int $sessionStatusResponseSocketTimeoutMs ) : SessionStatusRequest
     {
         $this->sessionStatusResponseSocketTimeoutMs = $sessionStatusResponseSocketTimeoutMs;
         return $this;
     }
 
-    public function isSessionStatusResponseSocketTimeoutSet()
+    public function isSessionStatusResponseSocketTimeoutSet() : bool
     {
         return isset( $this->sessionStatusResponseSocketTimeoutMs ) && $this->sessionStatusResponseSocketTimeoutMs > 0;
     }
 
-    public function setNetworkInterface( $networkInterface )
+    public function setNetworkInterface(string $networkInterface ) : SessionStatusRequest
     {
         $this->networkInterface = $networkInterface;
         return $this;
     }
 
-    public function toArray()
+    public function toArray() : array
     {
         $requiredArray = array();
         $requiredArray['sessionId'] = $this->sessionId;

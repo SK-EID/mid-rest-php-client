@@ -31,66 +31,80 @@ require_once __DIR__ . '/../../../exception/ParameterMissingException.php';
 
 class AuthenticationRequestBuilder
 {
-
+    /** @var string $relyingPartyName */
     private $relyingPartyName;
+
+    /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
+
+    /** @var string $phoneNumber */
     private $phoneNumber;
+
+    /** @var string $nationalIdentityNumber */
     private $nationalIdentityNumber;
+
+    /** @var MobileIdAuthenticationHashToSign $hashToSign */
     private $hashToSign;
+
+    /** @var Language $language */
     private $language;
+
+    /** @var string $displayText */
     private $displayText;
+
+    /** @var DisplayTextFormat $displayTextFormat */
     private $displayTextFormat;
 
 
-    public function withRelyingPartyUUID(string $relyingPartyUUID)
+    public function withRelyingPartyUUID(string $relyingPartyUUID) : AuthenticationRequestBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName(string $relyingPartyName)
+    public function withRelyingPartyName(string $relyingPartyName) : AuthenticationRequestBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;
     }
 
-    public function withPhoneNumber(string $phoneNumber)
+    public function withPhoneNumber(string $phoneNumber) : AuthenticationRequestBuilder
     {
         $this->phoneNumber = $phoneNumber;
         return $this;
     }
 
-    public function withNationalIdentityNumber(string $nationalIdentityNumber)
+    public function withNationalIdentityNumber(string $nationalIdentityNumber) : AuthenticationRequestBuilder
     {
         $this->nationalIdentityNumber = $nationalIdentityNumber;
         return $this;
     }
 
-    public function withHashToSign(MobileIdAuthenticationHashToSign $hashToSign)
+    public function withHashToSign(MobileIdAuthenticationHashToSign $hashToSign) : AuthenticationRequestBuilder
     {
         $this->hashToSign = $hashToSign;
         return $this;
     }
 
-    public function withLanguage(string $language)
+    public function withLanguage(string $language) : AuthenticationRequestBuilder
     {
         $this->language = $language;
         return $this;
     }
 
-    public function withDisplayText(string $displayText)
+    public function withDisplayText(string $displayText) : AuthenticationRequestBuilder
     {
         $this->displayText = $displayText;
         return $this;
     }
 
-    public function withDisplayTextFormat(string $displayTextFormat)
+    public function withDisplayTextFormat(string $displayTextFormat) : AuthenticationRequestBuilder
     {
         $this->displayTextFormat = $displayTextFormat;
         return $this;
     }
 
-    public function build()
+    public function build() : AuthenticationRequest
     {
         $this->validateParameters();
 
@@ -129,12 +143,12 @@ class AuthenticationRequestBuilder
         return $this->hashToSign;
     }
 
-    private function getRelyingPartyName()
+    private function getRelyingPartyName() : string
     {
         return $this->relyingPartyName;
     }
 
-    private function getRelyingPartyUUID()
+    private function getRelyingPartyUUID() : string
     {
         return $this->relyingPartyUUID;
     }
@@ -149,27 +163,27 @@ class AuthenticationRequestBuilder
         return $this->nationalIdentityNumber;
     }
 
-    protected function getHashType()
+    protected function getHashType() : HashType
     {
         return $this->getHashToSign()->getHashType();
     }
 
-    protected function getHashInBase64()
+    protected function getHashInBase64() : string
     {
         return $this->getHashToSign()->getHashInBase64();
     }
 
-    private function getLanguage() : string
+    private function getLanguage() : Language
     {
         return $this->language;
     }
 
-    private function getDisplayText()
+    private function getDisplayText() : string
     {
         return $this->displayText;
     }
 
-    private function getDisplayTextFormat()
+    private function getDisplayTextFormat() : DisplayTextFormat
     {
         return $this->displayTextFormat;
     }

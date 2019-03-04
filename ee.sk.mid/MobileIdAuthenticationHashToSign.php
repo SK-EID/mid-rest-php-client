@@ -25,8 +25,6 @@
  * #L%
  */
 
-use phpDocumentor\Reflection\Types\This;
-
 
 require_once 'HashType.php';
 require_once 'VerificationCodeCalculator.php';
@@ -35,25 +33,27 @@ class MobileIdAuthenticationHashToSign
 {
     const DEFAULT_HASH_TYPE = HashType::SHA256;
 
-
+    /** @var string $hash */
     private $hash;
+
+    /** @var HashType $hashType */
     private $hashType;
 
 
-    public function __construct($builder)
+    public function __construct(MobileIdAuthenticationHashToSignBuilder $builder)
     {
-        $this->hashType = $builder->hashType;
+        $this->hashType = $builder->getHashType();
 
-        if (null !== $builder->hash) {
-            $this->hash = $builder->hash;
+        if (null !== $builder->getHash()) {
+            $this->hash = $builder->getHash();
         }
         else {
-            $this->hash = openssl_random_pseudo_bytes($builder->hashType->getLengthInBytes());
+            $this->hash = openssl_random_pseudo_bytes($builder->getHashType()->getLengthInBytes());
         }
 
     }
 
-    public function getHashInBase64()
+    public function getHashInBase64() : string
     {
         return base64_encode($this->hash);
     }
@@ -63,7 +63,7 @@ class MobileIdAuthenticationHashToSign
         return $this->hashType;
     }
 
-    public function calculateVerificationCode()
+    public function calculateVerificationCode() : string
     {
         return VerificationCodeCalculator::calculateMobileIdVerificationCode($this->hash);
     }
@@ -90,7 +90,7 @@ class MobileIdAuthenticationHashToSign
             ->build();
     }
 
-    public static function newBuilder()
+    public static function newBuilder() : MobileIdAuthenticationHashToSignBuilder
     {
         return new MobileIdAuthenticationHashToSignBuilder();
     }
@@ -105,6 +105,7 @@ class MobileIdAuthenticationHashToSign
             case 'sha512':
                 return new Sha512();
         }
+        return null;
 
     }
 
@@ -113,32 +114,43 @@ class MobileIdAuthenticationHashToSign
 class MobileIdAuthenticationHashToSignBuilder
 {
 
-    public $hashType;
-    public $hash;
+    /** @var HashType $hashType */
+    private $hashType;
 
+    /** @var string $hash */
+    private $hash;
 
-    public function withHashType($hashType)
+    public function getHashType() : HashType
+    {
+        return $this->hashType;
+    }
+
+    public function getHash() : string
+    {
+        return $this->hash;
+    }
+
+    public function withHashType(HashType $hashType) : MobileIdAuthenticationHashToSignBuilder
     {
         if (is_string($hashType)) {
             $this->hashType = MobileIdAuthenticationHashToSign::strToHashType($hashType);
 
-        }
-        else {
+        } else {
             $this->hashType = $hashType;
         }
         return $this;
     }
 
-    public function withHashInBase64($hash)
+    public function withHashInBase64(string $hash) : MobileIdAuthenticationHashToSignBuilder
     {
         $this->hash = $hash;
         return $this;
     }
 
 
-    function validateFields()
+    function validateFields() : void
     {
-        if (is_null($this->hashType))
+        if (is_null($this->getHashType()))
         {
             throw new ParameterMissingException("Missing hash type");
         }

@@ -39,7 +39,9 @@ require_once 'MobileIdRestConnectorBuilder.php';
 class MobileIdRestConnector implements MobileIdConnector
 {
 
+    /** @var Logger $logger */
     private $logger;
+
     const CERTIFICATE_PATH = '/certificate';
     const SIGNATURE_PATH = '/signature';
     const AUTHENTICATION_PATH = '/authentication';
@@ -55,11 +57,17 @@ class MobileIdRestConnector implements MobileIdConnector
         471 => 'No suitable account of requested type found, but user has some other accounts.',
     );
 
+    /** @var string $endpointUrl */
     private $endpointUrl;
+
+    /** @var string $clientConfig */
     private $clientConfig;
+
+    /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
+
+    /** @var string $relyingPartyName */
     private $relyingPartyName;
-    private $curl;
 
     public function __construct(MobileIdRestConnectorBuilder $builder)
     {
@@ -85,7 +93,7 @@ class MobileIdRestConnector implements MobileIdConnector
     }
 
 
-    private function validateCertificateResult($result)
+    private function validateCertificateResult(string $result)
     {
         if (strcasecmp("NOT_FOUND", $result) == 0) {
             $this->logger->error("No certificate for the user was found");
@@ -107,7 +115,7 @@ class MobileIdRestConnector implements MobileIdConnector
         return $this->postAuthenticationRequest($url, $request);
     }
 
-    private function setRequestRelyingPartyDetailsIfMissing(AbstractRequest $request)
+    private function setRequestRelyingPartyDetailsIfMissing(AbstractRequest $request) : void
     {
         if (is_null($request->getRelyingPartyUUID())) {
             $request->setRelyingPartyUUID($this->relyingPartyUUID);
@@ -123,7 +131,7 @@ class MobileIdRestConnector implements MobileIdConnector
         }
     }
 
-    public function getAuthenticationSessionStatus(SessionStatusRequest $request)
+    public function getAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus
     {
         $url = $this->endpointUrl. '/authentication/session/' . $request->getSessionId();
 
@@ -141,18 +149,18 @@ class MobileIdRestConnector implements MobileIdConnector
     }
 
 
-    private function postCertificateRequest($uri, CertificateRequest $request) : CertificateChoiceResponse
+    private function postCertificateRequest(string $uri, CertificateRequest $request) : CertificateChoiceResponse
     {
         return new CertificateChoiceResponse($this->postRequest($uri, $request));
     }
 
 
-    private function postAuthenticationRequest($uri, $request) : AuthenticationResponse
+    private function postAuthenticationRequest(string $uri, AuthenticationRequest $request) : AuthenticationResponse
     {
         return new AuthenticationResponse($this->postRequest($uri, $request));
     }
 
-    private function postRequest($url, AbstractRequest $paramsForJson) : array
+    private function postRequest(string $url, AbstractRequest $paramsForJson) : array
     {
         $json = json_encode($paramsForJson);
         $this->logger->debug('POST '.$url.' contents: ' . $json);
@@ -174,13 +182,13 @@ class MobileIdRestConnector implements MobileIdConnector
         return json_decode($result, true);
     }
 
-    public static function newBuilder()
+    public static function newBuilder() : MobileIdRestConnectorBuilder
     {
         return new MobileIdRestConnectorBuilder();
     }
 
 
-    private function getRequest($url)
+    private function getRequest(string $url) : array
     {
 
         $ch = curl_init($url);
@@ -196,7 +204,7 @@ class MobileIdRestConnector implements MobileIdConnector
         return json_decode($result, true);
     }
 
-    private function getResponse($rawResponse, $responseType)
+    private function getResponse(string $rawResponse, $responseType)
     {
         $preparedResponse = json_decode($rawResponse, true);
         return new $responseType($preparedResponse);

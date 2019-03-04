@@ -28,18 +28,29 @@ require_once 'AbstractRequest.php';
 require_once 'AuthenticationRequestBuilder.php';
 class AuthenticationRequest extends AbstractRequest implements JsonSerializable
 {
+    /**
+     * @var string $phoneNumber
+     */
     private $phoneNumber;
 
+    /**
+     * @var string $nationalIdentityNumber
+     */
     private $nationalIdentityNumber;
 
+    /** @var string hash */
     private $hash;
 
+    /** @var string $hashType */
     private $hashType;
 
+    /** @var Language $language */
     private $language;
 
+    /** @var string $displayText */
     private $displayText;
 
+    /** @var DisplayTextFormat $displayTextFormat */
     private $displayTextFormat;
 
     public function __construct()
@@ -47,82 +58,77 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
         parent::__construct();
     }
 
-    public function getPhoneNumber()
+    public function getPhoneNumber(): string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber($phoneNumber)
+    public function setPhoneNumber(string $phoneNumber): void
     {
         $this->phoneNumber = $phoneNumber;
     }
 
-    public function getNationalIdentityNumber()
+    public function getNationalIdentityNumber(): string
     {
         return $this->nationalIdentityNumber;
     }
 
-    public function setNationalIdentityNumber($nationalIdentityNumber)
+    public function setNationalIdentityNumber(string $nationalIdentityNumber): void
     {
         $this->nationalIdentityNumber = $nationalIdentityNumber;
     }
 
-    public function getHash()
+    public function getHash(): string
     {
         return $this->hash;
     }
 
-    public function setHash(string $hash)
+    public function setHash(string $hash): void
     {
         $this->hash = $hash;
     }
 
-    public function getHashType()
+    public function getHashType(): string
     {
         return $this->hashType;
     }
 
-    public function setHashType($hashType)
+    public function setHashType(string $hashType): void
     {
         $this->hashType = $hashType;
     }
 
-    public function getLanguage()
+    public function getLanguage(): Language
     {
         return $this->language;
     }
 
-    public function setLanguage($language)
+    public function setLanguage(Language $language): void
     {
         $this->language = $language;
     }
 
-    public function getDisplayText()
+    public function getDisplayText(): string
     {
         return $this->displayText;
     }
 
-    public function setDisplayText($displayText)
+    public function setDisplayText(string $displayText): void
     {
         $this->displayText = $displayText;
     }
 
-    public function getDisplayTextFormat()
+    public function getDisplayTextFormat(): DisplayTextFormat
     {
         return $this->displayTextFormat;
     }
 
-    public function setDisplayTextFormat($displayTextFormat)
+    public function setDisplayTextFormat(DisplayTextFormat $displayTextFormat): void
     {
         $this->displayTextFormat = $displayTextFormat;
     }
 
-    public function toString()
-    {
-        return "AuthenticationRequest{<br/>phoneNumber=" . $this->phoneNumber . ",<br/> nationalIdentityNumber=" . $this->nationalIdentityNumber . ",<br/> hash=" . $this->hash . ",<br/> hashType=" . $this->hashType->getHashTypeName() . ",<br/> language=" . $this->language . ",<br/>displayText=" . $this->displayText  . ",<br/> displayTextFormat=" . $this->displayTextFormat . "<br/>}<br/><br/>";
-    }
-
-    public static function newBuilder()
+    public static function newBuilder() : AuthenticationRequestBuilder
     {
         return new AuthenticationRequestBuilder();
     }
@@ -146,8 +152,6 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
             }
         }
         return $params;
-
-
     }
 
 }

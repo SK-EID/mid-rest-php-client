@@ -27,6 +27,7 @@
 require_once __DIR__ . '/../util/Logger.php';
 class LoggingFilter
 {
+    /** @var Logger $logger */
     public static $logger;
 
     const LOGGING_OUTPUT_STREAM_PROPERTY = 'loggingOutputStream';

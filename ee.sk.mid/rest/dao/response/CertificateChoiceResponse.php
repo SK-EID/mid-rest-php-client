@@ -26,7 +26,10 @@
  */
 class CertificateChoiceResponse
 {
+    /** @var string $result  */
     private $result;
+
+    /** @var string $cert */
     private $cert;
 
     public function __construct(array $responseJson)
@@ -35,22 +38,22 @@ class CertificateChoiceResponse
         $this->cert = $responseJson['cert'];
     }
 
-    public function getResult()
+    public function getResult() : string
     {
         return $this->result;
     }
 
-    public function setResult($result)
+    public function setResult(string $result) : void
     {
         $this->result = $result;
     }
 
-    public function getCert()
+    public function getCert() : string
     {
         return $this->cert;
     }
 
-    public function setCert($cert)
+    public function setCert(string $cert) : void
     {
         $this->cert = $cert;
     }

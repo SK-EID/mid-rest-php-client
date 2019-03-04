@@ -27,6 +27,7 @@
 class AuthenticationResponse
 {
 
+    /** @var string $sessionId */
     private $sessionId;
 
     public function __construct(array $responseJson)
@@ -35,17 +36,17 @@ class AuthenticationResponse
     }
 
 
-    public function getSessionId()
+    public function getSessionId() : string
     {
         return $this->sessionId;
     }
 
-    public function setSessionId($sessionId)
+    public function setSessionId(string $sessionId) : void
     {
         $this->sessionId = $sessionId;
     }
 
-    public function toString()
+    public function toString() : string
     {
         return  "AuthenticationResponse{sessionID='" . $this->sessionId . '}';
     }

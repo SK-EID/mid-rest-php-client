@@ -27,11 +27,23 @@
 require_once 'MobileIdClient.php';
 class MobileIdClientBuilder
 {
+
+    /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
+
+    /** @var string $relyingPartyName */
     private $relyingPartyName;
+
+    /** @var string $hostUrl */
     private $hostUrl;
+
+    /** @var string $networkConnectionConfig */
     private $networkConnectionConfig;
+
+    /** @var int $pollingSleepTimeoutSeconds */
     private $pollingSleepTimeoutSeconds;
+
+    /** @var MobileIdRestConnector $connector */
     private $connector;
 
     public function __construct()
@@ -39,67 +51,67 @@ class MobileIdClientBuilder
         $this->pollingSleepTimeoutSeconds = 1;
     }
 
-    public function getRelyingPartyUUID()
+    public function getRelyingPartyUUID() : string
     {
         return $this->relyingPartyUUID;
     }
 
-    public function getRelyingPartyName()
+    public function getRelyingPartyName() : string
     {
         return $this->relyingPartyName;
     }
 
-    public function getHostUrl()
+    public function getHostUrl() : string
     {
         return $this->hostUrl;
     }
 
-    public function getNetworkConnectionConfig()
+    public function getNetworkConnectionConfig() : string
     {
         return $this->networkConnectionConfig;
     }
 
-    public function getPollingSleepTimeoutSeconds()
+    public function getPollingSleepTimeoutSeconds() : int
     {
         return $this->pollingSleepTimeoutSeconds;
     }
 
-    public function getConnector()
+    public function getConnector() : MobileIdRestConnector
     {
         return $this->connector;
     }
 
-    public function withRelyingPartyUUID($relyingPartyUUID)
+    public function withRelyingPartyUUID(string $relyingPartyUUID) : MobileIdClientBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName($relyingPartyName)
+    public function withRelyingPartyName(string $relyingPartyName) : MobileIdClientBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;
     }
 
-    public function withHostUrl($hostUrl)
+    public function withHostUrl(string $hostUrl) : MobileIdClientBuilder
     {
         $this->hostUrl = $hostUrl;
         return $this;
     }
 
-    public function withNetworkConnectionConfig($networkConnectionConfig)
+    public function withNetworkConnectionConfig(string $networkConnectionConfig) : MobileIdClientBuilder
     {
         $this->networkConnectionConfig = $networkConnectionConfig;
         return $this;
     }
 
-    public function withPollingSleepTimeoutSeconds($pollingSleepTimeoutSeconds)
+    public function withPollingSleepTimeoutSeconds(int $pollingSleepTimeoutSeconds) : MobileIdClientBuilder
     {
         $this->pollingSleepTimeoutSeconds = $pollingSleepTimeoutSeconds;
         return $this;
     }
 
-    public function withMobileIdConnector($mobileIdConnector)
+    public function withMobileIdConnector(MobileIdRestConnector $mobileIdConnector) : MobileIdClientBuilder
     {
         $this->connector = $mobileIdConnector;
         return $this;

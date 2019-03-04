@@ -29,29 +29,4 @@ class DisplayTextFormat
 
     const GSM7 = "GSM7";
     const UCS2 = "UCS2";
-
-    private $gsm7;
-    private $ucs2;
-
-    public function getGsm7()
-    {
-        return $this->gsm7;
-    }
-
-    public function setGsm7($gsm7)
-    {
-        $this->gsm7 = $gsm7;
-    }
-
-    public function getUcs2()
-    {
-        return $this->ucs2;
-    }
-
-    public function setUcs2($ucs2)
-    {
-        $this->ucs2 = $ucs2;
-    }
-
-
 }

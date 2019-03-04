@@ -1,4 +1,5 @@
 <?php
+
 /*-
  * #%L
  * Mobile ID sample PHP client
@@ -24,37 +25,40 @@
  * THE SOFTWARE.
  * #L%
  */
+
 abstract class AbstractRequest
 {
+    /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
 
+    /** @var string $relyingPartyName */
     private $relyingPartyName;
 
     public function __construct()
     {
     }
 
-    public function getRelyingPartyUUID()
+    public function getRelyingPartyUUID() : string
     {
         return $this->relyingPartyUUID;
     }
 
-    public function setRelyingPartyUUID($relyingPartyUUID)
+    public function setRelyingPartyUUID(string $relyingPartyUUID) : void
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
     }
 
-    public function getRelyingPartyName()
+    public function getRelyingPartyName() : string
     {
         return $this->relyingPartyName;
     }
 
-    public function setRelyingPartyName($relyingPartyName)
+    public function setRelyingPartyName(string $relyingPartyName) : void
     {
         $this->relyingPartyName = $relyingPartyName;
     }
 
-    public function toString()
+    public function toString() : string
     {
         return "AbstractRequest{<br/>relyingPartyUUID=" . $this->relyingPartyUUID . "<br/>relyingPartyName=" . $this->relyingPartyName . "<br/>}<br/><br/>";
     }

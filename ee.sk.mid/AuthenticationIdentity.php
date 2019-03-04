@@ -27,56 +27,63 @@
 class AuthenticationIdentity
 {
 
+    /** @var string $givenName */
     private $givenName;
+
+    /** @var string $surName */
     private $surName;
+
+    /** @var string $identityCode */
     private $identityCode;
+
+    /** @var string $country */
     private $country;
 
     public function __construct()
     {
     }
 
-    public function getGivenName()
+    public function getGivenName() : string
     {
         return $this->givenName;
     }
 
-    public function setGivenName($givenName)
+    public function setGivenName(string $givenName)
     {
         $this->givenName = $givenName;
     }
 
-    public function getSurName()
+    public function getSurName() : string
     {
         return $this->surName;
     }
 
-    public function setSurName($surName)
+    public function setSurName(string $surName)
     {
         $this->surName = $surName;
     }
 
-    public function getIdentityCode()
+    public function getIdentityCode() : string
     {
         return $this->identityCode;
     }
 
-    public function setIdentityCode($identityCode)
+    public function setIdentityCode(string $identityCode)
     {
         $this->identityCode = $identityCode;
     }
 
-    public function getCountry()
+    public function getCountry() : string
     {
         return $this->country;
     }
 
-    public function setCountry($country)
+    public function setCountry(string $country)
     {
         $this->country = $country;
     }
     
-    public function toString()
+    public function toString() : string
     {
         return "AuthenticationIdentity{<br/>givenName=" . $this->givenName . ",<br/> surName=" . $this->surName . ",<br/> identityCode=" . $this->identityCode . ",<br/> country=" . $this->country . "<br/>)<br/><br/>";
     }

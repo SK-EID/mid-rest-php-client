@@ -30,14 +30,15 @@ abstract class MobileIdAuthenticationError
     const SIGNATURE_VERIFICATION_FAILURE = 'Signature verification failed';
     const CERTIFICATE_EXPIRED = 'Signer\'s certificate expired';
 
+    /** @var string $message */
     private $message;
 
-    public function __construct($message)
+    public function __construct(string $message)
     {
         $this->message = $message;
     }
 
-    public function getMessage()
+    public function getMessage() : string
     {
         return $this->message;
     }

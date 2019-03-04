@@ -27,54 +27,59 @@
 class Logger
 {
 
+    /** @var string $className */
     private $className;
+
+    /** @var bool $traceEnabled */
     private $traceEnabled;
+
+    /** @var bool $debugEnabled */
     private $debugEnabled;
 
-    public function __construct($class)
+    public function __construct(string $class)
     {
         $this->className = $class;
         $this->traceEnabled = false;
         $this->debugEnabled = false;
     }
 
-    public function isTraceEnabled()
+    public function isTraceEnabled() : bool
     {
         return $this->traceEnabled;
     }
 
-    public function setTraceEnabled($traceEnabled)
+    public function setTraceEnabled(bool $traceEnabled) : void
     {
         $this->traceEnabled = $traceEnabled;
     }
 
-    public function isDebugEnabled()
+    public function isDebugEnabled() : bool
     {
         return $this->debugEnabled;
     }
 
-    public function setDebugEnabled($debugEnabled)
+    public function setDebugEnabled(bool $debugEnabled) : void
     {
         $this->debugEnabled = $debugEnabled;
     }
 
 
-    public function error($errorMessage)
+    public function error(string $errorMessage) : void
     {
         echo $this->debug_to_console(date("H:i:s").' '.$this->className.' error: '.$errorMessage);
     }
 
-    public function debug($debugMessage)
+    public function debug(string $debugMessage) : void
     {
         echo $this->debug_to_console(date("H:i:s").' '.$this->className.' debug: '.$debugMessage);
     }
 
-    public function trace($traceMessage)
+    public function trace(string $traceMessage) : void
     {
         echo $this->debug_to_console(date("H:i:s").' '.$this->className.' trace: '.$traceMessage);
     }
 
-    private function debug_to_console( $message ) {
+    private function debug_to_console(string $message) : string {
         return $message.PHP_EOL;
     }
 }

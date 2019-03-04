@@ -26,9 +26,16 @@
  */
 class SessionStatus
 {
+    /** @var string $state */
     private $state;
+
+    /** @var string $result */
     private $result;
+
+    /** @var MobileIdSignature $signature */
     private $signature;
+
+    /** @var string $cert */
     private $cert;
 
     public function __construct(array $values = array())
@@ -51,37 +58,37 @@ class SessionStatus
 
     }
 
-    public function getState()
+    public function getState() : string
     {
         return $this->state;
     }
 
-    public function setState($state)
+    public function setState(string $state)
     {
         $this->state = $state;
     }
 
-    public function getResult()
+    public function getResult() : string
     {
         return $this->result;
     }
 
-    public function setResult($result)
+    public function setResult(string $result)
     {
         $this->result = $result;
     }
 
-    public function getSignature()
+    public function getSignature() : MobileIdSignature
     {
         return $this->signature;
     }
 
-    public function setSignature($signature)
+    public function setSignature(MobileIdSignature $signature)
     {
         $this->signature = $signature;
     }
 
-    public function getCert()
+    public function getCert() : string
     {
         if (empty($this->cert) || is_null($this->cert)) {
             throw new ParameterMissingException("Certificate must be set.");
@@ -89,16 +96,16 @@ class SessionStatus
         return $this->cert;
     }
 
-    public function setCert($cert)
+    public function setCert(string $cert)
     {
         $this->cert = $cert;
     }
 
-    public function isComplete() {
+    public function isComplete() : bool {
         return strcasecmp("COMPLETE", $this->getState()) == 0;
     }
 
-    public function toString()
+    public function toString() : string
     {
         return "SessionStatus{<br/>state=".$this->state.",<br/> result=".$this->result.",<br/> signature=".$this->signature.", <br/>cert=".$this->cert."<br/>}<br/><br/>";
     }

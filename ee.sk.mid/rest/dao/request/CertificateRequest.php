@@ -29,8 +29,10 @@ require_once 'CertificateRequestBuilder.php';
 class CertificateRequest extends AbstractRequest implements JsonSerializable
 {
 
+    /** @var string $phoneNumber */
     private $phoneNumber;
 
+    /** @var string $nationalIdentityNumber */
     private $nationalIdentityNumber;
 
     public function __construct()
@@ -38,37 +40,32 @@ class CertificateRequest extends AbstractRequest implements JsonSerializable
         parent::__construct();
     }
 
-    public function getPhoneNumber()
+    public function getPhoneNumber() : string
     {
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber($phoneNumber)
+    public function setPhoneNumber(string $phoneNumber) : void
     {
         $this->phoneNumber = $phoneNumber;
     }
 
-    public function getNationalIdentityNumber()
+    public function getNationalIdentityNumber() : string
     {
         return $this->nationalIdentityNumber;
     }
 
-    public function setNationalIdentityNumber($nationalIdentityNumber)
+    public function setNationalIdentityNumber(string $nationalIdentityNumber) : void
     {
         $this->nationalIdentityNumber = $nationalIdentityNumber;
     }
 
-    public function toString()
-    {
-        return "CertificateRequest{<br/>phoneNumber=" . $this->phoneNumber . ",<br/> nationalIdentityNumber=" . $this->nationalIdentityNumber . "<br/>}<br/><br/>";
-    }
-
-    public static function newBuilder()
+    public static function newBuilder() : CertificateRequestBuilder
     {
         return new CertificateRequestBuilder();
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize() : array {
         return [
                 'phoneNumber' => $this->getPhoneNumber(),
                 'nationalIdentityNumber' => $this->getNationalIdentityNumber(),

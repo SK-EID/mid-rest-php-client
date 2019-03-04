@@ -37,13 +37,28 @@ require_once 'MobileIdClientBuilder.php';
 class MobileIdClient
 {
 
+    /** @var Logger $logger */
     public static $logger;
+
+    /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
+
+    /** @var string $relyingPartyName */
     private $relyingPartyName;
+
+    /** @var string $hostUrl */
     private $hostUrl;
+
+    /** @var string $networkConnectionConfig */
     private $networkConnectionConfig;
+
+    /** @var int $pollingSleepTimeoutSeconds */
     private $pollingSleepTimeoutSeconds;
+
+    /** @var MobileIdRestConnector $connector */
     private $connector;
+
+    /** @var SessionStatusPoller $sessionStatusPoller */
     private $sessionStatusPoller;
 
     public function __construct(MobileIdClientBuilder $builder)
@@ -118,7 +133,7 @@ class MobileIdClient
 
     }
 
-    private function validateCertificateResult($result)
+    private function validateCertificateResult(string $result) : void
     {
         if (strcasecmp('NOT_FOUND', $result) == 0) {
             self::$logger->error('No certificate for the user was found');
@@ -132,7 +147,7 @@ class MobileIdClient
         }
     }
 
-    private function validateCertificateResponse($certificateChoiceResponse)
+    private function validateCertificateResponse(CertificateChoiceResponse $certificateChoiceResponse) : void
     {
         if (is_null($certificateChoiceResponse->getCert()) || empty($certificateChoiceResponse->getCert())) {
             self::$logger->error('Certificate was not present in the session status response');
@@ -141,7 +156,7 @@ class MobileIdClient
     }
 
 
-    private function validateResponse($sessionStatus)
+    private function validateResponse(SessionStatus $sessionStatus) : void
     {
         if (is_null($sessionStatus->getSignature()) || empty($sessionStatus->getSignature()->getValue()))
         {
@@ -150,7 +165,7 @@ class MobileIdClient
         }
     }
 
-    public static function newBuilder()
+    public static function newBuilder() : MobileIdClientBuilder
     {
         return new MobileIdClientBuilder();
     }

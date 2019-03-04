@@ -29,11 +29,19 @@ require_once __DIR__ . '/../../../util/Logger.php';
 require_once __DIR__ . '/../../../exception/ParameterMissingException.php';
 class CertificateRequestBuilder
 {
+    /** @var Logger $logger */
     public static $logger;
 
+    /** @var string $relyingPartyName */
     private $relyingPartyName;
+
+    /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
+
+    /** @var string $phoneNumber */
     private $phoneNumber;
+
+    /** @var string $nationalIdentityNumber */
     private $nationalIdentityNumber;
 
     public function __construct()
@@ -41,25 +49,25 @@ class CertificateRequestBuilder
         self::$logger = new Logger('CertificateRequestBuilder');
     }
 
-    public function withRelyingPartyUUID(string $relyingPartyUUID)
+    public function withRelyingPartyUUID(string $relyingPartyUUID) : CertificateRequestBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName(string $relyingPartyName)
+    public function withRelyingPartyName(string $relyingPartyName) : CertificateRequestBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;
     }
 
-    public function withPhoneNumber(string $phoneNumber)
+    public function withPhoneNumber(string $phoneNumber) : CertificateRequestBuilder
     {
         $this->phoneNumber = $phoneNumber;
         return $this;
     }
 
-    public function withNationalIdentityNumber(string $nationalIdentityNumber)
+    public function withNationalIdentityNumber(string $nationalIdentityNumber) : CertificateRequestBuilder
     {
         $this->nationalIdentityNumber = $nationalIdentityNumber;
         return $this;
@@ -69,11 +77,31 @@ class CertificateRequestBuilder
     {
         $this->validateParameters();
         $request = new CertificateRequest();
-        $request->setRelyingPartyUUID($this->relyingPartyUUID);
-        $request->setRelyingPartyName($this->relyingPartyName);
-        $request->setPhoneNumber($this->phoneNumber);
-        $request->setNationalIdentityNumber($this->nationalIdentityNumber);
+        $request->setRelyingPartyUUID($this->getRelyingPartyUUID());
+        $request->setRelyingPartyName($this->getRelyingPartyName());
+        $request->setPhoneNumber($this->getPhoneNumber());
+        $request->setNationalIdentityNumber($this->getNationalIdentityNumber());
         return $request;
+    }
+
+    public function getRelyingPartyName(): string
+    {
+        return $this->relyingPartyName;
+    }
+
+    public function getRelyingPartyUUID(): string
+    {
+        return $this->relyingPartyUUID;
+    }
+
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function getNationalIdentityNumber(): string
+    {
+        return $this->nationalIdentityNumber;
     }
 
     private function validateParameters()

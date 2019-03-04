@@ -27,6 +27,7 @@
 require_once __DIR__ . '/util/Logger.php';
 class CertificateParser
 {
+    /** @var Logger $logger */
     public static $logger;
     const BEGIN_CERT = '-----BEGIN CERTIFICATE-----';
     const END_CERT = '-----END CERTIFICATE-----';
@@ -36,13 +37,13 @@ class CertificateParser
         self::$logger = new Logger('CertificateParser');
     }
 
-    public static function parseX509Certificate( $certificateValue )
+    public static function parseX509Certificate( string $certificateValue ) : array
     {
-        $certificateString = self::getPemCertificate( $certificateValue );
+        $certificateString = self::getPemCertificate(  $certificateValue );
         return openssl_x509_parse( $certificateString );
     }
 
-    public static function getPemCertificate( $certificateValue )
+    public static function getPemCertificate( string $certificateValue ) : string
     {
         if ( substr( $certificateValue, 0, strlen( self::BEGIN_CERT ) ) === self::BEGIN_CERT )
         {

@@ -27,7 +27,7 @@
 class DigestCalculator
 {
 
-    public static function calculateDigest( $dataToDigest, $hashType )
+    public static function calculateDigest( string $dataToDigest, string $hashType ) : string
     {
         return hash( $hashType, $dataToDigest );
     }

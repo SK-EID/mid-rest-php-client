@@ -27,8 +27,13 @@
 class MobileIdAuthenticationResult
 {
 
+    /** @var AuthenticationIdentity $authenticationIdentity */
     private $authenticationIdentity;
+
+    /** @var bool $valid */
     private $valid = true;
+
+    /** @var array $errors */
     private $errors = array();
 
     public function __construct()
@@ -40,27 +45,27 @@ class MobileIdAuthenticationResult
         return $this->authenticationIdentity;
     }
 
-    public function setAuthenticationIdentity($authenticationIdentity)
+    public function setAuthenticationIdentity(AuthenticationIdentity $authenticationIdentity)
     {
         $this->authenticationIdentity = $authenticationIdentity;
     }
 
-    public function isValid()
+    public function isValid() : bool
     {
         return $this->valid;
     }
 
-    public function setValid($valid)
+    public function setValid(bool $valid) : void
     {
         $this->valid = $valid;
     }
 
-    public function getErrors()
+    public function getErrors() : array
     {
         return $this->errors;
     }
 
-    public function addError($error)
+    public function addError(string $error) : void
     {
         array_push($this->errors, $error);
     }

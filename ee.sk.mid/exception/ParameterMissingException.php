@@ -27,8 +27,7 @@
 require_once 'MobileIdException.php';
 class ParameterMissingException extends MobileIdException {
 
-    public function __construct($message)
-    {
+    public function __construct($message) {
         if (is_null($message)) {
             parent::__construct();
         } else {

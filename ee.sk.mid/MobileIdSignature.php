@@ -26,11 +26,13 @@
  */
 class MobileIdSignature
 {
+    /** @var string $valueInBase64 */
     private $valueInBase64;
 
+    /** @var string $algorithmName */
     private $algorithmName;
 
-    public function getValue()
+    public function getValue() : string
     {
         if (!$this->valueInBase64) {
             throw new InvalidBase64CharacterException("Failed to parse signature value in base64. Probably incorrectly encoded base64 string: '" . $this->valueInBase64 . "'");
@@ -39,23 +41,23 @@ class MobileIdSignature
         }
     }
 
-    public function __construct($builder)
+    public function __construct(MobileIdSignatureBuilder $builder)
     {
         $this->valueInBase64 = $builder->getValueInBase64();
         $this->algorithmName = $builder->getAlgorithmName();
     }
 
-    public function getValueInBase64()
+    public function getValueInBase64() : string
     {
         return $this->valueInBase64;
     }
 
-    public function getAlgorithmName()
+    public function getAlgorithmName() : string
     {
         return $this->algorithmName;
     }
 
-    public static function newBuilder()
+    public static function newBuilder() : MobileIdSignatureBuilder
     {
         return new MobileIdSignatureBuilder();
     }
@@ -64,36 +66,39 @@ class MobileIdSignature
 
 class MobileIdSignatureBuilder
 {
+    /** @var string $valueInBase64 */
     private $valueInBase64;
+
+    /** @var string $algorithmName */
     private $algorithmName;
 
     public function __construct()
     {
     }
 
-    public function getValueInBase64()
+    public function getValueInBase64() : string
     {
         return $this->valueInBase64;
     }
 
-    public function getAlgorithmName()
+    public function getAlgorithmName() : string
     {
         return $this->algorithmName;
     }
 
-    public function withValueInBase64($valueInBase64)
+    public function withValueInBase64(string $valueInBase64) : MobileIdSignatureBuilder
     {
         $this->valueInBase64 = $valueInBase64;
         return $this;
     }
 
-    public function withAlgorithmName($algorithmName)
+    public function withAlgorithmName(string $algorithmName) : MobileIdSignatureBuilder
     {
         $this->algorithmName = $algorithmName;
         return $this;
     }
 
-    public function build()
+    public function build() : MobileIdSignature
     {
         return new MobileIdSignature($this);
     }

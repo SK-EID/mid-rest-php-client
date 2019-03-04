@@ -26,35 +26,37 @@
  */
 class SessionSignature
 {
+    /** @var string $algorithm */
     private $algorithm;
 
+    /** @var string $value */
     private $value;
 
     public function __construct()
     {
     }
 
-    public function getAlgorithm()
+    public function getAlgorithm() : string
     {
         return $this->algorithm;
     }
 
-    public function setAlgorithm($algorithm)
+    public function setAlgorithm(string $algorithm) : void
     {
         $this->algorithm = $algorithm;
     }
 
-    public function getValue()
+    public function getValue() : string
     {
         return $this->value;
     }
 
-    public function setValue($value)
+    public function setValue(string $value) : void
     {
         $this->value = $value;
     }
 
-    public function toString()
+    public function toString() : string
     {
         return "SessionSignature{<br/>algorithm=".$this->algorithm.",<br/>value=".$this->value."<br/>}<br/><br/>";
     }

@@ -32,12 +32,19 @@ abstract class HashType
     const SHA384 = 'sha384';
     const SHA512 = 'sha512';
 
+    /** @var string $algorithmName */
     private $algorithmName;
+
+    /** @var string $hashTypeName */
     private $hashTypeName;
+
+    /** @var int $lengthInBits */
     private $lengthInBits;
+
+    /** @var array $digestInfoPrefix */
     private $digestInfoPrefix;
 
-    public function __construct($algorithmName, $hashTypeName, $lengthInBits, $digestInfoPrefix)
+    public function __construct(string $algorithmName, string $hashTypeName, int $lengthInBits, array $digestInfoPrefix)
     {
         $this->algorithmName = $algorithmName;
         $this->hashTypeName = $hashTypeName;
@@ -45,29 +52,33 @@ abstract class HashType
         $this->digestInfoPrefix = $digestInfoPrefix;
     }
 
-    public function getAlgorithmName()
+    public function getAlgorithmName(): string
     {
         return $this->algorithmName;
     }
 
-    public function getHashTypeName()
+    public function getHashTypeName(): string
     {
         return $this->hashTypeName;
     }
 
-    public function getLengthInBytes()
+    public function getLengthInBits(): int
     {
-        return $this->lengthInBits / 8;
+        return $this->lengthInBits;
     }
 
-    public function getDigestInfoPrefix()
+    public function getDigestInfoPrefix(): array
     {
         return $this->digestInfoPrefix;
     }
 
-    public function calculateDigest( $dataToDigest )
+    public function calculateDigest(string $dataToDigest ) : string
     {
         return DigestCalculator::calculateDigest($dataToDigest, $this->getHashTypeName());
+    }
+
+    public function getLengthInBytes() : int {
+        return $this->lengthInBits / 8;
     }
 
 }

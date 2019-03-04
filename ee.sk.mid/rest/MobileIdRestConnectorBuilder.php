@@ -27,56 +27,63 @@
 class MobileIdRestConnectorBuilder
 {
 
+    /** @var string $endpointUrl */
     private $endpointUrl;
+
+    /** @var string $clientConfig */
     private $clientConfig;
+
+    /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
+
+    /** @var string $relyingPartyName */
     private $relyingPartyName;
 
-    public function getEndpointUrl()
+    public function getEndpointUrl() : string
     {
         return $this->endpointUrl;
     }
 
-    public function getClientConfig()
+    public function getClientConfig() : string
     {
         return $this->clientConfig;
     }
 
-    public function getRelyingPartyUUID()
+    public function getRelyingPartyUUID() : string
     {
         return $this->relyingPartyUUID;
     }
 
-    public function getRelyingPartyName()
+    public function getRelyingPartyName() : string
     {
         return $this->relyingPartyName;
     }
 
-    public function withEndpointUrl($endpointUrl)
+    public function withEndpointUrl(string $endpointUrl) : MobileIdRestConnectorBuilder
     {
         $this->endpointUrl = $endpointUrl;
         return $this;
     }
 
-    public function withClientConfig($clientConfig)
+    public function withClientConfig(string $clientConfig) : MobileIdRestConnectorBuilder
     {
         $this->clientConfig = $clientConfig;
         return $this;
     }
 
-    public function withRelyingPartyUUID($relyingPartyUUID)
+    public function withRelyingPartyUUID(string $relyingPartyUUID) : MobileIdRestConnectorBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName($relyingPartyName)
+    public function withRelyingPartyName(string $relyingPartyName) : MobileIdRestConnectorBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;
     }
 
-    public function build()
+    public function build() : MobileIdRestConnector
     {
         return new MobileIdRestConnector($this);
     }

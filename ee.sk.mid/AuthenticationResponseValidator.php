@@ -30,8 +30,10 @@ require_once 'MobileIdAuthenticationResult.php';
 require_once 'MobileIdAuthenticationError.php';
 require_once 'AuthenticationIdentity.php';
 require_once 'CertificateParser.php';
+
 class AuthenticationResponseValidator
 {
+    /** @var Logger $logger */
     private $logger;
 
     public function __construct()
@@ -39,7 +41,7 @@ class AuthenticationResponseValidator
         $this->logger = new Logger('AuthenticationResponseValidator');
     }
 
-    public function validate($authentication)
+    public function validate(Mobileidauthentication $authentication) : MobileIdAuthenticationResult
     {
         $this->validateAuthentication($authentication);
         $authenticationResult = new MobileIdAuthenticationResult();
@@ -55,13 +57,13 @@ class AuthenticationResponseValidator
         }
         if (!$this->isCertificateValid($authentication->getCertificate())) {
             $authenticationResult->setValid(false);
-            $authentication->addError(MobileIdAuthenticationError::CERTIFICATE_EXPIRED);
+            $authenticationResult->addError(MobileIdAuthenticationError::CERTIFICATE_EXPIRED);
         }
 
         return $authenticationResult;
     }
 
-    private function validateAuthentication($authentication)
+    private function validateAuthentication(Mobileidauthentication $authentication) : void
     {
         if (is_null($authentication->getCertificate())) {
             $this->logger->error('Certificate is not present in the authentication response');
@@ -75,70 +77,47 @@ class AuthenticationResponseValidator
         }
     }
 
-    function constructAuthenticationIdentity($certificate)
+    function constructAuthenticationIdentity(AuthenticationCertificate $certificate) : AuthenticationIdentity
     {
-        // TODO tuleb ümber teha.
         $identity = new AuthenticationIdentity();
-//        $identity = new AuthenticationIdentity();
-//        $ln = new LdapName($certificate->getSubjectDN()->getName());
-//        $var4 = $ln->getRdns()->iterator();
-//        while ($var4->hasNext())
-//        {
-//            $rdn = $var4->next();
-//            $type = $rdn->getType()->getUpperCase();
-//            $var8 = -1;
-//            switch ($type->hashCode())
-//            {
-//                case -1135010629:
-//                    if ($type == "SURNAME") {
-//                        $var8 = 1;
-//                    }
-//                    break;
-//                case -977765827:
-//                    if ($type == "SERIALNUMBER") {
-//                        $var8 = 2;
-//                    }
-//                    break;
-//                case -38372504:
-//                    if ($type == "GIVENNAME") {
-//                        $var8 = 0;
-//                    }
-//                    break;
-//                case 67:
-//                    if ($type == "C") {
-//                        $var8 = 3;
-//                    }
-//            }
-//
-//            switch ($var8)
-//            {
-//                case 0:
-//                    $identity->setGivenName($rdn->getValue()->toString());
-//                    break;
-//                case 1:
-//                    $identity->setSurName($rdn->getValue()->toString());
-//                    break;
-//                case 2:
-//                    $identity->setIdentityCode($this->getIdentityNumber($rdn->getValue()->toString()));
-//                    break;
-//                case 3:
-//                    $identity->setCountry($rdn->getValue()->toString());
-//            }
-//        }
-//        return $identity;
+        $subject = $certificate->getSubject();
+        $subjectReflection = new ReflectionClass( $subject );
+
+        foreach ( $subjectReflection->getProperties() as $property )
+        {
+            $property->setAccessible( true );
+            if ( strcasecmp( $property->getName(), 'GN' ) === 0 )
+            {
+                $identity->setGivenName( $property->getValue( $subject ) );
+            }
+            elseif ( strcasecmp( $property->getName(), 'SN' ) === 0 )
+            {
+                $identity->setSurName( $property->getValue( $subject ) );
+            }
+            elseif ( strcasecmp( $property->getName(), 'SERIALNUMBER' ) === 0 )
+            {
+                $identity->setIdentityCode( $property->getValue( $subject ) );
+            }
+            elseif ( strcasecmp( $property->getName(), 'C' ) === 0 )
+            {
+                $identity->setCountry( $property->getValue( $subject ) );
+            }
+        }
+
+        return $identity;
     }
 
-    private function getIdentityNumber($serialNumber)
+    private function getIdentityNumber(string $serialNumber) : string
     {
         return preg_replace('^PNO[A-Z][A-Z]-', '', $serialNumber);
     }
 
-    private function isResultOk($authentication)
+    private function isResultOk(MobileIdAuthentication $authentication) : bool
     {
         return strcasecmp('OK', $authentication->getResult()) == 0;
     }
 
-    private function isSignatureValid($authentication)
+    private function isSignatureValid(MobileIdAuthentication $authentication) : bool
     {
         $preparedCertificate = CertificateParser::getPemCertificate( $authentication->getCertificate() );
         $signature = $authentication->getValue();
@@ -151,7 +130,7 @@ class AuthenticationResponseValidator
         return false;
     }
 
-    private function isCertificateValid($certificate)
+    private function isCertificateValid(AuthenticationCertificate $certificate) : bool
     {
         return !$certificate->getNotAfter()->before(new Date());
     }

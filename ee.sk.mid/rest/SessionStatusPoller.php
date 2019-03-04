@@ -44,8 +44,14 @@ class SessionStatusPoller
 
     const SIGNATURE_SESSION_PATH = '/signature/session/{sessionId}';
     const AUTHENTICATION_SESSION_PATH = '/authentication/session/{sessionId}';
+
+    /** @var Logger $logger */
     private $logger;
+
+    /** @var MobileIdRestConnector $connector */
     private $connector;
+
+    /** @var int $pollingSleepTimeoutSeconds */
     private $pollingSleepTimeoutSeconds = 1;
 
     public function __construct($connector)
@@ -54,17 +60,17 @@ class SessionStatusPoller
         $this->connector = $connector;
     }
 
-    public function fetchFinalSignatureSessionStatus($sessionId, $longPollSeconds = 20)
+    public function fetchFinalSignatureSessionStatus(string $sessionId, int $longPollSeconds = 20) : SessionStatus
     {
         return $this->fetchFinalSessionStatus($sessionId, self::SIGNATURE_SESSION_PATH, $longPollSeconds);
     }
 
-    public function fetchFinalAuthenticationSession($sessionId, $longPollSeconds = 20)
+    public function fetchFinalAuthenticationSession(string $sessionId, int $longPollSeconds = 20) : SessionStatus
     {
         return $this->fetchFinalSessionStatus($sessionId, self::AUTHENTICATION_SESSION_PATH, $longPollSeconds);
     }
 
-    public function fetchFinalSessionStatus($sessionId, $path, $longPollSeconds = null)
+    public function fetchFinalSessionStatus(string $sessionId, string $path, int $longPollSeconds = null) : SessionStatus
     {
         $this->logger->debug('Starting to poll session status for session ' . $sessionId);
         $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $path, $longPollSeconds);
@@ -73,7 +79,7 @@ class SessionStatusPoller
         return $sessionStatus;
     }
 
-    private function pollForFinalSessionStatus($sessionId, $path, $longPollSeconds = 20) : SessionStatus
+    private function pollForFinalSessionStatus(string $sessionId, string $path, int $longPollSeconds = 20) : SessionStatus
     {
         $sessionStatus = null;
 
@@ -91,19 +97,19 @@ class SessionStatusPoller
         return $sessionStatus;
     }
 
-    private function pollSessionStatus($sessionId, $path, $longPollSeconds = null) : SessionStatus
+    private function pollSessionStatus(string $sessionId, string $path, int $longPollSeconds = null) : SessionStatus
     {
         $this->logger->debug('Polling session status');
         $request = $this->createSessionStatusRequest($sessionId, $longPollSeconds);
         return $this->connector->getAuthenticationSessionStatus($request, $path);
     }
 
-    private function createSessionStatusRequest($sessionId, $longPollSeconds)
+    private function createSessionStatusRequest(string $sessionId, int $longPollSeconds) : SessionStatusRequest
     {
         return new SessionStatusRequest($sessionId, $longPollSeconds);
     }
 
-    private function validateResult(SessionStatus $sessionStatus)
+    private function validateResult(SessionStatus $sessionStatus) : void
     {
         $result = $sessionStatus->getResult();
         if ($result == null) {
@@ -114,7 +120,7 @@ class SessionStatusPoller
         }
     }
 
-    private function validateResultOfString($result)
+    private function validateResultOfString(string $result) : void
     {
         if (strcasecmp('TIMEOUT', $result) == 0) { // compare strings case-insensitively
             $this->logger->error('Session timeout');
@@ -152,7 +158,7 @@ class SessionStatusPoller
         }
     }
 
-    public function setPollingSleepTimeSeconds($pollingSleepTimeSeconds)
+    public function setPollingSleepTimeSeconds(int $pollingSleepTimeSeconds) : void
     {
         $this->logger->debug('Polling sleep time is ' . $pollingSleepTimeSeconds . ' second(s)');
         $this->pollingSleepTimeoutSeconds = $pollingSleepTimeSeconds;
