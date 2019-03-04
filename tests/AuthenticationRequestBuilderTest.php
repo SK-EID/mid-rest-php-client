@@ -36,7 +36,7 @@ class AuthenticationRequestBuilderTest extends TestCase
     protected function setUp()
     {
         $this->connector = new MobileIdConnectorSpy();
-        $this->connector->setAuthenticationResponseToRespond(new AuthenticationResponse(TestData::SESSION_ID));
+        $this->connector->setAuthenticationResponseToRespond(new AuthenticationResponse( array('sessionId' => TestData::SESSION_ID)));
         $this->connector->setSessionStatusToRespond(self::createDummyAuthenticationSessionStatus());
     }
 
@@ -52,7 +52,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withPhoneNumber(TestData::VALID_PHONE)
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
             ->withHashToSign($mobileAuthenticationHash)
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
@@ -74,7 +74,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withPhoneNumber(TestData::VALID_PHONE)
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
             ->withHashToSign($mobileAuthenticationHash)
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
@@ -93,7 +93,7 @@ class AuthenticationRequestBuilderTest extends TestCase
         $request = AuthenticationRequest::newBuilder()
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
             ->withHashToSign($mobileAuthenticationHash)
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
@@ -115,7 +115,7 @@ class AuthenticationRequestBuilderTest extends TestCase
         $request = AuthenticationRequest::newBuilder()
             ->withPhoneNumber(TestData::VALID_PHONE)
             ->withHashToSign($mobileAuthenticationHash)
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
@@ -137,7 +137,7 @@ class AuthenticationRequestBuilderTest extends TestCase
         $request = AuthenticationRequest::newBuilder()
             ->withPhoneNumber(TestData::VALID_PHONE)
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
@@ -309,7 +309,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withPhoneNumber(TestData::VALID_PHONE)
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
             ->withHashToSign($authenticationHash)
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
 
         $response = $connector->authenticate($request);
@@ -323,14 +323,16 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withHostUrl(TestData::LOCALHOST_URL)
             ->build();
 
-        $client->createMobileIdAuthentication($sessionStatus, $authenticationHash->getHashInBase64(), $authenticationHash->getHashType());
+        $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }
 
     private static function createDummyAuthenticationSessionStatus()
     {
-        $signature = new SessionSignature();
-        $signature->setValue("c2FtcGxlIHNpZ25hdHVyZQ0K");
-        $signature->setAlgorithm("sha512WithRSAEncryption");
+        $signature = MobileIdSignature::newBuilder()
+                ->withValueInBase64("c2FtcGxlIHNpZ25hdHVyZQ0K")
+                ->withAlgorithmName("sha512WithRSAEncryption")
+                ->build();
+
         $sessionStatus = new SessionStatus();
         $sessionStatus->setState("COMPLETE");
         $sessionStatus->setResult("OK");

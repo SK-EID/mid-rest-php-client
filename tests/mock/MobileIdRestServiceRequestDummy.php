@@ -43,7 +43,7 @@ class MobileIdRestServiceRequestDummy
             ->withPhoneNumber($phoneNumber)
             ->withNationalIdentityNumber($nationalIdentityNumber)
             ->withHashToSign(self::calculateMobileIdAuthenticationHash())
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
     }
 
@@ -65,7 +65,7 @@ class MobileIdRestServiceRequestDummy
             ->withPhoneNumber($phoneNumber)
             ->withNationalIdentityNumber($nationalIdentityNumber)
             ->withHashToSign($authenticationHash)
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
         $response = $client->getMobileIdConnector()->authenticate($request);
         $sessionStatus = $client->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
@@ -114,7 +114,7 @@ class MobileIdRestServiceRequestDummy
             ->withPhoneNumber($phoneNumber)
             ->withNationalIdentityNumber($nationalIdentityNumber)
             ->withHashToSign($authenticationHash)
-            ->withLanguage(Language::EST)
+            ->withLanguage(EST::asType())
             ->build();
 
         $response = $client->getMobileIdConnector()->authenticate($request);
@@ -168,7 +168,7 @@ class MobileIdRestServiceRequestDummy
         } catch (Exception $e) {
         }
         try {
-            TestCase::assertEquals(Language::EST, $request->getLanguage());
+            TestCase::assertEquals(EST::asType(), $request->getLanguage());
         } catch (Exception $e) {
         }
     }
@@ -192,7 +192,7 @@ class MobileIdRestServiceRequestDummy
         } catch (Exception $e) {
         }
         try {
-            TestCase::assertEquals(Language::EST, $request->getLanguage());
+            TestCase::assertEquals(EST::asType(), $request->getLanguage());
         } catch (Exception $e) {
         }
     }

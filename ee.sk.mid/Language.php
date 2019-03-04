@@ -31,9 +31,61 @@ abstract class Language {
     const RUS = 'RUS';
     const LIT = 'LIT';
 
-    private function __construct()
+    protected $languageName;
+
+    public function __construct(string $languageName)
     {
+        $this->languageName = $languageName;
     }
 
+    public function __toString()
+    {
+        return $this->languageName;
+    }
 
+}
+class EST extends Language
+{
+    public function __construct()
+    {
+        parent::__construct("EST");
+    }
+
+    public static function asType() : Language
+    {
+        return new EST();
+    }
+}
+class ENG extends Language
+{
+    public function __construct()
+    {
+        parent::__construct("ENG");
+    }
+    public static function asType() : Language
+    {
+        return new ENG();
+    }
+}
+class RUS extends Language
+{
+    public function __construct()
+    {
+        parent::__construct("RUS");
+    }
+    public static function asType() : Language
+    {
+        return new RUS();
+    }
+}
+class LIT extends Language
+{
+    public function __construct()
+    {
+        parent::__construct("LIT");
+    }
+    public static function asType() : Language
+    {
+        return new LIT();
+    }
 }

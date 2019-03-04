@@ -44,17 +44,17 @@ class MobileIdRestConnectorBuilder
         return $this->endpointUrl;
     }
 
-    public function getClientConfig() : string
+    public function getClientConfig() : ?string
     {
         return $this->clientConfig;
     }
 
-    public function getRelyingPartyUUID() : string
+    public function getRelyingPartyUUID() : ?string
     {
         return $this->relyingPartyUUID;
     }
 
-    public function getRelyingPartyName() : string
+    public function getRelyingPartyName() : ?string
     {
         return $this->relyingPartyName;
     }
@@ -65,19 +65,19 @@ class MobileIdRestConnectorBuilder
         return $this;
     }
 
-    public function withClientConfig(string $clientConfig) : MobileIdRestConnectorBuilder
+    public function withClientConfig(?string $clientConfig) : MobileIdRestConnectorBuilder
     {
         $this->clientConfig = $clientConfig;
         return $this;
     }
 
-    public function withRelyingPartyUUID(string $relyingPartyUUID) : MobileIdRestConnectorBuilder
+    public function withRelyingPartyUUID(?string $relyingPartyUUID) : MobileIdRestConnectorBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName(string $relyingPartyName) : MobileIdRestConnectorBuilder
+    public function withRelyingPartyName(?string $relyingPartyName) : MobileIdRestConnectorBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;

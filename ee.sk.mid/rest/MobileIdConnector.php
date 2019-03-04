@@ -33,9 +33,9 @@ require_once __DIR__ . '/dao/response/CertificateChoiceResponse.php';
 interface MobileIdConnector
 {
 
-    public function authenticate(AuthenticationRequest $request);
+    public function authenticate(AuthenticationRequest $request) : AuthenticationResponse;
 
-    public function getAuthenticationSessionStatus(SessionStatusRequest $request);
+    public function getAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus;
 
     public function getCertificate(CertificateRequest $request) : CertificateChoiceResponse;
 

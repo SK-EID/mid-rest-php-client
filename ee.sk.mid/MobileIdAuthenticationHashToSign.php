@@ -70,10 +70,14 @@ class MobileIdAuthenticationHashToSign
 
     public static function generateRandomHashOfDefaultType() : MobileIdAuthenticationHashToSign
     {
-        return self::generateRandomHashOfType(self::DEFAULT_HASH_TYPE);
+
+        return MobileIdAuthenticationHashToSign::newBuilder()
+                ->withHashType(self::DEFAULT_HASH_TYPE)
+                ->build();
+
     }
 
-    public static function generateRandomHashOfType($hashTypeName) : MobileIdAuthenticationHashToSign
+    public static function generateRandomHashOfType(string $hashTypeName) : MobileIdAuthenticationHashToSign
     {
         if ($hashTypeName == 'sha256') {
             $hashType = new Sha256();
@@ -125,7 +129,7 @@ class MobileIdAuthenticationHashToSignBuilder
         return $this->hashType;
     }
 
-    public function getHash() : string
+    public function getHash() : ?string
     {
         return $this->hash;
     }

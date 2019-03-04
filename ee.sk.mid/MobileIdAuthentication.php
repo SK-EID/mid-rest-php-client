@@ -26,8 +26,8 @@
  */
 
 
-require_once '../ee.sk.mid/exception/InvalidBase64CharacterException.php';
-require_once 'VerificationCodeCalculator.php';
+require_once __DIR__ . '/exception/InvalidBase64CharacterException.php';
+require_once __DIR__ . '/VerificationCodeCalculator.php';
 
 class MobileIdAuthentication
 {
@@ -157,7 +157,7 @@ class MobileIdAuthenticationBuilder
         return $this->algorithmName;
     }
 
-    public function getCertificate() : string
+    public function getCertificate() : array
     {
         return $this->certificate;
     }

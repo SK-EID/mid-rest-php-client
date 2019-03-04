@@ -26,7 +26,6 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
-
         $resp = self::generateSessionId($client);
 
         $this->assertEquals(36, strlen($resp->getSessionId()));
@@ -143,7 +142,7 @@ class MobileIdAuthenticationIT extends TestCase
         $authenticationRequest = AuthenticationRequest::newBuilder()
             ->withNationalIdentityNumber(60001019906)
             ->withPhoneNumber("+37200000766")
-            ->withLanguage(Language::ENG)
+            ->withLanguage(ENG::asType())
             ->withHashToSign(MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType())
             ->build();
 

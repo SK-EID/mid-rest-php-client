@@ -49,13 +49,13 @@ class CertificateRequestBuilder
         self::$logger = new Logger('CertificateRequestBuilder');
     }
 
-    public function withRelyingPartyUUID(string $relyingPartyUUID) : CertificateRequestBuilder
+    public function withRelyingPartyUUID(?string $relyingPartyUUID) : CertificateRequestBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName(string $relyingPartyName) : CertificateRequestBuilder
+    public function withRelyingPartyName(?string $relyingPartyName) : CertificateRequestBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;
@@ -84,12 +84,12 @@ class CertificateRequestBuilder
         return $request;
     }
 
-    public function getRelyingPartyName(): string
+    public function getRelyingPartyName(): ?string
     {
         return $this->relyingPartyName;
     }
 
-    public function getRelyingPartyUUID(): string
+    public function getRelyingPartyUUID(): ?string
     {
         return $this->relyingPartyUUID;
     }

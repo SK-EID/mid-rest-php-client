@@ -51,12 +51,12 @@ class MobileIdClientBuilder
         $this->pollingSleepTimeoutSeconds = 1;
     }
 
-    public function getRelyingPartyUUID() : string
+    public function getRelyingPartyUUID() : ?string
     {
         return $this->relyingPartyUUID;
     }
 
-    public function getRelyingPartyName() : string
+    public function getRelyingPartyName() : ?string
     {
         return $this->relyingPartyName;
     }
@@ -66,7 +66,7 @@ class MobileIdClientBuilder
         return $this->hostUrl;
     }
 
-    public function getNetworkConnectionConfig() : string
+    public function getNetworkConnectionConfig() : ?string
     {
         return $this->networkConnectionConfig;
     }
@@ -76,18 +76,18 @@ class MobileIdClientBuilder
         return $this->pollingSleepTimeoutSeconds;
     }
 
-    public function getConnector() : MobileIdRestConnector
+    public function getConnector() : ?MobileIdRestConnector
     {
         return $this->connector;
     }
 
-    public function withRelyingPartyUUID(string $relyingPartyUUID) : MobileIdClientBuilder
+    public function withRelyingPartyUUID(?string $relyingPartyUUID) : MobileIdClientBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName(string $relyingPartyName) : MobileIdClientBuilder
+    public function withRelyingPartyName(?string $relyingPartyName) : MobileIdClientBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;

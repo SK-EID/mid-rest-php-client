@@ -56,13 +56,13 @@ class AuthenticationRequestBuilder
     private $displayTextFormat;
 
 
-    public function withRelyingPartyUUID(string $relyingPartyUUID) : AuthenticationRequestBuilder
+    public function withRelyingPartyUUID(?string $relyingPartyUUID) : AuthenticationRequestBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
         return $this;
     }
 
-    public function withRelyingPartyName(string $relyingPartyName) : AuthenticationRequestBuilder
+    public function withRelyingPartyName(?string $relyingPartyName) : AuthenticationRequestBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
         return $this;
@@ -86,7 +86,7 @@ class AuthenticationRequestBuilder
         return $this;
     }
 
-    public function withLanguage(string $language) : AuthenticationRequestBuilder
+    public function withLanguage(Language $language) : AuthenticationRequestBuilder
     {
         $this->language = $language;
         return $this;
@@ -143,12 +143,12 @@ class AuthenticationRequestBuilder
         return $this->hashToSign;
     }
 
-    private function getRelyingPartyName() : string
+    private function getRelyingPartyName() : ?string
     {
         return $this->relyingPartyName;
     }
 
-    private function getRelyingPartyUUID() : string
+    private function getRelyingPartyUUID() : ?string
     {
         return $this->relyingPartyUUID;
     }
@@ -178,12 +178,12 @@ class AuthenticationRequestBuilder
         return $this->language;
     }
 
-    private function getDisplayText() : string
+    private function getDisplayText() : ?string
     {
         return $this->displayText;
     }
 
-    private function getDisplayTextFormat() : DisplayTextFormat
+    private function getDisplayTextFormat() : ?DisplayTextFormat
     {
         return $this->displayTextFormat;
     }

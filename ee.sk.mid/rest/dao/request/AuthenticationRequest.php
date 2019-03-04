@@ -108,22 +108,22 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
         $this->language = $language;
     }
 
-    public function getDisplayText(): string
+    public function getDisplayText(): ?string
     {
         return $this->displayText;
     }
 
-    public function setDisplayText(string $displayText): void
+    public function setDisplayText(?string $displayText): void
     {
         $this->displayText = $displayText;
     }
 
-    public function getDisplayTextFormat(): DisplayTextFormat
+    public function getDisplayTextFormat(): ?DisplayTextFormat
     {
         return $this->displayTextFormat;
     }
 
-    public function setDisplayTextFormat(DisplayTextFormat $displayTextFormat): void
+    public function setDisplayTextFormat(?DisplayTextFormat $displayTextFormat): void
     {
         $this->displayTextFormat = $displayTextFormat;
     }
@@ -141,7 +141,7 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
                 'relyingPartyName' => $this->getRelyingPartyName(),
                 'hash' => $this->getHash(),
                 'hashType' => $this->getHashType(),
-                'language' => $this->getLanguage()
+                'language' => (string) $this->getLanguage()
         ];
 
         if (null !== $this->getDisplayText()) {

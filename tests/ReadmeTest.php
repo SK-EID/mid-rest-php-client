@@ -111,7 +111,7 @@ class ReadmeTest extends TestCase
             ->withPhoneNumber("+37200000766")
             ->withNationalIdentityNumber("60001019906")
             ->withHashToSign($authenticationHash)
-            ->withLanguage(Language::ENG)
+            ->withLanguage(ENG::asType())
             ->withDisplayText("Log into self-service?")
             ->withDisplayTextFormat(DisplayTextFormat::GSM7)
             ->build();

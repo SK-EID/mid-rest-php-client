@@ -102,7 +102,7 @@ class MobileIdConnectorSpy implements MobileIdConnector
         return $this->signatureRequestUsed;
     }
 
-    public function getCertificate($request)
+    public function getCertificate(CertificateRequest $request) : CertificateChoiceResponse
     {
         $this->certificateRequestUsed = $request;
         return $this->certificateChoiceResponseToRespond;
@@ -114,19 +114,19 @@ class MobileIdConnectorSpy implements MobileIdConnector
         return $this->signatureResponseToRespond;
     }
 
-    public function authenticate(AuthenticationRequest $request)
+    public function authenticate(AuthenticationRequest $request) : AuthenticationResponse
     {
         $this->authenticationRequestUsed = $request;
         return $this->authenticationResponseToRespond;
     }
 
-    public function getSessionStatus($request, $path)
+    public function getSessionStatus(SessionStatusRequest $request, $path) : SessionStatus
     {
         $this->sessionIdUsed = $request->getSessionId();
         return $this->sessionStatusToRespond;
     }
 
-    public function getAuthenticationSessionStatus($request)
+    public function getAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus
     {
         return $this->getSessionStatus($request, SessionStatusPoller::AUTHENTICATION_SESSION_PATH);
     }
