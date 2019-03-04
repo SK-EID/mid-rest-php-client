@@ -133,7 +133,7 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
         return new AuthenticationRequestBuilder();
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize() : array {
         $params = [
                 'phoneNumber' => $this->getPhoneNumber(),
                 'nationalIdentityNumber' => $this->getNationalIdentityNumber(),

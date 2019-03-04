@@ -1,9 +1,5 @@
 <?php
 
-use Exception;
-use ReflectionMethod;
-use ReflectionProperty;
-
 abstract class PropertyMapper
 {
   /**
@@ -65,11 +61,12 @@ abstract class PropertyMapper
     throw new Exception( 'Undefined method ' . $key . "!" );
   }
 
-  /**
-   * @param string $key
-   * @param mixed $value
-   * @return $this
-   */
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     * @throws ReflectionException
+     */
   public function __set( $key, $value )
   {
     $alternativeKey = ucwords( $key, '_' );
@@ -95,11 +92,12 @@ abstract class PropertyMapper
     return $this;
   }
 
-  /**
-   * @param string $method
-   * @param array|mixed $value
-   * @return mixed
-   */
+    /**
+     * @param string $method
+     * @param array|mixed $value
+     * @return mixed
+     * @throws ReflectionException
+     */
   private function prepareValue( $method, $value )
   {
     if ( is_array( $value ) )
@@ -145,9 +143,10 @@ abstract class PropertyMapper
     }
   }
 
-  /**
-   * @return array
-   */
+    /**
+     * @return array
+     * @throws ReflectionException
+     */
   public function toArray()
   {
     $values = get_object_vars( $this );

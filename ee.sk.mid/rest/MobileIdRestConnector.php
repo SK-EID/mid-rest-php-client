@@ -194,20 +194,14 @@ class MobileIdRestConnector implements MobileIdConnector
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                        'Content-Type: application/json')
+        curl_setopt($ch, CURLOPT_HTTPHEADER,
+            array('Content-Type: application/json')
         );
         $result = curl_exec($ch);
 
         $this->logger->debug('Result is '. $result);
 
         return json_decode($result, true);
-    }
-
-    private function getResponse(string $rawResponse, $responseType)
-    {
-        $preparedResponse = json_decode($rawResponse, true);
-        return new $responseType($preparedResponse);
     }
 
 

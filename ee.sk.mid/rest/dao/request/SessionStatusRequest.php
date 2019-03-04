@@ -89,5 +89,4 @@ class SessionStatusRequest
         return $requiredArray;
     }
 
-
 }

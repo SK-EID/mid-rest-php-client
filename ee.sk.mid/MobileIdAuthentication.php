@@ -50,7 +50,7 @@ class MobileIdAuthentication
     /** @var AuthenticationCertificate $certificate */
     private $certificate;
 
-    public function __construct($builder)
+    public function __construct(MobileIdAuthenticationBuilder $builder)
     {
         $this->result = $builder->getResult();
         $this->signedHashInBase64 = $builder->getSignedHashInBase64();
@@ -125,7 +125,7 @@ class MobileIdAuthenticationBuilder
     /** @var string $algorithmName */
     private $algorithmName;
 
-    /** @var array $certificate */
+    /** @var string $certificate */
     private $certificate;
 
     public function __construct()
@@ -157,7 +157,7 @@ class MobileIdAuthenticationBuilder
         return $this->algorithmName;
     }
 
-    public function getCertificate() : AuthenticationCertificate
+    public function getCertificate() : string
     {
         return $this->certificate;
     }

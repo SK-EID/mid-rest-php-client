@@ -42,8 +42,8 @@ require_once __DIR__ . '/../exception/SignatureHashMismatchException.php';
 class SessionStatusPoller
 {
 
-    const SIGNATURE_SESSION_PATH = '/signature/session/{sessionId}';
-    const AUTHENTICATION_SESSION_PATH = '/authentication/session/{sessionId}';
+    const SIGNATURE_SESSION_PATH = '/signature/session';
+    const AUTHENTICATION_SESSION_PATH = '/authentication/session';
 
     /** @var Logger $logger */
     private $logger;
@@ -62,29 +62,29 @@ class SessionStatusPoller
 
     public function fetchFinalSignatureSessionStatus(string $sessionId, int $longPollSeconds = 20) : SessionStatus
     {
-        return $this->fetchFinalSessionStatus($sessionId, self::SIGNATURE_SESSION_PATH, $longPollSeconds);
+        return $this->fetchFinalSessionStatus($sessionId, $longPollSeconds);
     }
 
     public function fetchFinalAuthenticationSession(string $sessionId, int $longPollSeconds = 20) : SessionStatus
     {
-        return $this->fetchFinalSessionStatus($sessionId, self::AUTHENTICATION_SESSION_PATH, $longPollSeconds);
+        return $this->fetchFinalSessionStatus($sessionId, $longPollSeconds);
     }
 
-    public function fetchFinalSessionStatus(string $sessionId, string $path, int $longPollSeconds = null) : SessionStatus
+    public function fetchFinalSessionStatus(string $sessionId, int $longPollSeconds = null) : SessionStatus
     {
         $this->logger->debug('Starting to poll session status for session ' . $sessionId);
-        $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $path, $longPollSeconds);
+        $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $longPollSeconds);
         $this->validateResult($sessionStatus);
         $this->logger->debug('Session status is ' . $sessionStatus->getResult());
         return $sessionStatus;
     }
 
-    private function pollForFinalSessionStatus(string $sessionId, string $path, int $longPollSeconds = 20) : SessionStatus
+    private function pollForFinalSessionStatus(string $sessionId, int $longPollSeconds = 20) : SessionStatus
     {
         $sessionStatus = null;
 
         while ($sessionStatus == null || strcasecmp($sessionStatus->getState(), 'RUNNING') == 0) {
-            $sessionStatus = $this->pollSessionStatus($sessionId, $path, $longPollSeconds);
+            $sessionStatus = $this->pollSessionStatus($sessionId, $longPollSeconds);
             if ($sessionStatus->isComplete()) {
                 return $sessionStatus;
             }
@@ -97,11 +97,11 @@ class SessionStatusPoller
         return $sessionStatus;
     }
 
-    private function pollSessionStatus(string $sessionId, string $path, int $longPollSeconds = null) : SessionStatus
+    private function pollSessionStatus(string $sessionId, int $longPollSeconds = null) : SessionStatus
     {
         $this->logger->debug('Polling session status');
         $request = $this->createSessionStatusRequest($sessionId, $longPollSeconds);
-        return $this->connector->getAuthenticationSessionStatus($request, $path);
+        return $this->connector->getAuthenticationSessionStatus($request);
     }
 
     private function createSessionStatusRequest(string $sessionId, int $longPollSeconds) : SessionStatusRequest

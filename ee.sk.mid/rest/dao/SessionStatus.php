@@ -107,7 +107,7 @@ class SessionStatus
 
     public function toString() : string
     {
-        return "SessionStatus{<br/>state=".$this->state.",<br/> result=".$this->result.",<br/> signature=".$this->signature.", <br/>cert=".$this->cert."<br/>}<br/><br/>";
+        return "SessionStatus{<br/>state=".$this->state.",<br/> result=".$this->result.",<br/> signature=".$this->signature->getValue().", <br/>cert=".$this->cert."<br/>}<br/><br/>";
     }
 
 

@@ -130,7 +130,7 @@ class MobileIdAuthenticationHashToSignBuilder
         return $this->hash;
     }
 
-    public function withHashType(HashType $hashType) : MobileIdAuthenticationHashToSignBuilder
+    public function withHashType(string $hashType) : MobileIdAuthenticationHashToSignBuilder
     {
         if (is_string($hashType)) {
             $this->hashType = MobileIdAuthenticationHashToSign::strToHashType($hashType);

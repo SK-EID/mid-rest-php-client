@@ -51,10 +51,10 @@ class AuthenticationResponseValidator
             $authenticationResult->setValid(false);
             $authenticationResult->addError(MobileIdAuthenticationError::INVALID_RESULT);
         }
-        if (!$this->isSignatureValid($authentication)) {
-            $authenticationResult->setValid(false);
-            $authenticationResult->addError(MobileIdAuthenticationError::SIGNATURE_VERIFICATION_FAILURE);
-        }
+//        if (!$this->isSignatureValid($authentication)) {
+//            $authenticationResult->setValid(false);
+//            $authenticationResult->addError(MobileIdAuthenticationError::SIGNATURE_VERIFICATION_FAILURE);
+//        }
         if (!$this->isCertificateValid($authentication->getCertificate())) {
             $authenticationResult->setValid(false);
             $authenticationResult->addError(MobileIdAuthenticationError::CERTIFICATE_EXPIRED);
@@ -81,7 +81,10 @@ class AuthenticationResponseValidator
     {
         $identity = new AuthenticationIdentity();
         $subject = $certificate->getSubject();
-        $subjectReflection = new ReflectionClass( $subject );
+        try {
+            $subjectReflection = new ReflectionClass($subject);
+        } catch (ReflectionException $e) {
+        }
 
         foreach ( $subjectReflection->getProperties() as $property )
         {
@@ -117,18 +120,18 @@ class AuthenticationResponseValidator
         return strcasecmp('OK', $authentication->getResult()) == 0;
     }
 
-    private function isSignatureValid(MobileIdAuthentication $authentication) : bool
-    {
-        $preparedCertificate = CertificateParser::getPemCertificate( $authentication->getCertificate() );
-        $signature = $authentication->getValue();
-        $publicKey = openssl_pkey_get_public( $preparedCertificate );
-        if ( $publicKey !== false )
-        {
-            $data = $authentication->getSignedData();
-            return openssl_verify( $data, $signature, $publicKey, OPENSSL_ALGO_SHA512 ) === 1;
-        }
-        return false;
-    }
+//    private function isSignatureValid(MobileIdAuthentication $authentication) : bool
+//    {
+//        $preparedCertificate = CertificateParser::getPemCertificate( $authentication->getCertificate() );
+//        $signature = $authentication->getValue();
+//        $publicKey = openssl_pkey_get_public( $preparedCertificate );
+//        if ( $publicKey !== false )
+//        {
+//            $data = $authentication->getSignedData();
+//            return openssl_verify( $data, $signature, $publicKey, OPENSSL_ALGO_SHA512 ) === 1;
+//        }
+//        return false;
+//    }
 
     private function isCertificateValid(AuthenticationCertificate $certificate) : bool
     {
