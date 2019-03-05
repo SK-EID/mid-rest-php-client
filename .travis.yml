@@ -1,3 +1,10 @@
 language: php
 php:
   - '7.1'
+
+branches:
+  only:
+    master
+before_install:
+  - composer install
+script: phpunit --exclude-group FITS --bootstrap vendor/autoload.php tests
