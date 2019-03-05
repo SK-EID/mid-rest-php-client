@@ -25,13 +25,10 @@
  * #L%
  */
 require_once 'MobileIdException.php';
-class InvalidBase64CharacterException extends MobileIdException {
-    public function __construct($message = null)
+class MidSessionNotFoundException extends MobileIdException {
+
+    public function __construct()
     {
-        if ($message == null) {
-            parent::__construct();
-        } else {
-            parent::__construct($message);
-        }
+        parent::__construct();
     }
 }

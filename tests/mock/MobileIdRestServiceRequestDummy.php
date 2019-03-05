@@ -9,19 +9,6 @@ require_once __DIR__ . '/TestData.php';
 
 use PHPUnit\Framework\TestCase;
 
-/*
-require_once __DIR__ . '/mock/MobileIdConnectorSpy.php';
-
-require_once __DIR__ . '/../../ee.sk.mid/MobileIdClient.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/MobileIdRestConnector.php';
-
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/response/CertificateChoiceResponse.php';
-
-require_once __DIR__ . '/../ee.sk.mid/exception/CertificateNotPresentException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/ExpiredException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/ParameterMissingException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/TechnicalErrorException.php';
-*/
 /**
  * Created by PhpStorm.
  * User: mikks
@@ -42,7 +29,7 @@ class MobileIdRestServiceRequestDummy
             ->withRelyingPartyName($name)
             ->withPhoneNumber($phoneNumber)
             ->withNationalIdentityNumber($nationalIdentityNumber)
-            ->withHashToSign(self::calculateMobileIdAuthenticationHash())
+            ->withHashToSign(MobileIdRestServiceRequestDummy::calculateMobileIdAuthenticationHash())
             ->withLanguage(EST::asType())
             ->build();
     }
@@ -128,7 +115,7 @@ class MobileIdRestServiceRequestDummy
         return base64_encode($digestValue);
     }
 
-    private static function calculateMobileIdAuthenticationHash() : MobileIdAuthenticationHashToSign
+    public static function calculateMobileIdAuthenticationHash() : MobileIdAuthenticationHashToSign
     {
         $digestValue = new Sha512();
         $digestValue->calculateDigest(TestData::DATA_TO_SIGN);

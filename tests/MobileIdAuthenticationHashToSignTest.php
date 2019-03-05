@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
 require_once __DIR__ . '/../ee.sk.mid/VerificationCodeCalculator.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/ParameterMissingException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/MissingOrInvalidParameterException.php';
 
 /**
  * Created by PhpStorm.
@@ -45,7 +45,7 @@ class MobileIdAuthenticationHashToSignTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function checkFields_withoutHashType()
     {

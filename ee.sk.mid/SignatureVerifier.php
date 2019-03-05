@@ -46,7 +46,7 @@ class SignatureVerifier
             return $signature->verify($authentication->getSignatureValue());
         } catch (GeneralSecurityException $var5) {
             self::$logger->error('Signature verification with RSA failed');
-            throw new TechnicalErrorException('Signature verification with RSA failed', $var5);
+            throw new MidInternalErrorException('Signature verification with RSA failed', $var5);
         }
     }
 
@@ -66,7 +66,7 @@ class SignatureVerifier
             return $signature->verify(fromCVCEncoding($authentication->getSignatureValue()));
         } catch (GeneralSecurityException $var4) {
             self::$logger->error('Signature verification with ECDSA failed');
-            throw new TechnicalErrorException('Signature verification with ECDSA failed');
+            throw new MidInternalErrorException('Signature verification with ECDSA failed');
         }
     }
 

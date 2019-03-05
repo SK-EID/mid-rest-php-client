@@ -25,15 +25,10 @@
  * #L%
  */
 require_once 'MobileIdException.php';
-class TechnicalErrorException extends MobileIdException {
+class PhoneNotAvailableException extends MobileIdException {
 
-    public function __construct($message = null, $cause = null)
+    public function __construct()
     {
-        if (!is_null($message) && is_null($cause)) {
-            parent::__construct($message);
-        }
-        if (!is_null($message) && !is_null($cause)) {
-            parent::__construct($message, $cause);
-        }
+        parent::__construct("Unable to reach phone or SIM card");
     }
 }

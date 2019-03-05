@@ -34,11 +34,7 @@ class MobileIdSignature
 
     public function getValue() : string
     {
-        if (!$this->valueInBase64) {
-            throw new InvalidBase64CharacterException("Failed to parse signature value in base64. Probably incorrectly encoded base64 string: '" . $this->valueInBase64 . "'");
-        } else {
-            return $this->valueInBase64;
-        }
+        return $this->valueInBase64;
     }
 
     public function __construct(MobileIdSignatureBuilder $builder)
@@ -88,6 +84,11 @@ class MobileIdSignatureBuilder
 
     public function withValueInBase64(string $valueInBase64) : MobileIdSignatureBuilder
     {
+        if (FALSE === base64_decode($valueInBase64))
+        {
+            throw new MissingOrInvalidParameterException("Failed to parse signature value. Input is not valid Base64 string: '" . $valueInBase64 . "'");
+        }
+
         $this->valueInBase64 = $valueInBase64;
         return $this;
     }

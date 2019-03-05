@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../mock/TestData.php';
 require_once __DIR__ . '/../../ee.sk.mid/MobileIdClient.php';
-require_once __DIR__ . '/../../ee.sk.mid/exception/NotMIDClientException.php';
+require_once __DIR__ . '/../../ee.sk.mid/exception/NotMidClientException.php';
 
 class MobileIdCertificateIT extends TestCase
 {
@@ -37,7 +37,7 @@ class MobileIdCertificateIT extends TestCase
 
     /**
      * @test
-     * @expectedException NotMIDClientException
+     * @expectedException NotMidClientException
      */
     public function getCertificate_notMidClient_shouldThrowNotMIDClientException()
     {
@@ -57,7 +57,7 @@ class MobileIdCertificateIT extends TestCase
 
     /**
      * @test
-     * @expectedException NotMIDClientException
+     * @expectedException NotMidClientException
      */
     public function getCertificate_certificateNotActive_shouldThrowNotMIDClientException()
     {

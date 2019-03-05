@@ -97,7 +97,7 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException MidInternalErrorException
      */
     public function validate_whenCertificateIsNull_shouldThrowException()
     {
@@ -114,7 +114,7 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException MidInternalErrorException
      */
     public function validate_whenHashTypeIsNull_shouldThrowException()
     {

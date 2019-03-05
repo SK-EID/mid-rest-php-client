@@ -26,8 +26,8 @@
  */
 require_once __DIR__ . '/../../../MobileIdAuthenticationHashToSign.php';
 require_once __DIR__ . '/../../../util/Logger.php';
-require_once __DIR__ . '/../../../exception/ParameterMissingException.php';
-require_once __DIR__ . '/../../../exception/ParameterMissingException.php';
+require_once __DIR__ . '/../../../exception/MissingOrInvalidParameterException.php';
+require_once __DIR__ . '/../../../exception/MissingOrInvalidParameterException.php';
 
 class AuthenticationRequestBuilder
 {
@@ -127,15 +127,15 @@ class AuthenticationRequestBuilder
     {
 
         if (empty($this->phoneNumber) || empty($this->nationalIdentityNumber)) {
-            throw new ParameterMissingException('Phone number and national identity must be set');
+            throw new MissingOrInvalidParameterException('Phone number and national identity must be set');
         }
 
         if (is_null($this->hashToSign)) {
-            throw new ParameterMissingException("hashToSign must be set");
+            throw new MissingOrInvalidParameterException("hashToSign must be set");
         }
 
         if (is_null($this->language)) {
-            throw new ParameterMissingException("Language for user dialog in mobile phone must be set");
+            throw new MissingOrInvalidParameterException("Language for user dialog in mobile phone must be set");
         }
     }
 

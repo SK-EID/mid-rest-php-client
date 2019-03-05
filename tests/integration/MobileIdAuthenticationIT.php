@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/AuthenticationRequest.
 require_once __DIR__ . '/../../ee.sk.mid/Language.php';
 require_once __DIR__ . '/../../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
 require_once __DIR__ . '/../../ee.sk.mid/MobileIdClient.php';
-require_once __DIR__ . '/../../ee.sk.mid/exception/NotMIDClientException.php';
+require_once __DIR__ . '/../../ee.sk.mid/exception/NotMidClientException.php';
 
 class MobileIdAuthenticationIT extends TestCase
 {
@@ -80,7 +80,7 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function mobileAuthenticate_noRelyingPartyName_shouldThrowParameterMissingException()
     {
@@ -94,7 +94,7 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function mobileAuthenticate_relyingPartyNameEmpty_shouldThrowParameterMissingException()
     {
@@ -109,7 +109,7 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function mobileAuthenticate_noRelyingPartyUUID_shouldThrowParameterMissingException()
     {
@@ -124,7 +124,7 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function mobileAuthenticate_relyingPartyUUID_shouldThrowParameterMissingException()
     {

@@ -26,7 +26,7 @@
  * #L%
  */
 require_once __DIR__ . '/../../../util/Logger.php';
-require_once __DIR__ . '/../../../exception/ParameterMissingException.php';
+require_once __DIR__ . '/../../../exception/MissingOrInvalidParameterException.php';
 class CertificateRequestBuilder
 {
     /** @var Logger $logger */
@@ -108,7 +108,7 @@ class CertificateRequestBuilder
     {
         if (empty($this->phoneNumber) || empty($this->nationalIdentityNumber)) {
             self::$logger->error('Phone number and national identity must be set');
-            throw new ParameterMissingException('Phone number and national identity must be set');
+            throw new MissingOrInvalidParameterException('Phone number and national identity must be set');
         }
     }
 

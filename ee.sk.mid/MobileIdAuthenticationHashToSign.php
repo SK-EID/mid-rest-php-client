@@ -156,7 +156,7 @@ class MobileIdAuthenticationHashToSignBuilder
     {
         if (is_null($this->getHashType()))
         {
-            throw new ParameterMissingException("Missing hash type");
+            throw new MissingOrInvalidParameterException("Missing hash type");
         }
 
     }

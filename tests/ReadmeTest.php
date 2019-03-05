@@ -126,7 +126,7 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException MidInternalErrorException
      * @throws Exception
      */
     public function documentHowToVerifyAuthenticationResult()

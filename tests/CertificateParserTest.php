@@ -27,7 +27,7 @@ class CertificateParserTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException MidInternalErrorException
      */
     public function parseInvalidCertificate_shouldThrowException()
     {

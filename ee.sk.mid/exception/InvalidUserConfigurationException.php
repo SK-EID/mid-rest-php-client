@@ -25,10 +25,10 @@
  * #L%
  */
 require_once 'MobileIdException.php';
-class SessionNotFoundException extends MobileIdException {
+class InvalidUserConfigurationException extends MobileIdException {
 
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct("Mobile-ID configuration on user's SIM card differs from what is configured on service provider side. Please contact your mobile operator.");
     }
 }

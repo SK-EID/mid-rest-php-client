@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
-require_once __DIR__ . '/../../../ee.sk.mid/exception/UnAuthorizedException.php';
+require_once __DIR__ . '/../../../ee.sk.mid/exception/UnauthorizedException.php';
 require_once __DIR__ . '/../../mock/TestData.php';
 require_once __DIR__ . '/../../mock/TestData.php';
 require_once __DIR__ . '/../../../ee.sk.mid/rest/MobileIdRestConnector.php';
@@ -18,6 +18,11 @@ class MobileIdRestConnectorCertificateIT extends TestCase
 {
 
     private $connector;
+
+    private function getConnector() : MobileIdRestConnector
+    {
+        return $this->connector;
+    }
 
     protected function setUp()
     {
@@ -38,7 +43,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
         $request->setNationalIdentityNumber(TestData::VALID_NAT_IDENTITY);
         MobileIdRestServiceRequestDummy::assertCorrectCertificateRequestMade($request);
 
-        $response = $this->connector->getCertificate($request);
+        $response = $this->getConnector()->getCertificate($request);
 
         assert(!is_null($response));
         try {
@@ -50,39 +55,42 @@ class MobileIdRestConnectorCertificateIT extends TestCase
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException NotMidClientException
      */
     public function getCertificate_withWrongPhoneNumber_shouldThrowException()
     {
-        $request = new CertificateRequest();
-        $request->setPhoneNumber(TestData::WRONG_PHONE);
-        $request->setNationalIdentityNumber(TestData::VALID_NAT_IDENTITY);
+        $request = CertificateRequest::newBuilder()
+            ->withPhoneNumber(TestData::WRONG_PHONE)
+            ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
+            ->build();
 
-        $this->connector->getCertificate($request);
+        $this->getConnector()->getCertificate($request);
     }
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException NotMidClientException
      */
     public function getCertificate_withWrongNationalIdentityNumber_shouldThrowException()
     {
-        $request = new CertificateRequest();
-        $request->setPhoneNumber(TestData::VALID_PHONE);
-        $request->setNationalIdentityNumber(TestData::WRONG_NAT_IDENTITY);
+        $request = CertificateRequest::newBuilder()
+                ->withPhoneNumber(TestData::VALID_PHONE)
+                ->withNationalIdentityNumber(TestData::WRONG_NAT_IDENTITY)
+                ->build();
 
-        $this->connector->getCertificate($request);
+
+        $this->getConnector()->getCertificate($request);
     }
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException UnauthorizedException
      */
     public function getCertificate_withWrongRelyingPartyUUID_shouldThrowException()
     {
         $connector = MobileIdRestConnector::newBuilder()
             ->withEndpointUrl(TestData::DEMO_HOST_URL)
-            ->withRelyingPartyUUID("wrong_UUID")
+            ->withRelyingPartyUUID(TestData::WRONG_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 

@@ -74,7 +74,7 @@ class SessionStatusPollerTest extends TestCase
 
     /**
      * @test
-     * @expectedException SessionTimeoutException
+     * @expectedException MidSessionTimeoutException
      */
     public function getUserTimeoutResponse_shouldThrowException()
     {
@@ -94,7 +94,7 @@ class SessionStatusPollerTest extends TestCase
 
     /**
      * @test
-     * @expectedException NotMIDClientException
+     * @expectedException NotMidClientException
      */
     public function getNotMIDClientResponse_shouldThrowException()
     {
@@ -134,7 +134,7 @@ class SessionStatusPollerTest extends TestCase
 
     /**
      * @test
-     * @expectedException SimNotAvailableException
+     * @expectedException PhoneNotAvailableException
      */
     public function getSimNotAvailableResponse_shouldThrowException()
     {
@@ -164,7 +164,7 @@ class SessionStatusPollerTest extends TestCase
 
     /**
      * @test
-     * @expectedException SignatureHashMismatchException
+     * @expectedException InvalidUserConfigurationException
      */
     public function getSignatureHashMismatchResponse_shouldThrowException()
     {
@@ -174,7 +174,7 @@ class SessionStatusPollerTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException MidInternalErrorException
      */
     public function getUnknownResult_shouldThrowException()
     {
@@ -186,7 +186,7 @@ class SessionStatusPollerTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException MidInternalErrorException
      */
     public function getMissingResult_shouldThrowException()
     {

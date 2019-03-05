@@ -25,14 +25,10 @@
  * #L%
  */
 require_once 'MobileIdException.php';
-class NotMIDClientException extends MobileIdException {
+class UnauthorizedException extends MobileIdException {
 
-    const ERROR_MESSAGE = 'User is not a Mobile-ID client';
-
-    public function __construct()
+    public function __construct($message = null)
     {
-        parent::__construct(self::ERROR_MESSAGE);
+        parent::__construct($message);
     }
-
-
 }

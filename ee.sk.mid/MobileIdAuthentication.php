@@ -26,7 +26,6 @@
  */
 
 
-require_once __DIR__ . '/exception/InvalidBase64CharacterException.php';
 require_once __DIR__ . '/VerificationCodeCalculator.php';
 
 class MobileIdAuthentication
@@ -62,12 +61,12 @@ class MobileIdAuthentication
 
     public function getSignatureValue() : string
     {
-        if (base64_encode(base64_decode($this->signatureValueInBase64)) !== $this->signatureValueInBase64) {
-            throw new InvalidBase64CharacterException("Failed to parse signature value in base64. Probably incorrectly encoded base64 string: '" . $this->signatureValueInBase64 . "'");
+        $decodedBase64 = base64_decode($this->signatureValueInBase64);
+        if (FALSE === $decodedBase64) {
+            throw new MissingOrInvalidParameterException("Failed to parse signature value. Input is not valid Base64 string: '" . $this->signatureValueInBase64 . "'");
         } else {
-            return base64_decode($this->signatureValueInBase64);
+            return $decodedBase64;
         }
-
     }
 
     public function getResult() : string

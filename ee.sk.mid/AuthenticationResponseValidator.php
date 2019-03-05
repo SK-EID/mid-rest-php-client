@@ -25,7 +25,7 @@
  * #L%
  */
 require_once __DIR__ . '/util/Logger.php';
-require_once __DIR__ . '/exception/TechnicalErrorException.php';
+require_once __DIR__ . '/exception/MidInternalErrorException.php';
 require_once 'MobileIdAuthenticationResult.php';
 require_once 'MobileIdAuthenticationError.php';
 require_once 'AuthenticationIdentity.php';
@@ -67,13 +67,13 @@ class AuthenticationResponseValidator
     {
         if (is_null($authentication->getCertificate())) {
             $this->logger->error('Certificate is not present in the authentication response');
-            throw new TechnicalErrorException('Certificate is not present in the authentication response');
+            throw new MidInternalErrorException('Certificate is not present in the authentication response');
         } else if (empty($authentication->getSignatureValueInBase64())) {
             $this->logger->error('Signature is not present in the authentication response');
-            throw new TechnicalErrorException('Signature is not present in the authentication response');
+            throw new MidInternalErrorException('Signature is not present in the authentication response');
         } else if (is_null($authentication->getHashType())) {
             $this->logger->error('Hash type is not present in the authentication response');
-            throw new TechnicalErrorException('Hash type is not present in the authentication response');
+            throw new MidInternalErrorException('Hash type is not present in the authentication response');
         }
     }
 

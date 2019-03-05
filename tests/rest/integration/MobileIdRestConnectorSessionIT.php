@@ -16,6 +16,11 @@ class MobileIdRestConnectorSessionIT extends TestCase
 {
     private $connector;
 
+    private function getConnector() : MobileIdRestConnector
+    {
+        return $this->connector;
+    }
+
     protected function setUp()
     {
         $this->connector = MobileIdRestConnector::newBuilder()
@@ -31,23 +36,23 @@ class MobileIdRestConnectorSessionIT extends TestCase
         $authenticationRequest = MobileIdRestServiceRequestDummy::createValidAuthenticationRequest();
         MobileIdRestServiceRequestDummy::assertCorrectAuthenticationRequestMade($authenticationRequest);
 
-        $authenticationResponse = $this->connector->authenticate($authenticationRequest);
+        $authenticationResponse = $this->getConnector()->authenticate($authenticationRequest);
         assert(!is_null($authenticationResponse->getSessionId()) && !empty($authenticationResponse->getSessionId()));
 
         $sessionStatusRequest = new SessionStatusRequest($authenticationResponse->getSessionId());
-        $poller = new SessionStatusPoller($this->connector);
+        $poller = new SessionStatusPoller($this->getConnector());
         $sessionStatus = $poller->fetchFinalAuthenticationSession($sessionStatusRequest->getSessionId());
         MobileIdRestServiceResponseDummy::assertAuthenticationPolled($sessionStatus);
     }
 
     /**
      * @test
-     * @expectedException SessionNotFoundException
+     * @expectedException MidSessionNotFoundException
      */
     public function getSessionStatus_whenSessionStatusNotExists_shouldThrowException()
     {
         $request = new SessionStatusRequest(TestData::SESSION_ID);
-        $this->connector->getAuthenticationSessionStatus($request);
+        $this->getConnector()->getAuthenticationSessionStatus($request);
     }
 
 }

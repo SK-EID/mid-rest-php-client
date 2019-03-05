@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../ee.sk.mid/rest/MobileIdRestConnector.php';
-require_once __DIR__ . '/../../../ee.sk.mid/exception/UnAuthorizedException.php';
+require_once __DIR__ . '/../../../ee.sk.mid/exception/UnauthorizedException.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceResponseDummy.php';
 require_once __DIR__ . '/../../mock/TestData.php';
@@ -19,6 +19,12 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
 
     private $connector;
 
+    private function getConnector() : MobileIdRestConnector
+    {
+        return $this->connector;
+    }
+
+
     protected function setUp()
     {
         $this->connector = MobileIdRestConnector::newBuilder()
@@ -28,6 +34,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
 
     /**
      * @test
+     * @throws Exception
      */
     public function authenticate_withDisplayText()
     {
@@ -35,8 +42,8 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
         $request->setDisplayText("Log into internet banking system");
         MobileIdRestServiceRequestDummy::assertCorrectAuthenticationRequestMade($request);
 
-        $response = $this->connector->authenticate($request);
-        assert(!is_null($response->getSessionId()) && !empty($response->getSessionId()));
+        $response = $this->getConnector()->authenticate($request);
+        $this->assertNotEmpty($response->getSessionId());
 
         $sessionStatus = SessionStatusPollerDummy::pollSessionStatus($this->connector, $response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
         MobileIdRestServiceResponseDummy::assertAuthenticationPolled($sessionStatus);
@@ -44,74 +51,80 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withWrongPhoneNumber_shouldThrowException()
     {
-        $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
-            TestData::DEMO_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::WRONG_PHONE, TestData::VALID_NAT_IDENTITY
-        );
-        $this->connector->authenticate($request);
+        $request = AuthenticationRequest::newBuilder()
+            ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
+            ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
+            ->withPhoneNumber("123")
+            ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
+            ->withHashToSign(MobileIdRestServiceRequestDummy::calculateMobileIdAuthenticationHash())
+            ->withLanguage(EST::asType())
+            ->build();
+
+        $this->getConnector()->authenticate($request);
     }
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException UnauthorizedException
      */
     public function authenticate_withWrongNationalIdentityNumber_shouldThrowException()
     {
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::DEMO_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::WRONG_NAT_IDENTITY
         );
-        $this->connector->authenticate($request);
+        $this->getConnector()->authenticate($request);
     }
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException UnauthorizedException
      */
     public function authenticate_withWrongRelyingPartyUUID_shouldThrowException()
     {
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::WRONG_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
         );
-        $this->connector->authenticate($request);
+        $this->getConnector()->authenticate($request);
     }
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException UnauthorizedException
      */
     public function authenticate_withWrongRelyingPartyName_shouldThrowException()
     {
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::DEMO_RELYING_PARTY_UUID, TestData::WRONG_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
         );
-        $this->connector->authenticate($request);
+        $this->getConnector()->authenticate($request);
     }
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException UnauthorizedException
      */
     public function authenticate_withUnknownRelyingPartyUUID_shouldThrowException()
     {
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::DEMO_RELYING_PARTY_UUID, TestData::UNKNOWN_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
         );
-        $this->connector->authenticate($request);
+        $this->getConnector()->authenticate($request);
     }
 
     /**
      * @test
-     * @expectedException UnAuthorizedException
+     * @expectedException UnauthorizedException
      */
     public function authenticate_withUnknownRelyingPartyName_shouldThrowException()
     {
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::UNKNOWN_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
         );
-        $this->connector->authenticate($request);
+        $this->getConnector()->authenticate($request);
     }
 
 

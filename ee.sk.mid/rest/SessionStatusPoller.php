@@ -27,17 +27,13 @@
 require_once __DIR__ . '/../util/Logger.php';
 require_once __DIR__ . '/dao/SessionStatus.php';
 require_once __DIR__ . '/dao/request/SessionStatusRequest.php';
-require_once __DIR__ . '/../exception/TechnicalErrorException.php';
-require_once __DIR__ . '/../exception/SessionTimeoutException.php';
-require_once __DIR__ . '/../exception/ResponseRetrievingException.php';
-require_once __DIR__ . '/../exception/NotMIDClientException.php';
-require_once __DIR__ . '/../exception/CertificateRevokedException.php';
+require_once __DIR__ . '/../exception/MidInternalErrorException.php';
+require_once __DIR__ . '/../exception/MidSessionTimeoutException.php';
+require_once __DIR__ . '/../exception/NotMidClientException.php';
 require_once __DIR__ . '/../exception/UserCancellationException.php';
-require_once __DIR__ . '/../exception/MIDNotReadyException.php';
-require_once __DIR__ . '/../exception/SimNotAvailableException.php';
+require_once __DIR__ . '/../exception/PhoneNotAvailableException.php';
 require_once __DIR__ . '/../exception/DeliveryException.php';
-require_once __DIR__ . '/../exception/InvalidCardResponseException.php';
-require_once __DIR__ . '/../exception/SignatureHashMismatchException.php';
+require_once __DIR__ . '/../exception/InvalidUserConfigurationException.php';
 
 class SessionStatusPoller
 {
@@ -114,7 +110,7 @@ class SessionStatusPoller
         $result = $sessionStatus->getResult();
         if ($result == null) {
             $this->logger->error('Result is missing in the session status response');
-            throw new TechnicalErrorException('Result is missing in the session status response');
+            throw new MidInternalErrorException('Result is missing in the session status response');
         } else {
             $this->validateResultOfString($result);
         }
@@ -122,39 +118,34 @@ class SessionStatusPoller
 
     private function validateResultOfString(string $result) : void
     {
-        if (strcasecmp('TIMEOUT', $result) == 0) { // compare strings case-insensitively
-            $this->logger->error('Session timeout');
-            throw new SessionTimeoutException();
-        } else if (strcasecmp('ERROR', $result) == 0) {
-            $this->logger->error('Error getting response from cert-store/MSSP');
-            throw new ResponseRetrievingException();
-        } else if (strcasecmp('NOT_MID_CLIENT', $result) == 0) {
-            $this->logger->error('Given user has no active certificates and is not M-ID client');
-            throw new NotMIDClientException();
-        } else if (strcasecmp('EXPIRED_TRANSACTION', $result) == 0) {
-            $this->logger->error('MSSP transaction timed out');
-            throw new CertificateRevokedException();
-        } else if (strcasecmp('USER_CANCELLED', $result) == 0) {
-            $this->logger->error('User cancelled the operation');
-            throw new UserCancellationException();
-        } else if (strcasecmp('MID_NOT_READY', $result) == 0) {
-            $this->logger->error('Mobile-ID not ready');
-            throw new MIDNotReadyException();
-        } else if (strcasecmp('PHONE_ABSENT', $result) == 0) {
-            $this->logger->error('Sim not available');
-            throw new SimNotAvailableException();
-        } else if (strcasecmp('DELIVERY_ERROR', $result) == 0) {
-            $this->logger->error('SMS sending error');
-            throw new DeliveryException();
-        } else if (strcasecmp('SIM_ERROR', $result) == 0) {
-            $this->logger->error('Invalid response from card');
-            throw new InvalidCardResponseException();
-        } else if (strcasecmp('SIGNATURE_HASH_MISMATCH', $result) == 0) {
-            $this->logger->error('Hash does not match with certificate type');
-            throw new SignatureHashMismatchException();
-        } else if (!strcasecmp('OK', $result) == 0) {
-            $this->logger->error("Session status end result is '" . $result . "'");
-            throw new TechnicalErrorException("Session status end result is '" . $result . "'");
+        $result = strtoupper($result);
+
+        switch ($result) {
+            case 'OK':
+                return;
+            case 'TIMEOUT':
+            case 'EXPIRED_TRANSACTION':
+                $this->logger->error('Session timeout');
+                throw new MidSessionTimeoutException();
+            case 'NOT_MID_CLIENT':
+                $this->logger->error('Given user has no active certificates and is not M-ID client');
+                throw new NotMidClientException();
+            case 'USER_CANCELLED':
+                $this->logger->error('User cancelled the operation');
+                throw new UserCancellationException();
+            case 'PHONE_ABSENT':
+                $this->logger->error('Sim not available');
+                throw new PhoneNotAvailableException();
+            case 'SIGNATURE_HASH_MISMATCH':
+                $this->logger->error('Hash does not match with certificate type');
+                throw new InvalidUserConfigurationException(); // TODO
+            case 'SIM_ERROR':
+            case 'DELIVERY_ERROR':
+                $this->logger->error('SMS sending or SIM error');
+                throw new DeliveryException();
+            default:
+                throw new MidInternalErrorException("MID returned error code '" . $result . "'");
+
         }
     }
 

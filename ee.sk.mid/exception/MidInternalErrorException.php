@@ -25,10 +25,15 @@
  * #L%
  */
 require_once 'MobileIdException.php';
-class SessionTimeoutException extends MobileIdException {
+class MidInternalErrorException extends MobileIdException {
 
-    public function __construct()
+    public function __construct($message = null, $cause = null)
     {
-        parent::__construct();
+        if (!is_null($message) && is_null($cause)) {
+            parent::__construct($message);
+        }
+        if (!is_null($message) && !is_null($cause)) {
+            parent::__construct($message, $cause);
+        }
     }
 }

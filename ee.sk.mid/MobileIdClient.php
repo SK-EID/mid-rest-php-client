@@ -26,9 +26,7 @@
  */
 require_once __DIR__ . '/util/Logger.php';
 require_once __DIR__ . '/rest/SessionStatusPoller.php';
-require_once __DIR__ . '/exception/CertificateNotPresentException.php';
-require_once __DIR__ . '/exception/CertificateRevokedException.php';
-require_once __DIR__ . '/exception/TechnicalErrorException.php';
+require_once __DIR__ . '/exception/MidInternalErrorException.php';
 require_once __DIR__ . '/rest/MobileIdRestConnector.php';
 require_once 'MobileIdSignature.php';
 require_once 'MobileIdAuthentication.php';
@@ -133,17 +131,17 @@ class MobileIdClient
 
     }
 
-    private function validateCertificateResult(string $result) : void
+    private function validateCertificateResult(?string $result) : void
     {
         if (strcasecmp('NOT_FOUND', $result) == 0) {
             self::$logger->error('No certificate for the user was found');
-            throw new CertificateNotPresentException('No certificate for the user was found');
+            throw new NotMidClientException();
         } else if (strcasecmp('NOT_ACTIVE', $result) == 0) {
             self::$logger->error('Inactive certificate found');
-            throw new CertificateRevokedException('Inactive certificate found');
+            throw new NotMidClientException();
         } else if (!strcasecmp('OK', $result) == 0) {
             self::$logger->error("Session status end result is '".$result."'");
-            throw new TechnicalErrorException("Session status end result is '".$result."'");
+            throw new MidInternalErrorException("Session status end result is '".$result."'");
         }
     }
 
@@ -151,7 +149,7 @@ class MobileIdClient
     {
         if (is_null($certificateChoiceResponse->getCert()) || empty($certificateChoiceResponse->getCert())) {
             self::$logger->error('Certificate was not present in the session status response');
-            throw new TechnicalErrorException('Certificate was not present in the session status response');
+            throw new MidInternalErrorException('Certificate was not present in the session status response');
         }
     }
 
@@ -161,7 +159,7 @@ class MobileIdClient
         if (is_null($sessionStatus->getSignature()) || empty($sessionStatus->getSignature()->getValue()))
         {
             self::$logger->error('Signature was not present in the response');
-            throw new TechnicalErrorException('Signature was not present in the response');
+            throw new MidInternalErrorException('Signature was not present in the response');
         }
     }
 

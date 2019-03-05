@@ -38,22 +38,22 @@ class CertificateChoiceResponse
         $this->cert = $responseJson['cert'];
     }
 
-    public function getResult() : string
+    public function getResult() : ?string
     {
         return $this->result;
     }
 
-    public function setResult(string $result) : void
+    public function setResult(?string $result) : void
     {
         $this->result = $result;
     }
 
-    public function getCert() : string
+    public function getCert() : ?string
     {
         return $this->cert;
     }
 
-    public function setCert(string $cert) : void
+    public function setCert(?string $cert) : void
     {
         $this->cert = $cert;
     }

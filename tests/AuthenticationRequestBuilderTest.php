@@ -3,11 +3,9 @@ require_once __DIR__ . '/mock/MobileIdConnectorSpy.php';
 require_once __DIR__ . '/mock/SessionStatusDummy.php';
 require_once __DIR__ . '/mock/TestData.php';
 
-require_once __DIR__ . '/../ee.sk.mid/exception/CertificateNotPresentException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/CertificateRevokedException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/ParameterMissingException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/SessionTimeoutException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/TechnicalErrorException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/MissingOrInvalidParameterException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/MidSessionTimeoutException.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/MidInternalErrorException.php';
 
 require_once __DIR__ . '/../ee.sk.mid/Language.php';
 require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
@@ -42,7 +40,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withoutRelyingPartyUUID_shouldThrowException()
     {
@@ -64,7 +62,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withoutRelyingPartyName_shouldThrowException()
     {
@@ -85,7 +83,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withoutPhoneNumber_shouldThrowException()
     {
@@ -107,7 +105,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withoutNationalIdentityNumber_shouldThrowException()
     {
@@ -129,7 +127,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withoutHashToSign_shouldThrowException()
     {
@@ -151,7 +149,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withoutLanguage_shouldThrowException()
     {
@@ -173,7 +171,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException SessionTimeoutException
+     * @expectedException MidSessionTimeoutException
      */
     public function authenticate_withTimeout_shouldThrowException()
     {
@@ -193,7 +191,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException NotMIDClientException
+     * @expectedException NotMidClientException
      */
     public function authenticate_withNotMIDClient_shouldThrowException()
     {
@@ -233,7 +231,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException SimNotAvailableException
+     * @expectedException PhoneNotAvailableException
      */
     public function authenticate_withSimNotAvailable_shouldThrowException()
     {
@@ -263,7 +261,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException MidInternalErrorException
      */
     public function authenticate_withResultMissingInResponse_shouldThrowException()
     {
@@ -273,7 +271,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException TechnicalErrorException
+     * @expectedException MidInternalErrorException
      */
     public function authenticate_withResultBlankInResponse_shouldThrowException()
     {
@@ -283,7 +281,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withCertificateBlankInResponse_shouldThrowException()
     {
@@ -293,7 +291,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ParameterMissingException
+     * @expectedException MissingOrInvalidParameterException
      */
     public function authenticate_withCertificateMissingInResponse_shouldThrowException()
     {

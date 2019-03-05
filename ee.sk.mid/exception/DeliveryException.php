@@ -29,6 +29,6 @@ class DeliveryException extends MobileIdException {
 
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct("SMS sending error");
     }
 }

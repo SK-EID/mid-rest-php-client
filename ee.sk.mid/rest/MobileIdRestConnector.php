@@ -26,9 +26,9 @@
  */
 require_once __DIR__ . '/../util/Logger.php';
 require_once __DIR__ . '/../util/Curl.php';
-require_once __DIR__ . '/../exception/SessionNotFoundException.php';
+require_once __DIR__ . '/../exception/MidSessionNotFoundException.php';
 require_once __DIR__ . '/../exception/MobileIdException.php';
-require_once __DIR__ . '/../exception/NotMIDClientException.php';
+require_once __DIR__ . '/../exception/NotMidClientException.php';
 require_once __DIR__ . '/dao/request/AuthenticationRequest.php';
 require_once __DIR__ . '/dao/response/CertificateChoiceResponse.php';
 require_once __DIR__ . '/dao/response/AuthenticationResponse.php';
@@ -106,10 +106,10 @@ class MobileIdRestConnector implements MobileIdConnector
             $request->setRelyingPartyName($this->relyingPartyName);
         }
         if (empty($request->getRelyingPartyUUID())) {
-            throw new ParameterMissingException('Relying Party UUID parameter must be set in client or request');
+            throw new MissingOrInvalidParameterException('Relying Party UUID parameter must be set in client or request');
         }
         if (empty($request->getRelyingPartyName())) {
-            throw new ParameterMissingException('Relying Party Name parameter must be set in client or request');
+            throw new MissingOrInvalidParameterException('Relying Party Name parameter must be set in client or request');
         }
     }
 
@@ -123,7 +123,7 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $this->logger->debug('Sending get request to ' . $url);
         $responseAsArray = $this->getRequest($url);
-        if (isset($responseAsArray['error'])) throw new SessionNotFoundException();
+        if (isset($responseAsArray['error'])) throw new MidSessionNotFoundException();
         return new SessionStatus($responseAsArray);
     }
 
@@ -132,7 +132,7 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $responseJson = $this->postRequest($uri, $request);
         if (isset($responseJson['error'])) {
-            throw new UnAuthorizedException();
+            throw new UnauthorizedException();
         } else {
             $this->validateCertificateResult($responseJson['result']);
         }
@@ -141,22 +141,26 @@ class MobileIdRestConnector implements MobileIdConnector
 
     private function validateCertificateResult(string $result)
     {
-        if (strcasecmp("NOT_FOUND", $result) == 0) {
-            $this->logger->error("No certificate for the user was found");
-            throw new NotMIDClientException();
-        } else if (strcasecmp("NOT_ACTIVE", $result) == 0) {
-            $this->logger->error("Certificate was found but is not active");
-            throw new CertificateRevokedException("Inactive certificate found");
-        } else if (strcasecmp("OK", $result) != 0) {
-            $this->logger->error("Session status end result is '" . $result . "'");
-            throw new TechnicalErrorException("Session status end result is '" . $result . "'");
+        $result = strtoupper($result);
+
+        switch ($result) {
+            case 'OK':
+                return;
+            case 'NOT_FOUND':
+            case 'NOT_ACTIVE':
+                $this->logger->error("No certificate for the user were found");
+                throw new NotMidClientException();
+            default:
+                $this->logger->error("MID returned error code '" . $result . "'");
+                throw new MidInternalErrorException("MID returned error code '" . $result . "'");
         }
+        
     }
 
     private function postAuthenticationRequest(string $uri, AuthenticationRequest $request) : AuthenticationResponse
     {
         $responseJson = $this->postRequest($uri, $request);
-        if (!isset($responseJson['sessionId'])) throw new UnAuthorizedException();
+        if (!isset($responseJson['sessionId'])) throw new UnauthorizedException();
         return new AuthenticationResponse($responseJson);
     }
 
@@ -176,10 +180,25 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $result = curl_exec($ch);
 
-        $this->logger->debug('Response was '.$result);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        $this->logger->debug('Response was '.$result.', status code was '.$httpcode);
+        $responseAsArray = json_decode($result, true);
+
+        switch ($httpcode) {
+            case 200:
+                return $responseAsArray;
+            case 400:
+                throw new MissingOrInvalidParameterException($responseAsArray['error']);
+            case 401:
+                throw new UnauthorizedException($responseAsArray['error']);
+            case 405:
+                throw new MissingOrInvalidParameterException($responseAsArray['error']);
+            default:
+                throw new MidInternalErrorException($responseAsArray['error']);
+        }
 
 
-        return json_decode($result, true);
     }
 
     public static function newBuilder() : MobileIdRestConnectorBuilder

@@ -1,5 +1,4 @@
 <?php
-
 /*-
  * #%L
  * Mobile ID sample PHP client
@@ -26,10 +25,14 @@
  * #L%
  */
 require_once 'MobileIdException.php';
-class CertificateNotPresentException extends MobileIdException {
+class MissingOrInvalidParameterException extends MobileIdException {
 
-    public function __construct($message)
-    {
-        parent::__construct($message);
+    public function __construct($message) {
+        if (is_null($message)) {
+            parent::__construct();
+        } else {
+            parent::__construct($message);
+        }
     }
+
 }

@@ -25,10 +25,10 @@
  * #L%
  */
 require_once 'MobileIdException.php';
-class ResponseRetrievingException extends MobileIdException {
+class MidSessionTimeoutException extends MobileIdException {
 
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct("User didn't enter PIN code or communication error.");
     }
 }
