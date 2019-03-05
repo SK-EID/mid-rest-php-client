@@ -98,19 +98,19 @@ class SessionStatusDummy
         return $sessionStatus;
     }
 
-    public static function assertCompleteSessionStatus($sessionStatus)
+    public static function assertCompleteSessionStatus(SessionStatus $sessionStatus)
     {
         assert(!is_null($sessionStatus));
         assert($sessionStatus->getState() == "COMPLETE");
     }
 
-    public static function assertSuccessfulSessionStatus($sessionStatus)
+    public static function assertSuccessfulSessionStatus(SessionStatus $sessionStatus)
     {
         assert($sessionStatus->getState() == "COMPLETE");
         assert($sessionStatus->getResult() == "OK");
     }
 
-    public static function assertErrorSessionStatus($sessionStatus, $result)
+    public static function assertErrorSessionStatus(SessionStatus $sessionStatus, string $result)
     {
         assert($sessionStatus->getState() == "COMPLETE");
         assert($sessionStatus->getResult() == $result);

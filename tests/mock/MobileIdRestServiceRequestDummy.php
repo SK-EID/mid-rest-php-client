@@ -30,12 +30,12 @@ require_once __DIR__ . '/../ee.sk.mid/exception/TechnicalErrorException.php';
  */
 class MobileIdRestServiceRequestDummy
 {
-    public static function createValidAuthenticationRequest()
+    public static function createValidAuthenticationRequest() : AuthenticationRequest
     {
         return MobileIdRestServiceRequestDummy::createAuthenticationRequest(TestData::DEMO_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY);
     }
 
-    public static function createAuthenticationRequest($UUID, $name, $phoneNumber, $nationalIdentityNumber)
+    public static function createAuthenticationRequest(string $UUID, string $name, string $phoneNumber, string $nationalIdentityNumber) : AuthenticationRequest
     {
         return AuthenticationRequest::newBuilder()
             ->withRelyingPartyUUID($UUID)
@@ -47,7 +47,7 @@ class MobileIdRestServiceRequestDummy
             ->build();
     }
 
-    public static function getCertificate($client)
+    public static function getCertificate(MobileIdClient $client)
     {
         $request = CertificateRequest::newBuilder()
             ->withPhoneNumber(TestData::VALID_PHONE)
@@ -59,7 +59,7 @@ class MobileIdRestServiceRequestDummy
         return $client->createMobileIdCertificate($response);
     }
 
-    public static function createAndSendAuthentication($client, $phoneNumber, $nationalIdentityNumber, $authenticationHash)
+    public static function createAndSendAuthentication(MobileIdClient $client, string $phoneNumber, string $nationalIdentityNumber, MobileIdAuthenticationHashToSign $authenticationHash) : MobileIdAuthentication
     {
         $request = AuthenticationRequest::newBuilder()
             ->withPhoneNumber($phoneNumber)
@@ -72,19 +72,19 @@ class MobileIdRestServiceRequestDummy
         return $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }
 
-    public static function sendAuthentication($client, $request, $authenticationHash)
+    public static function sendAuthentication(MobileIdClient $client, AuthenticationRequest $request, MobileIdAuthenticationHashToSign $authenticationHash) : MobileIdAuthentication
     {
         $response = $client->getMobileIdConnector()->authenticate($request);
         $sessionStatus = $client->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
         return $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }
 
-    public static function makeValidCertificateRequest($client)
+    public static function makeValidCertificateRequest(MobileIdClient $client)
     {
         self::makeCertificateRequest($client, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY);
     }
 
-    public static function makeCertificateRequest($client, $phoneNumber, $nationalIdentityNumber)
+    public static function makeCertificateRequest($client, $phoneNumber, $nationalIdentityNumber) : void
     {
         $request = CertificateRequest::newBuilder()
             ->withRelyingPartyUUID($client->getRelyingPartyUUID())
@@ -96,12 +96,12 @@ class MobileIdRestServiceRequestDummy
         $client->createMobileIdCertificate($response);
     }
 
-    public static function makeValidAuthenticationRequest($client)
+    public static function makeValidAuthenticationRequest(MobileIdClient $client)
     {
         self::makeAuthenticationRequest($client, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY);
     }
 
-    public static function makeAuthenticationRequest($client, $phoneNumber, $nationalIdentityNumber)
+    public static function makeAuthenticationRequest(MobileIdClient $client, string $phoneNumber, string $nationalIdentityNumber) : void
     {
         $authenticationHash = MobileIdAuthenticationHashToSign::newBuilder()
             ->withHashInBase64(TestData::SHA512_HASH_IN_BASE64)
@@ -122,13 +122,13 @@ class MobileIdRestServiceRequestDummy
         $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }
 
-    private static function calculateHashInBase64($hashType)
+    private static function calculateHashInBase64(HashType $hashType) : string
     {
         $digestValue = $hashType->calculateDigest(TestData::DATA_TO_SIGN);
         return base64_encode($digestValue);
     }
 
-    private static function calculateMobileIdAuthenticationHash()
+    private static function calculateMobileIdAuthenticationHash() : MobileIdAuthenticationHashToSign
     {
         $digestValue = new Sha512();
         $digestValue->calculateDigest(TestData::DATA_TO_SIGN);
@@ -137,7 +137,7 @@ class MobileIdRestServiceRequestDummy
             ->build();
     }
 
-    public static function assertCorrectCertificateRequestMade($request)
+    public static function assertCorrectCertificateRequestMade(CertificateRequest $request)
     {
         try {
             TestCase::assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
@@ -149,7 +149,7 @@ class MobileIdRestServiceRequestDummy
         }
     }
 
-    public static function assertMadeCorrectAuthenticationRequesWithSHA256($request)
+    public static function assertMadeCorrectAuthenticationRequesWithSHA256(AuthenticationRequest $request)
     {
         try {
             TestCase::assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
@@ -173,7 +173,7 @@ class MobileIdRestServiceRequestDummy
         }
     }
 
-    public static function assertCorrectAuthenticationRequestMade($request)
+    public static function assertCorrectAuthenticationRequestMade(AuthenticationRequest $request)
     {
         try {
             TestCase::assertEquals(TestData::VALID_PHONE, $request->getPhoneNumber());
@@ -197,17 +197,17 @@ class MobileIdRestServiceRequestDummy
         }
     }
 
-    public static function assertCertificateCreated($certificate)
+    public static function assertCertificateCreated(string $certificate)
     {
-        assert(!isNull($certificate));
+        assert(!is_null($certificate));
     }
 
-    public static function assertAuthenticationCreated($authentication, $expectedHashToSignInBase64)
+    public static function assertAuthenticationCreated(MobileIdAuthentication $authentication, string $expectedHashToSignInBase64)
     {
         assert(!is_null($authentication));
-        assert(!isNull($authentication->getResult()) && !empty($authentication->getResult()));
-        assert(!isNull($authentication->getSignatureValueInBase64()) && !empty($authentication->getSignatureValueInBase64()));
-        assert(!isNull($authentication->getCertificate()));
+        assert(!is_null($authentication->getResult()) && !empty($authentication->getResult()));
+        assert(!is_null($authentication->getSignatureValueInBase64()) && !empty($authentication->getSignatureValueInBase64()));
+        assert(!is_null($authentication->getCertificate()));
         try {
             assertEquals($expectedHashToSignInBase64, $authentication->getSignedHashInBase64());
         } catch (Exception $e) {

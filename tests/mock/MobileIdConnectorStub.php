@@ -8,22 +8,19 @@ require_once __DIR__ . '/../../ee.sk.mid/rest/MobileIdConnector.php';
  */
 class MobileIdConnectorStub implements MobileIdConnector
 {
+    /** @var string $sessionIdUsed */
     private $sessionIdUsed;
     private $requestUsed;
     private $responses = array();
+
+    /** @var int $responseNumber */
     private $responseNumber = 0;
 
-    /**
-     * @return mixed
-     */
-    public function getSessionIdUsed()
+    public function getSessionIdUsed() : string
     {
         return $this->sessionIdUsed;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRequestUsed()
     {
         return $this->requestUsed;
@@ -46,7 +43,7 @@ class MobileIdConnectorStub implements MobileIdConnector
     }
 
 
-    public function getCertificate($request)
+    public function getCertificate(CertificateRequest $request) : CertificateChoiceResponse
     {
         return null;
     }
@@ -56,25 +53,25 @@ class MobileIdConnectorStub implements MobileIdConnector
         return null;
     }
 
-    public function authenticate($request)
+    public function authenticate(AuthenticationRequest $request) : AuthenticationResponse
     {
         return null;
     }
 
-    public function getSessionStatus($request, $path)
+    public function getSessionStatus(SessionStatusRequest $request) : SessionStatus
     {
         $this->sessionIdUsed = $request->getSessionId();
         $requestUsed = $request;
         return $this->responses[$this->responseNumber + 1];
     }
 
-    public function getAuthenticationSessionStatus($request)
+    public function getAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus
     {
-        return $this->getSessionStatus($request, SessionStatusPoller::AUTHENTICATION_SESSION_PATH);
+        return $this->getSessionStatus($request);
     }
 
     public function getSignatureSessionStatus($request)
     {
-        return $this->getSessionStatus($request, SessionStatusPoller::SIGNATURE_SESSION_PATH);
+        return $this->getSessionStatus($request);
     }
 }

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/SessionStatusRequest.p
  */
 class SessionStatusPollerDummy
 {
-    public static function pollSessionStatus($connector, $sessionId)
+    public static function pollSessionStatus(MobileIdRestConnector $connector, string $sessionId)
     {
         $sessionStatus = null;
         while ($sessionStatus == null || strcasecmp("RUNNING", $sessionStatus->getState()) == 0)
@@ -17,7 +17,6 @@ class SessionStatusPollerDummy
             $sessionStatus = $connector->getAuthenticationSessionStatus($request);
             sleep(1);
         }
-        echo 'status: '.$sessionStatus->getState(),PHP_EOL;
         assert($sessionStatus->getState() == "COMPLETE");
         return $sessionStatus;
     }

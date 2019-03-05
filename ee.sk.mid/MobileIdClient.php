@@ -110,7 +110,7 @@ class MobileIdClient
         return $sessionStatusPoller;
     }
 
-    public function createMobileIdCertificate(CertificateChoiceResponse $certificateChoiceResponse)
+    public function createMobileIdCertificate(CertificateChoiceResponse $certificateChoiceResponse) : array
     {
         $this->validateCertificateResult($certificateChoiceResponse->getResult());
         $this->validateCertificateResponse($certificateChoiceResponse);

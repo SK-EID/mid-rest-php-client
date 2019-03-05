@@ -7,13 +7,13 @@
  */
 class MobileIdRestServiceResponseDummy
 {
-    public static function assertAuthenticationPolled($sessionStatus)
+    public static function assertAuthenticationPolled(SessionStatus $sessionStatus)
     {
         self::assertSessionStatusPolled($sessionStatus);
         assert(!is_null($sessionStatus->getCert()) && !empty($sessionStatus->getCert()));
     }
 
-    private static function assertSessionStatusPolled($sessionStatus)
+    private static function assertSessionStatusPolled(SessionStatus $sessionStatus)
     {
         assert(!is_null($sessionStatus));
         assert(!is_null($sessionStatus->getState()) && !empty($sessionStatus->getState()));

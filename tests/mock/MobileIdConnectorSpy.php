@@ -13,90 +13,73 @@ require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/AuthenticationRequest.
 class MobileIdConnectorSpy implements MobileIdConnector
 {
 
+    /** @var SessionStatus $sessionStatusToRespond */
     private $sessionStatusToRespond;
+
+    /** @var CertificateChoiceResponse $certificateChoiceResponseToRespond */
     private $certificateChoiceResponseToRespond;
+
+    /** @var AuthenticationResponse $authenticationResponseToRespond */
     private $authenticationResponseToRespond;
+
     private $signatureResponseToRespond;
+
+    /** @var String $sessionIdUsed */
     private $sessionIdUsed;
+
+    /** @var CertificateRequest $certificateRequestUsed */
     private $certificateRequestUsed;
+
+    /** @var AuthenticationRequest $authenticationRequestUsed */
     private $authenticationRequestUsed;
+
     private $signatureRequestUsed;
 
-    /**
-     * @return mixed
-     */
-    public function getSessionStatusToRespond()
+    public function getSessionStatusToRespond(): SessionStatus
     {
         return $this->sessionStatusToRespond;
     }
 
-    /**
-     * @param mixed $sessionStatusToRespond
-     */
-    public function setSessionStatusToRespond($sessionStatusToRespond)
+    public function setSessionStatusToRespond(SessionStatus $sessionStatusToRespond): void
     {
         $this->sessionStatusToRespond = $sessionStatusToRespond;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCertificateChoiceResponseToRespond()
+    public function getCertificateChoiceResponseToRespond(): CertificateChoiceResponse
     {
         return $this->certificateChoiceResponseToRespond;
     }
 
-    /**
-     * @param mixed $certificateChoiceResponseToRespond
-     */
-    public function setCertificateChoiceResponseToRespond($certificateChoiceResponseToRespond)
+    public function setCertificateChoiceResponseToRespond(CertificateChoiceResponse $certificateChoiceResponseToRespond): void
     {
         $this->certificateChoiceResponseToRespond = $certificateChoiceResponseToRespond;
     }
 
-    /**
-     * @param mixed $authenticationResponseToRespond
-     */
-    public function setAuthenticationResponseToRespond($authenticationResponseToRespond)
+    public function setAuthenticationResponseToRespond(AuthenticationResponse $authenticationResponseToRespond): void
     {
         $this->authenticationResponseToRespond = $authenticationResponseToRespond;
     }
 
-    /**
-     * @param mixed $signatureResponseToRespond
-     */
     public function setSignatureResponseToRespond($signatureResponseToRespond)
     {
         $this->signatureResponseToRespond = $signatureResponseToRespond;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSessionIdUsed()
+    public function getSessionIdUsed(): String
     {
         return $this->sessionIdUsed;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCertificateRequestUsed()
+    public function getCertificateRequestUsed(): CertificateRequest
     {
         return $this->certificateRequestUsed;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAuthenticationRequestUsed()
+    public function getAuthenticationRequestUsed(): AuthenticationRequest
     {
         return $this->authenticationRequestUsed;
     }
 
-    /**
-     * @return mixed
-     */
     public function getSignatureRequestUsed()
     {
         return $this->signatureRequestUsed;
