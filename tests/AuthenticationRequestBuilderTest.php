@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 
 class AuthenticationRequestBuilderTest extends TestCase
 {
+    /** @var MobileIdConnectorSpy $connector */
     private $connector;
 
     protected function setUp()
@@ -181,7 +182,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException ResponseRetrievingException
+     * @expectedException MidInternalErrorException
      */
     public function authenticate_withResponseRetrievingError_shouldThrowException()
     {
@@ -201,7 +202,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
  * @test
- * @expectedException CertificateRevokedException
+ * @expectedException MidSessionTimeoutException
  */
     public function authenticate_withMSSPTransactionExpired_shouldThrowException()
     {
@@ -221,7 +222,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException MIDNotReadyException
+     * @expectedException MidInternalErrorException
      */
     public function authenticate_withMIDNotReady_shouldThrowException()
     {
@@ -251,7 +252,7 @@ class AuthenticationRequestBuilderTest extends TestCase
 
     /**
      * @test
-     * @expectedException InvalidCardResponseException
+     * @expectedException DeliveryException
      */
     public function authenticate_withInvalidCardResponse_shouldThrowException()
     {
@@ -299,7 +300,7 @@ class AuthenticationRequestBuilderTest extends TestCase
         $this->makeAuthenticationRequest($this->connector);
     }
     
-    private function makeAuthenticationRequest($connector)
+    private function makeAuthenticationRequest(MobileIdConnector $connector)
     {
         $authenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
 
@@ -313,7 +314,7 @@ class AuthenticationRequestBuilderTest extends TestCase
         $response = $connector->authenticate($request);
 
         $poller = new SessionStatusPoller($connector);
-        $sessionStatus = $poller->fetchFinalSessionStatus($response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
+        $sessionStatus = $poller->fetchFinalSessionStatus($response->getSessionId());
 
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)

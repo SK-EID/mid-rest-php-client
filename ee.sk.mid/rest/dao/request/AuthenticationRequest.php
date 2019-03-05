@@ -118,12 +118,12 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
         $this->displayText = $displayText;
     }
 
-    public function getDisplayTextFormat(): ?DisplayTextFormat
+    public function getDisplayTextFormat(): ?string
     {
         return $this->displayTextFormat;
     }
 
-    public function setDisplayTextFormat(?DisplayTextFormat $displayTextFormat): void
+    public function setDisplayTextFormat(?string $displayTextFormat): void
     {
         $this->displayTextFormat = $displayTextFormat;
     }

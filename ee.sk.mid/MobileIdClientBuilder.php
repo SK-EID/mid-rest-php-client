@@ -61,7 +61,7 @@ class MobileIdClientBuilder
         return $this->relyingPartyName;
     }
 
-    public function getHostUrl() : string
+    public function getHostUrl() : ?string
     {
         return $this->hostUrl;
     }

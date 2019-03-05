@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 class MobileIdRestConnectorCertificateIT extends TestCase
 {
 
+    /** @var MobileIdRestConnector $connector */
     private $connector;
 
     private function getConnector() : MobileIdRestConnector

@@ -1,5 +1,7 @@
 <?php
-
+require_once __DIR__ . '/../rest/dao/AuthenticationCertificateSubject.php';
+require_once __DIR__ . '/../rest/dao/AuthenticationCertificateIssuer.php';
+require_once __DIR__ . '/../rest/dao/AuthenticationCertificateExtensions.php';
 abstract class PropertyMapper
 {
   /**

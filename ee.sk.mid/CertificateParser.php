@@ -25,6 +25,7 @@
  * #L%
  */
 require_once __DIR__ . '/util/Logger.php';
+require_once __DIR__ . '/rest/dao/AuthenticationCertificate.php';
 class CertificateParser
 {
     /** @var Logger $logger */
@@ -40,7 +41,11 @@ class CertificateParser
     public static function parseX509Certificate( string $certificateValue ) : array
     {
         $certificateString = self::getPemCertificate(  $certificateValue );
-        return openssl_x509_parse( $certificateString );
+        $result = openssl_x509_parse( $certificateString );
+        if ($result == null) {
+            throw new MidInternalErrorException();
+        }
+        return $result;
     }
 
     public static function getPemCertificate( string $certificateValue ) : string

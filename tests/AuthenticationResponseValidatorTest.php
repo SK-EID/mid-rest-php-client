@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 class AuthenticationResponseValidatorTest extends TestCase
 {
 
+    /** @var AuthenticationResponseValidator $validator */
     private $validator;
 
     protected function setUp()
@@ -59,7 +60,7 @@ class AuthenticationResponseValidatorTest extends TestCase
             ->withSignatureValueInBase64(TestData::VALID_SIGNATURE_IN_BASE64)
             ->withCertificate(CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE))
             ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
-            ->withHashType(HashType::SHA512)
+            ->withHashType(new Sha512())
             ->build();
 
         $authenticationResult = $this->validator->validate($authentication);
@@ -69,6 +70,7 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
+     * @expectedException  MidInternalErrorException
      * @throws Exception
      */
     public function validate_whenResultNotOk_shouldReturnInvalidAuthenticationResult()
@@ -106,7 +108,7 @@ class AuthenticationResponseValidatorTest extends TestCase
             ->withSignatureValueInBase64(TestData::VALID_SIGNATURE_IN_BASE64)
             ->withCertificate(null)
             ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
-            ->withHashType(HashType::SHA512)
+            ->withHashType(new Sha512())
             ->build();
 
         $this->validator->validate($authentication);
@@ -136,7 +138,7 @@ class AuthenticationResponseValidatorTest extends TestCase
     public function constructAuthenticationIdentity_withEECertificate()
     {
         $cerificateEe = CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE);
-        $authenticationIdentity = $this->validator->constructAuthenticationIdentity($cerificateEe);
+        $authenticationIdentity = $this->validator->constructAuthenticationIdentity(new AuthenticationCertificate($cerificateEe));
 
         $this->assertEquals("MARY ÄNN", $authenticationIdentity->getGivenName());
         $this->assertEquals("O’CONNEŽ-ŠUSLIK TESTNUMBER", $authenticationIdentity->getSurName());
@@ -151,7 +153,7 @@ class AuthenticationResponseValidatorTest extends TestCase
     public function constructAuthenticationIdentity_withLVCertificate()
     {
         $certificateLv = CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_LV);
-        $authenticationIdentity = $this->validator->constructAuthenticationIdentity($certificateLv);
+        $authenticationIdentity = $this->validator->constructAuthenticationIdentity(new AuthenticationCertificate($certificateLv));
 
         $this->assertEquals("FORENAME-010117-21234", $authenticationIdentity->getGivenName());
         $this->assertEquals("SURNAME-010117-21234", $authenticationIdentity->getSurName());
@@ -166,12 +168,12 @@ class AuthenticationResponseValidatorTest extends TestCase
     public function constructAuthenticationIdentity_withLTCertificate()
     {
         $certificateLt = CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_LT);
-        $authenticationIdentity = $this->validator->constructAuthenticationIdentity($certificateLt);
+        $authenticationIdentity = $this->validator->constructAuthenticationIdentity(new AuthenticationCertificate($certificateLt));
 
-        $this->assertEquals("FORENAMEPNOLT-36009067968", $authenticationIdentity->getAuthenticationIdentity()->getGivenName());
-        $this->assertEquals("SURNAMEPNOLT-36009067968", $authenticationIdentity->getAuthenticationIdentity()->getSurName());
-        $this->assertEquals("36009067968", $authenticationIdentity->getAuthenticationIdentity()->getIdentityCode());
-        $this->assertEquals("LT", $authenticationIdentity->getAuthenticationIdentity()->getCountry());
+        $this->assertEquals("FORENAMEPNOLT-36009067968", $authenticationIdentity->getGivenName());
+        $this->assertEquals("SURNAMEPNOLT-36009067968", $authenticationIdentity->getSurName());
+        $this->assertEquals("36009067968", $authenticationIdentity->getIdentityCode());
+        $this->assertEquals("LT", $authenticationIdentity->getCountry());
     }
 
     private function createValidMobileIdAuthentication()
@@ -186,24 +188,32 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     private function createMobileIdAuthentication($result, $signatureInBase64)
     {
-        return MobileIdAuthentication::newBuilder()
-            ->withResult($result)
-            ->withSignatureValueInBase64($signatureInBase64)
-            ->withCertificate(CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE))
-            ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
-            ->withHashType(HashType::SHA512)
-            ->build();
+        try {
+            return MobileIdAuthentication::newBuilder()
+                ->withResult($result)
+                ->withSignatureValueInBase64($signatureInBase64)
+                ->withCertificate(CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE))
+                ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
+                ->withHashType(new Sha512())
+                ->build();
+        } catch (ReflectionException $e) {
+            return $e;
+        }
     }
 
     private function createMobileIdAuthenticationWithECC()
     {
-        return MobileIdAuthentication::newBuilder()
-            ->withResult("OK")
-            ->withSignatureValueInBase64(TestData::VALID_ECC_SIGNATURE_IN_BASE64)
-            ->withCertificate(CertificateParser::parseX509Certificate(TestData::ECC_CERTIFICATE))
-            ->withSignedHashInBase64(TestData::SIGNED_ECC_HASH_IN_BASE64)
-            ->withHashType(HashType::SHA512)
-            ->build();
+        try {
+            return MobileIdAuthentication::newBuilder()
+                ->withResult("OK")
+                ->withSignatureValueInBase64(TestData::VALID_ECC_SIGNATURE_IN_BASE64)
+                ->withCertificate(CertificateParser::parseX509Certificate(TestData::ECC_CERTIFICATE))
+                ->withSignedHashInBase64(TestData::SIGNED_ECC_HASH_IN_BASE64)
+                ->withHashType(new Sha512())
+                ->build();
+        } catch (ReflectionException $e) {
+            return $e;
+        }
     }
 
 
@@ -212,3 +222,4 @@ class AuthenticationResponseValidatorTest extends TestCase
 
 
 }
+

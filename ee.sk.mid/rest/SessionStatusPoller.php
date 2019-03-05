@@ -75,7 +75,7 @@ class SessionStatusPoller
         return $sessionStatus;
     }
 
-    private function pollForFinalSessionStatus(string $sessionId, int $longPollSeconds = 20) : SessionStatus
+    private function pollForFinalSessionStatus(string $sessionId, ?int $longPollSeconds = 20) : SessionStatus
     {
         $sessionStatus = null;
 
@@ -93,14 +93,14 @@ class SessionStatusPoller
         return $sessionStatus;
     }
 
-    private function pollSessionStatus(string $sessionId, int $longPollSeconds = null) : SessionStatus
+    private function pollSessionStatus(string $sessionId, ?int $longPollSeconds = null) : SessionStatus
     {
         $this->logger->debug('Polling session status');
         $request = $this->createSessionStatusRequest($sessionId, $longPollSeconds);
         return $this->connector->getAuthenticationSessionStatus($request);
     }
 
-    private function createSessionStatusRequest(string $sessionId, int $longPollSeconds) : SessionStatusRequest
+    private function createSessionStatusRequest(string $sessionId, ?int $longPollSeconds) : SessionStatusRequest
     {
         return new SessionStatusRequest($sessionId, $longPollSeconds);
     }

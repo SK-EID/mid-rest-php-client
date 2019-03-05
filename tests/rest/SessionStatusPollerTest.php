@@ -17,10 +17,11 @@ require_once __DIR__ . '/../../ee.sk.mid/rest/SessionStatusPoller.php';
  */
 class SessionStatusPollerTest extends TestCase
 {
+    /** @var MobileIdConnectorStub $connector */
     private $connector;
+
+    /** @var SessionStatusPoller $poller */
     private $poller;
-
-
 
     protected function setUp()
     {
@@ -35,8 +36,8 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getFirstCompleteResponse()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createCompleteSessionStatus());
-        $sessionStatus = $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createSuccessfulSessionStatus());
+        $sessionStatus = $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
         $this->assertEquals(TestData::SESSION_ID, $this->connector->getSessionIdUsed());
         $this->assertEquals(1, $this->connector->getResponseNumber());
         SessionStatusDummy::assertCompleteSessionStatus($sessionStatus);
@@ -48,28 +49,13 @@ class SessionStatusPollerTest extends TestCase
      */
     public function pollAndGetThirdCompleteResponse()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createRunningSessionStatus());
-        $this->connector->getResponses()->add(SessionStatusDummy::createRunningSessionStatus());
-        $this->connector->getResponses()->add(SessionStatusDummy::createSuccessfulSessionStatus());
+        $this->connector->addResponse(SessionStatusDummy::createRunningSessionStatus());
+        $this->connector->addResponse(SessionStatusDummy::createRunningSessionStatus());
+        $this->connector->addResponse(SessionStatusDummy::createSuccessfulSessionStatus());
 
-        $sessionStatus = $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
-        $this->assertEquals(3, $this->connector->getResponsesNumber());
+        $sessionStatus = $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
+        $this->assertEquals(3, $this->connector->getResponseNumber());
         SessionStatusDummy::assertCompleteSessionStatus($sessionStatus);
-    }
-
-    /**
-     * @test
-     * @throws Exception
-     */
-    public function setPollingSleepTime()
-    {
-        $this->poller->setPollingSleepTimeSeconds(2);
-        self::addMultipleRunningSessionResponses();
-        $this->connector->getResponses()->add(SessionStatusDummy::createSuccessfulSessionStatus());
-        $duration = self::measurePollingDuration();
-        echo $duration;
-        $this->assertEquals(true, $duration > 10000);
-        $this->assertEquals(true, $duration < 10100);
     }
 
     /**
@@ -78,18 +64,18 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getUserTimeoutResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createTimeoutSessionStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createTimeoutSessionStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
      * @test
-     * @expectedException ResponseRetrievingException
+     * @expectedException MidInternalErrorException
      */
     public function getResponseRetrievingErrorResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createResponseRetrievingErrorStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createResponseRetrievingErrorStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
@@ -98,18 +84,18 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getNotMIDClientResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createNotMIDClientStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createNotMIDClientStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
      * @test
-     * @expectedException CertificateRevokedException
+     * @expectedException MidSessionTimeoutException
      */
     public function getMSSSPTransactionExpiredResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createMSSPTransactionExpiredStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createMSSPTransactionExpiredStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
@@ -118,18 +104,18 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getUserCancellationResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createUserCancellationStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createUserCancellationStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
      * @test
-     * @expectedException MIDNotReadyException
+     * @expectedException MidInternalErrorException
      */
     public function getMIDNotReadyResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createMIDNotReadyStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createMIDNotReadyStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
@@ -138,8 +124,8 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getSimNotAvailableResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createSimNotAvailableStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createSimNotAvailableStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
@@ -148,18 +134,18 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getDeliveryErrorResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createDeliveryErrorStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createDeliveryErrorStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
      * @test
-     * @expectedException InvalidCardResponseException
+     * @expectedException DeliveryException
      */
     public function getInvalidCardResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createInvalidCardResponseStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createInvalidCardResponseStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
@@ -168,8 +154,8 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getSignatureHashMismatchResponse_shouldThrowException()
     {
-        $this->connector->getResponses()->add(SessionStatusDummy::createSignatureHashMismatchStatus());
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse(SessionStatusDummy::createSignatureHashMismatchStatus());
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
@@ -180,8 +166,8 @@ class SessionStatusPollerTest extends TestCase
     {
         $sessionStatus = SessionStatusDummy::createSuccessfulSessionStatus();
         $sessionStatus->setResult("HACKERMAN");
-        $this->connector->getResponses()->add($sessionStatus);
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse($sessionStatus);
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     /**
@@ -192,14 +178,14 @@ class SessionStatusPollerTest extends TestCase
     {
         $sessionStatus = SessionStatusDummy::createSuccessfulSessionStatus();
         $sessionStatus->setResult(null);
-        $this->connector->getResponses()->add($sessionStatus);
-        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $this->connector->addResponse($sessionStatus);
+        $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
     }
 
     private function measurePollingDuration()
     {
         $startTime = microtime(true);
-        $sessionStatus = $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID, TestData::AUTHENTICATION_SESSION_PATH);
+        $sessionStatus = $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
         SessionStatusDummy::assertCompleteSessionStatus($sessionStatus);
         $endTime = microtime(true) - $startTime;
         return $endTime - $startTime;
@@ -207,9 +193,10 @@ class SessionStatusPollerTest extends TestCase
 
     private function addMultipleRunningSessionResponses()
     {
+        $responses = $this->connector->getResponses();
         for ($i = 0; $i < 5; $i++)
         {
-            $this->connector->getResponses()->add(SessionStatusDummy::createRunningSessionStatus());
+            array_push($responses, SessionStatusDummy::createRunningSessionStatus());
         }
     }
 

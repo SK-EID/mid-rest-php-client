@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/SessionStatusRequest.p
  */
 class SessionStatusPollerDummy
 {
-    public static function pollSessionStatus(MobileIdRestConnector $connector, string $sessionId)
+    public static function pollSessionStatus(MobileIdRestConnector $connector, string $sessionId) : SessionStatus
     {
         $sessionStatus = null;
         while ($sessionStatus == null || strcasecmp("RUNNING", $sessionStatus->getState()) == 0)

@@ -52,7 +52,7 @@ class AuthenticationRequestBuilder
     /** @var string $displayText */
     private $displayText;
 
-    /** @var DisplayTextFormat $displayTextFormat */
+    /** @var string $displayTextFormat */
     private $displayTextFormat;
 
 
@@ -183,7 +183,7 @@ class AuthenticationRequestBuilder
         return $this->displayText;
     }
 
-    private function getDisplayTextFormat() : ?DisplayTextFormat
+    private function getDisplayTextFormat() : ?string
     {
         return $this->displayTextFormat;
     }

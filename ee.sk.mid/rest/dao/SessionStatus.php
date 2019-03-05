@@ -59,7 +59,7 @@ class SessionStatus
 
     }
 
-    public function getState() : string
+    public function getState() : ?string
     {
         return $this->state;
     }
@@ -69,12 +69,12 @@ class SessionStatus
         $this->state = $state;
     }
 
-    public function getResult() : string
+    public function getResult() : ?string
     {
         return $this->result;
     }
 
-    public function setResult(string $result)
+    public function setResult(?string $result)
     {
         $this->result = $result;
     }
@@ -97,7 +97,7 @@ class SessionStatus
         return $this->cert;
     }
 
-    public function setCert(string $cert)
+    public function setCert(?string $cert)
     {
         $this->cert = $cert;
     }

@@ -88,9 +88,8 @@ class MobileIdAuthenticationHashToSign
         if ($hashTypeName == 'sha512') {
             $hashType = new Sha512();
         }
-
         return MobileIdAuthenticationHashToSign::newBuilder()
-            ->withHashType($hashType)
+            ->withHashType(strtolower($hashType->getHashTypeName()))
             ->build();
     }
 
@@ -124,7 +123,7 @@ class MobileIdAuthenticationHashToSignBuilder
     /** @var string $hash */
     private $hash;
 
-    public function getHashType() : HashType
+    public function getHashType() : ?HashType
     {
         return $this->hashType;
     }

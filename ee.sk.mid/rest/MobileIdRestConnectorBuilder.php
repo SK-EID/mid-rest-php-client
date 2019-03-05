@@ -39,7 +39,7 @@ class MobileIdRestConnectorBuilder
     /** @var string $relyingPartyName */
     private $relyingPartyName;
 
-    public function getEndpointUrl() : string
+    public function getEndpointUrl() : ?string
     {
         return $this->endpointUrl;
     }
@@ -59,7 +59,7 @@ class MobileIdRestConnectorBuilder
         return $this->relyingPartyName;
     }
 
-    public function withEndpointUrl(string $endpointUrl) : MobileIdRestConnectorBuilder
+    public function withEndpointUrl(?string $endpointUrl) : MobileIdRestConnectorBuilder
     {
         $this->endpointUrl = $endpointUrl;
         return $this;

@@ -26,18 +26,17 @@ class MobileIdConnectorStub implements MobileIdConnector
         return $this->requestUsed;
     }
 
-    /**
-     * @return array
-     */
-    public function getResponses()
+    public function getResponses() : array
     {
         return $this->responses;
     }
 
-    /**
-     * @return int
-     */
-    public function getResponseNumber()
+    public function addResponse(SessionStatus $response) : void
+    {
+        array_push($this->responses, $response);
+    }
+
+    public function getResponseNumber() : int
     {
         return $this->responseNumber;
     }
@@ -62,7 +61,7 @@ class MobileIdConnectorStub implements MobileIdConnector
     {
         $this->sessionIdUsed = $request->getSessionId();
         $requestUsed = $request;
-        return $this->responses[$this->responseNumber + 1];
+        return $this->responses[$this->responseNumber++];
     }
 
     public function getAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus

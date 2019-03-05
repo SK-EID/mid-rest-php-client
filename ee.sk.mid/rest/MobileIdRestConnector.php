@@ -160,7 +160,6 @@ class MobileIdRestConnector implements MobileIdConnector
     private function postAuthenticationRequest(string $uri, AuthenticationRequest $request) : AuthenticationResponse
     {
         $responseJson = $this->postRequest($uri, $request);
-        if (!isset($responseJson['sessionId'])) throw new UnauthorizedException();
         return new AuthenticationResponse($responseJson);
     }
 

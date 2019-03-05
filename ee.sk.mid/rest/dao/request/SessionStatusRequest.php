@@ -35,7 +35,7 @@ class SessionStatusRequest
     /** @var string $networkInterface */
     private $networkInterface;
 
-    public function __construct(string $sessionId, int $longPollSeconds = null )
+    public function __construct(string $sessionId, ?int $longPollSeconds = null )
     {
         $this->sessionId = $sessionId;
 

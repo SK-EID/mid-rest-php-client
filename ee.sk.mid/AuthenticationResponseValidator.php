@@ -50,14 +50,12 @@ class AuthenticationResponseValidator
         if (!$this->isResultOk($authentication)) {
             $authenticationResult->setValid(false);
             $authenticationResult->addError(MobileIdAuthenticationError::INVALID_RESULT);
+            throw new MidInternalErrorException();
         }
-//        if (!$this->isSignatureValid($authentication)) {
-//            $authenticationResult->setValid(false);
-//            $authenticationResult->addError(MobileIdAuthenticationError::SIGNATURE_VERIFICATION_FAILURE);
-//        }
-        if (!$this->isCertificateValid($authentication->getCertificate())) {
-            $authenticationResult->setValid(false);
-            $authenticationResult->addError(MobileIdAuthenticationError::CERTIFICATE_EXPIRED);
+        if ( !$this->verifyCertificateExpiry( $authentication->getCertificate() ) ) {
+            $authenticationResult->setValid( false );
+            $authenticationResult->addError( MobileIdAuthenticationError::CERTIFICATE_EXPIRED );
+            throw new MidInternalErrorException();
         }
 
         return $authenticationResult;
@@ -77,37 +75,38 @@ class AuthenticationResponseValidator
         }
     }
 
-    function constructAuthenticationIdentity(AuthenticationCertificate $certificate) : AuthenticationIdentity
+    public function constructAuthenticationIdentity(AuthenticationCertificate $certificate) : AuthenticationIdentity
     {
         $identity = new AuthenticationIdentity();
         $subject = $certificate->getSubject();
         try {
             $subjectReflection = new ReflectionClass($subject);
+            foreach ( $subjectReflection->getProperties() as $property )
+            {
+                $property->setAccessible( true );
+                if ( strcasecmp( $property->getName(), 'GN' ) === 0 )
+                {
+                    $identity->setGivenName( $property->getValue( $subject ) );
+                }
+                elseif ( strcasecmp( $property->getName(), 'SN' ) === 0 )
+                {
+                    $identity->setSurName( $property->getValue( $subject ) );
+                }
+                elseif ( strcasecmp( $property->getName(), 'SERIALNUMBER' ) === 0 )
+                {
+                    $identityCode = $property->getValue( $subject );
+                    $identity->setIdentityCode(preg_replace('(PNO[A-Z][A-Z]-)','',$identityCode));
+                }
+                elseif ( strcasecmp( $property->getName(), 'C' ) === 0 )
+                {
+                    $identity->setCountry( $property->getValue( $subject ) );
+                }
+            }
         } catch (ReflectionException $e) {
-        }
 
-        foreach ( $subjectReflection->getProperties() as $property )
-        {
-            $property->setAccessible( true );
-            if ( strcasecmp( $property->getName(), 'GN' ) === 0 )
-            {
-                $identity->setGivenName( $property->getValue( $subject ) );
-            }
-            elseif ( strcasecmp( $property->getName(), 'SN' ) === 0 )
-            {
-                $identity->setSurName( $property->getValue( $subject ) );
-            }
-            elseif ( strcasecmp( $property->getName(), 'SERIALNUMBER' ) === 0 )
-            {
-                $identity->setIdentityCode( $property->getValue( $subject ) );
-            }
-            elseif ( strcasecmp( $property->getName(), 'C' ) === 0 )
-            {
-                $identity->setCountry( $property->getValue( $subject ) );
-            }
         }
-
         return $identity;
+
     }
 
     private function getIdentityNumber(string $serialNumber) : string
@@ -120,25 +119,9 @@ class AuthenticationResponseValidator
         return strcasecmp('OK', $authentication->getResult()) == 0;
     }
 
-//    private function isSignatureValid(MobileIdAuthentication $authentication) : bool
-//    {
-//        $preparedCertificate = CertificateParser::getPemCertificate( $authentication->getCertificate() );
-//        $signature = $authentication->getValue();
-//        $publicKey = openssl_pkey_get_public( $preparedCertificate );
-//        if ( $publicKey !== false )
-//        {
-//            $data = $authentication->getSignedData();
-//            return openssl_verify( $data, $signature, $publicKey, OPENSSL_ALGO_SHA512 ) === 1;
-//        }
-//        return false;
-//    }
-
-    private function isCertificateValid(AuthenticationCertificate $certificate) : bool
+    private function verifyCertificateExpiry( AuthenticationCertificate $authenticationCertificate )
     {
-        return !$certificate->getNotAfter()->before(new Date());
+        return $authenticationCertificate !== null && $authenticationCertificate->getValidTo() > time();
     }
-
-
-
 
 }

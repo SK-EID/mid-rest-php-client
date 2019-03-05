@@ -32,6 +32,7 @@ require_once 'MobileIdSignature.php';
 require_once 'MobileIdAuthentication.php';
 require_once 'CertificateParser.php';
 require_once 'MobileIdClientBuilder.php';
+
 class MobileIdClient
 {
 
@@ -71,10 +72,9 @@ class MobileIdClient
         $this->createSessionStatusPoller();
     }
 
-    public function getMobileIdConnector() : MobileIdConnector
+    public function getMobileIdConnector(): MobileIdConnector
     {
-        if (is_null($this->connector))
-        {
+        if (is_null($this->connector)) {
             $this->connector = MobileIdRestConnector::newBuilder()
                 ->withEndpointUrl($this->hostUrl)
                 ->withClientConfig($this->networkConnectionConfig)
@@ -85,22 +85,22 @@ class MobileIdClient
         return $this->connector;
     }
 
-    public function getSessionStatusPoller() : SessionStatusPoller
+    public function getSessionStatusPoller(): SessionStatusPoller
     {
         return $this->sessionStatusPoller;
     }
 
-    public function getRelyingPartyUUID() : string
+    public function getRelyingPartyUUID(): string
     {
         return $this->relyingPartyUUID;
     }
 
-    public function getRelyingPartyName() : string
+    public function getRelyingPartyName(): string
     {
         return $this->relyingPartyName;
     }
 
-    private function createSessionStatusPoller() : SessionStatusPoller
+    private function createSessionStatusPoller(): SessionStatusPoller
     {
         $sessionStatusPoller = new SessionStatusPoller($this->getMobileIdConnector());
         $sessionStatusPoller->setPollingSleepTimeSeconds($this->pollingSleepTimeoutSeconds);
@@ -108,18 +108,19 @@ class MobileIdClient
         return $sessionStatusPoller;
     }
 
-    public function createMobileIdCertificate(CertificateChoiceResponse $certificateChoiceResponse) : array
+    public function createMobileIdCertificate(CertificateChoiceResponse $certificateChoiceResponse): array
     {
         $this->validateCertificateResult($certificateChoiceResponse->getResult());
         $this->validateCertificateResponse($certificateChoiceResponse);
         return CertificateParser::parseX509Certificate($certificateChoiceResponse->getCert());
     }
 
-    public function createMobileIdAuthentication(SessionStatus $sessionStatus, MobileIdAuthenticationHashToSign $hash) : MobileIdAuthentication
+    public function createMobileIdAuthentication(SessionStatus $sessionStatus, MobileIdAuthenticationHashToSign $hash): MobileIdAuthentication
     {
         $this->validateResponse($sessionStatus);
         $sessionSignature = $sessionStatus->getSignature();
         $certificate = CertificateParser::parseX509Certificate($sessionStatus->getCert());
+
         return MobileIdAuthentication::newBuilder()
             ->withResult($sessionStatus->getResult())
             ->withSignatureValueInBase64($sessionSignature->getValue())
@@ -131,7 +132,7 @@ class MobileIdClient
 
     }
 
-    private function validateCertificateResult(?string $result) : void
+    private function validateCertificateResult(?string $result): void
     {
         if (strcasecmp('NOT_FOUND', $result) == 0) {
             self::$logger->error('No certificate for the user was found');
@@ -140,12 +141,12 @@ class MobileIdClient
             self::$logger->error('Inactive certificate found');
             throw new NotMidClientException();
         } else if (!strcasecmp('OK', $result) == 0) {
-            self::$logger->error("Session status end result is '".$result."'");
-            throw new MidInternalErrorException("Session status end result is '".$result."'");
+            self::$logger->error("Session status end result is '" . $result . "'");
+            throw new MidInternalErrorException("Session status end result is '" . $result . "'");
         }
     }
 
-    private function validateCertificateResponse(CertificateChoiceResponse $certificateChoiceResponse) : void
+    private function validateCertificateResponse(CertificateChoiceResponse $certificateChoiceResponse): void
     {
         if (is_null($certificateChoiceResponse->getCert()) || empty($certificateChoiceResponse->getCert())) {
             self::$logger->error('Certificate was not present in the session status response');
@@ -154,16 +155,15 @@ class MobileIdClient
     }
 
 
-    private function validateResponse(SessionStatus $sessionStatus) : void
+    private function validateResponse(SessionStatus $sessionStatus): void
     {
-        if (is_null($sessionStatus->getSignature()) || empty($sessionStatus->getSignature()->getValue()))
-        {
+        if (is_null($sessionStatus->getSignature()) || empty($sessionStatus->getSignature()->getValue())) {
             self::$logger->error('Signature was not present in the response');
             throw new MidInternalErrorException('Signature was not present in the response');
         }
     }
 
-    public static function newBuilder() : MobileIdClientBuilder
+    public static function newBuilder(): MobileIdClientBuilder
     {
         return new MobileIdClientBuilder();
     }

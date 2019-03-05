@@ -6,6 +6,7 @@ require_once __DIR__ . '/../ee.sk.mid/AuthenticationResponseValidator.php';
 require_once __DIR__ . '/../ee.sk.mid/Language.php';
 require_once __DIR__ . '/../ee.sk.mid/DisplayTextFormat.php';
 require_once __DIR__ . '/../ee.sk.mid/MobileIdClient.php';
+require_once __DIR__ . '/../ee.sk.mid/exception/UnauthorizedException.php';
 require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
 require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/CertificateRequest.php';
 require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
@@ -39,8 +40,8 @@ class ReadmeTest extends TestCase
             ->withHashType(HashType::SHA512)
             ->build();
 
-        $authentication = MobileIdAuthentication::newBuilder()->build();
-        $authenticationResult = new MobileIdAuthenticationResult();
+        $this->authentication = MobileIdAuthentication::newBuilder()->build();
+        $this->authenticationResult = new MobileIdAuthenticationResult();
     }
 
     private function getClient() : MobileIdClient {
@@ -57,6 +58,7 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
+     * @throws Exception
      */
     public function documentConfigureTheClient()
     {
@@ -71,6 +73,7 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
+     * @throws Exception
      */
     public function documentClientWithPollingTimeout()
     {
@@ -83,6 +86,7 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
+     * @expectedException NotMidClientException
      */
     public function documentRetrieveCert()
     {
@@ -97,9 +101,9 @@ class ReadmeTest extends TestCase
     }
 
 
-
     /**
      * @test
+     * @throws Exception
      */
     public function documentGetAuthenticationResponse()
     {
@@ -118,10 +122,10 @@ class ReadmeTest extends TestCase
 
         $response = $this->getClient()->getMobileIdConnector()->authenticate($request);
 
-        $sessionStatus = $this->getClient()->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionID(),
-            "/authentication/session/{sessionId}");
+        $sessionStatus = $this->getClient()->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionID());
 
         $authentication = $this->getClient()->createMobileIdAuthentication($sessionStatus, $authenticationHash);
+        $this->assertEquals(true, !is_null($authentication));
     }
 
     /**
@@ -141,19 +145,12 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
-     */
-    public function documentGettingErrors()
-    {
-        $errors = $this->getAuthenticationResult()->getErrors();
-    }
-
-    /**
-     * @test
-     * @expectedException Exception
+     * @expectedException UnauthorizedException
      */
     public function documentAuthenticationIdentityUsage()
     {
         $authenticationIdentity = $this->getAuthenticationResult()->getAuthenticationIdentity();
+        if ($authenticationIdentity == null) throw new UnauthorizedException();
         $givenName = $authenticationIdentity->getGivenName();
         $surName = $authenticationIdentity->getSurName();
         $identityCode = $authenticationIdentity->getIdentityCode();

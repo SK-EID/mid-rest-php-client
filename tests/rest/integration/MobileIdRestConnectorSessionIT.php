@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class MobileIdRestConnectorSessionIT extends TestCase
 {
+    /** @var MobileIdRestConnector $connector */
     private $connector;
 
     private function getConnector() : MobileIdRestConnector

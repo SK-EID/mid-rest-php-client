@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/../../util/PropertyMapper.php';
 class AuthenticationCertificate extends PropertyMapper
 {
   /**
