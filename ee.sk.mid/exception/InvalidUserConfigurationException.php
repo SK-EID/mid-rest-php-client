@@ -29,6 +29,6 @@ class InvalidUserConfigurationException extends MobileIdException {
 
     public function __construct()
     {
-        parent::__construct("Mobile-ID configuration on user's SIM card differs from what is configured on service provider side. Please contact your mobile operator.");
+        parent::__construct("Mobile-ID configuration on user's SIM card differs from what is configured on service provider side. User needs to contact his/her mobile operator.");
     }
 }
