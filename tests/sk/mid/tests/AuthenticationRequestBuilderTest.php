@@ -1,6 +1,6 @@
 <?php
 namespace sk\mid\tests;
-use sk\mid\EST;
+use sk\mid\language\EST;
 use sk\mid\exception\DeliveryException;
 use sk\mid\exception\NotMidClientException;
 use sk\mid\exception\PhoneNotAvailableException;
@@ -18,7 +18,6 @@ use sk\mid\MobileIdAuthenticationHashToSign;
 use sk\mid\MobileIdClient;
 use sk\mid\rest\MobileIdRestConnector;
 use sk\mid\rest\SessionStatusPoller;
-use sk\mid\rest\dao\SessionSignature;
 use sk\mid\rest\dao\SessionStatus;
 use sk\mid\rest\dao\request\AuthenticationRequest;
 use sk\mid\rest\dao\response\AuthenticationResponse;

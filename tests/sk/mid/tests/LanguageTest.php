@@ -11,10 +11,10 @@ namespace sk\mid\tests;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use sk\mid\ENG;
-use sk\mid\EST;
-use sk\mid\LIT;
-use sk\mid\RUS;
+use sk\mid\language\ENG;
+use sk\mid\language\EST;
+use sk\mid\language\LIT;
+use sk\mid\language\RUS;
 
 
 class LanguageTest extends TestCase

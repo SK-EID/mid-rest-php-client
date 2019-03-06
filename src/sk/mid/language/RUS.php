@@ -1,18 +1,16 @@
 <?php
 
-namespace sk\mid;
+namespace sk\mid\language;
 
 
-class EST extends Language
+class RUS extends Language
 {
     public function __construct()
     {
-        parent::__construct("EST");
+        parent::__construct("RUS");
     }
-
     public static function asType() : Language
     {
-        return new EST();
+        return new RUS();
     }
 }
-

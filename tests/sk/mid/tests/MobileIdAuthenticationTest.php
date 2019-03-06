@@ -4,7 +4,7 @@ namespace sk\mid\tests;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
-use sk\mid\Sha512;
+use sk\mid\hashtype\Sha512;
 use sk\mid\tests\mock\TestData;
 use sk\mid\HashType;
 use sk\mid\CertificateParser;

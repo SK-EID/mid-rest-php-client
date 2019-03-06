@@ -1,7 +1,7 @@
 <?php
 namespace sk\mid\tests\rest\integration;
 use Exception;
-use sk\mid\EST;
+use sk\mid\language\EST;
 use sk\mid\exception\MissingOrInvalidParameterException;
 use sk\mid\rest\dao\request\AuthenticationRequest;
 use sk\mid\rest\MobileIdRestConnector;

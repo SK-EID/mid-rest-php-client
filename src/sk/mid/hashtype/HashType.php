@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace sk\mid;
+namespace sk\mid\hashtype;
 use sk\mid\util\DigestCalculator;
 abstract class HashType
 {

@@ -26,7 +26,10 @@
  */
 namespace sk\mid;
 use sk\mid\exception\MissingOrInvalidParameterException;
-use sk\mid\HashType;
+use sk\mid\hashtype\HashType;
+use sk\mid\hashtype\Sha256;
+use sk\mid\hashtype\Sha384;
+use sk\mid\hashtype\Sha512;
 use sk\mid\VerificationCodeCalculator;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 

@@ -24,6 +24,9 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid\util;
+use Exception;
+
 class Curl
 {
     const

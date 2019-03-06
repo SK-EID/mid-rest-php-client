@@ -4,9 +4,9 @@ namespace sk\mid\tests\integration;
 use Exception;
 use phpDocumentor\Reflection\Types\This;
 use PHPUnit\Framework\TestCase;
-use sk\mid\ENG;
+use sk\mid\hashtype\HashType;
+use sk\mid\language\ENG;
 use sk\mid\exception\MissingOrInvalidParameterException;
-use sk\mid\HashType;
 use sk\mid\MobileIdClient;
 use sk\mid\rest\dao\response\AuthenticationResponse;
 use sk\mid\rest\dao\SessionStatus;
@@ -99,7 +99,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
-        $resp = self::generateSessionId($client);
+        self::generateSessionId($client);
     }
 
     /**
@@ -114,7 +114,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
-        $resp = self::generateSessionId($client);
+        self::generateSessionId($client);
     }
 
     /**
@@ -128,7 +128,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
-        $resp = self::generateSessionId($client);
+        self::generateSessionId($client);
     }
 
 
@@ -146,7 +146,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withMobileIdConnector(MobileIdRestConnector::newBuilder()->build())
             ->build();
 
-        $resp = self::generateSessionId($client);
+        self::generateSessionId($client);
     }
 
     private static function generateSessionId(MobileIdClient $client) : AuthenticationResponse

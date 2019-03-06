@@ -6,7 +6,7 @@
  * Time: 12:43 PM
  */
 
-namespace sk\mid;
+namespace sk\mid\language;
 
 
 class LIT extends Language

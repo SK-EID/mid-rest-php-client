@@ -2,7 +2,7 @@
 namespace sk\mid\tests;
 use Exception;
 use sk\mid\VerificationCodeCalculator;
-use sk\mid\HashType;
+use sk\mid\hashtype\HashType;
 use sk\mid\util\DigestCalculator;
 
 use PHPUnit\Framework\TestCase;

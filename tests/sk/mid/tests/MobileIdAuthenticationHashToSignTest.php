@@ -3,7 +3,7 @@ namespace sk\mid\tests;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use sk\mid\HashType;
+use sk\mid\hashtype\HashType;
 use sk\mid\MobileIdAuthenticationHashToSign;
 use sk\mid\tests\mock\TestData;
 use sk\mid\VerificationCodeCalculator;

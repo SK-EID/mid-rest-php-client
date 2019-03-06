@@ -28,8 +28,8 @@ namespace sk\mid\rest\dao\request;
 use sk\mid\MobileIdAuthenticationHashToSign;
 use sk\mid\util\Logger;
 use sk\mid\exception\MissingOrInvalidParameterException;
-use sk\mid\Language;
-use sk\mid\HashType;
+use sk\mid\language\Language;
+use sk\mid\hashtype\HashType;
 class AuthenticationRequestBuilder
 {
     /** @var string $relyingPartyName */

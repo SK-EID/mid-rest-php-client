@@ -2,14 +2,14 @@
 namespace sk\mid\tests\mock;
 use Exception;
 use sk\mid\AuthenticationResponseValidator;
-use sk\mid\EST;
+use sk\mid\hashtype\HashType;
+use sk\mid\language\EST;
 use sk\mid\MobileIdClient;
 use sk\mid\rest\dao\request\AuthenticationRequest;
 use sk\mid\rest\dao\request\CertificateRequest;
-use sk\mid\HashType;
 use sk\mid\Language;
 use sk\mid\MobileIdAuthenticationHashToSign;
-use sk\mid\Sha512;
+use sk\mid\hashtype\Sha512;
 use sk\mid\tests\mock\TestData;
 use sk\mid\MobileIdAuthentication;
 

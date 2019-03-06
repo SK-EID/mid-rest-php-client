@@ -6,7 +6,7 @@
  * Time: 12:55 PM
  */
 
-namespace sk\mid;
+namespace sk\mid\hashtype;
 
 
 class Sha256 extends HashType

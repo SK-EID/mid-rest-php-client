@@ -26,6 +26,7 @@
  */
 namespace sk\mid;
 
+use sk\mid\hashtype\HashType;
 use sk\mid\VerificationCodeCalculator;
 use sk\mid\rest\dao\AuthenticationCertificate;
 use sk\mid\exception\MissingOrInvalidParameterException;

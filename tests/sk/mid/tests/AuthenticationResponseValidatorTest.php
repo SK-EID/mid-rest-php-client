@@ -8,7 +8,7 @@ use sk\mid\exception\MidInternalErrorException;
 use sk\mid\HashType;
 use sk\mid\MobileIdAuthentication;
 use sk\mid\rest\dao\AuthenticationCertificate;
-use sk\mid\Sha512;
+use sk\mid\hashtype\Sha512;
 use sk\mid\tests\mock\TestData;
 
 use PHPUnit\Framework\TestCase;

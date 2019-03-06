@@ -5,9 +5,9 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use sk\mid\HashType;
 use sk\mid\MobileIdAuthenticationHashToSign;
-use sk\mid\Sha256;
-use sk\mid\Sha384;
-use sk\mid\Sha512;
+use sk\mid\hashtype\Sha256;
+use sk\mid\hashtype\Sha384;
+use sk\mid\hashtype\Sha512;
 
 /**
  * Created by PhpStorm.
