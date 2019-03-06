@@ -20,13 +20,6 @@ require_once __DIR__ . '/../../../src/sk/mid/rest/dao/response/AuthenticationRes
 
 use PHPUnit\Framework\TestCase;
 
-/**
- * Created by PhpStorm.
- * User: mikks
- * Date: 2/21/2019
- * Time: 3:10 PM
- */
-
 class AuthenticationRequestBuilderTest extends TestCase
 {
     /** @var MobileIdConnectorSpy $connector */
