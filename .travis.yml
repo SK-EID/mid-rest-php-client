@@ -4,7 +4,7 @@ php:
 
 before_install:
   - composer install
-script: phpunit --coverage-clover=coverage.xml --bootstrap vendor/autoload.php tests
+script: phpunit --coverage-clover=coverage.xml --configuration phpunit.xml --bootstrap vendor/autoload.php tests
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
