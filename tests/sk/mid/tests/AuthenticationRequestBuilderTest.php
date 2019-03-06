@@ -298,7 +298,31 @@ class AuthenticationRequestBuilderTest extends TestCase
         $this->connector->getSessionStatusToRespond()->setCert(null);
         $this->makeAuthenticationRequest($this->connector);
     }
-    
+
+    /**
+     * @test
+     * @expectedException MissingOrInvalidParameterException
+     */
+    public function authenticate_withMobileIdSignatureWithEmptyBase64Value_shouldThrowException()
+    {
+        $signature = MobileIdSignature::newBuilder()
+            ->withValueInBase64("")
+            ->withAlgorithmName("sha512WithRSAEncryption")
+            ->build();
+    }
+
+    /**
+     * @test
+     * @expectedException MissingOrInvalidParameterException
+     */
+    public function authenticate_withMobileIdSignatureWithNullBase64Value_shouldThrowException()
+    {
+        $signature = MobileIdSignature::newBuilder()
+            ->withValueInBase64(null)
+            ->withAlgorithmName("sha512WithRSAEncryption")
+            ->build();
+    }
+
     private function makeAuthenticationRequest(MobileIdConnector $connector)
     {
         $authenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();

@@ -33,9 +33,6 @@ class SessionStatusRequest
     /** @var int $sessionStatusResponseSocketTimeoutMs */
     private $sessionStatusResponseSocketTimeoutMs;
 
-    /** @var string $networkInterface */
-    private $networkInterface;
-
     public function __construct(string $sessionId, ?int $longPollSeconds = null )
     {
         $this->sessionId = $sessionId;
@@ -55,39 +52,39 @@ class SessionStatusRequest
         return $this->sessionStatusResponseSocketTimeoutMs;
     }
 
-    public function setSessionStatusResponseSocketTimeoutMs(int $sessionStatusResponseSocketTimeoutMs ) : SessionStatusRequest
-    {
-        $this->sessionStatusResponseSocketTimeoutMs = $sessionStatusResponseSocketTimeoutMs;
-        return $this;
-    }
+//    public function setSessionStatusResponseSocketTimeoutMs(int $sessionStatusResponseSocketTimeoutMs ) : SessionStatusRequest
+//    {
+//        $this->sessionStatusResponseSocketTimeoutMs = $sessionStatusResponseSocketTimeoutMs;
+//        return $this;
+//    }
 
-    public function isSessionStatusResponseSocketTimeoutSet() : bool
-    {
-        return isset( $this->sessionStatusResponseSocketTimeoutMs ) && $this->sessionStatusResponseSocketTimeoutMs > 0;
-    }
-
-    public function setNetworkInterface(string $networkInterface ) : SessionStatusRequest
-    {
-        $this->networkInterface = $networkInterface;
-        return $this;
-    }
-
-    public function toArray() : array
-    {
-        $requiredArray = array();
-        $requiredArray['sessionId'] = $this->sessionId;
-
-        if ( $this->isSessionStatusResponseSocketTimeoutSet() )
-        {
-            $requiredArray[ 'timeoutMs' ] = $this->sessionStatusResponseSocketTimeoutMs;
-        }
-
-        if ( isset( $this->networkInterface ) )
-        {
-            $requiredArray[ 'networkInterface' ] = $this->networkInterface;
-        }
-
-        return $requiredArray;
-    }
+//    public function isSessionStatusResponseSocketTimeoutSet() : bool
+//    {
+//        return isset( $this->sessionStatusResponseSocketTimeoutMs ) && $this->sessionStatusResponseSocketTimeoutMs > 0;
+//    }
+//
+//    public function setNetworkInterface(string $networkInterface ) : SessionStatusRequest
+//    {
+//        $this->networkInterface = $networkInterface;
+//        return $this;
+//    }
+//
+//    public function toArray() : array
+//    {
+//        $requiredArray = array();
+//        $requiredArray['sessionId'] = $this->sessionId;
+//
+//        if ( $this->isSessionStatusResponseSocketTimeoutSet() )
+//        {
+//            $requiredArray[ 'timeoutMs' ] = $this->sessionStatusResponseSocketTimeoutMs;
+//        }
+//
+//        if ( isset( $this->networkInterface ) )
+//        {
+//            $requiredArray[ 'networkInterface' ] = $this->networkInterface;
+//        }
+//
+//        return $requiredArray;
+//    }
 
 }

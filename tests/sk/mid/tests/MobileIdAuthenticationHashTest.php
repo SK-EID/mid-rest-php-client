@@ -33,11 +33,22 @@ class MobileIdAuthenticationHashTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function shouldGenerateRandomHashOfType_SHA256_hashHasCorrectTypeAndLength()
+    public function shouldGenerateDefaultHashOfType_SHA256_hashHasCorrectTypeAndLength()
     {
         $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
         $this->assertEquals(new Sha256(), $mobileIdAuthenticationHash->getHashType());
         $this->assertEquals(44, strlen($mobileIdAuthenticationHash->getHashInBase64()));
+    }
+
+    /**
+     * @test
+     * @throws Exception
+     */
+    public function shouldGenerateRandomHashOfType_SHA256_hashHasCorrectTypeAndLength()
+    {
+        $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfType(HashType::SHA256);
+        $this->assertEquals(new Sha256(), $mobileIdAuthenticationHash->getHashType());
+        $this->assertEquals(64, strlen($mobileIdAuthenticationHash->getHashInBase64()));
     }
 
     /**

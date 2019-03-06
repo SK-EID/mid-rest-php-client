@@ -33,7 +33,7 @@ class AuthenticationResponse
 
     public function __construct(array $responseJson)
     {
-        $this->sessionId = $responseJson['sessionID'] ?? $responseJson['sessionId'];
+        $this->setSessionId($responseJson['sessionID'] ?? $responseJson['sessionId']);
     }
 
 

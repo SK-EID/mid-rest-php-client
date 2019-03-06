@@ -2,6 +2,7 @@
 namespace sk\mid\tests\integration;
 
 use Exception;
+use phpDocumentor\Reflection\Types\This;
 use PHPUnit\Framework\TestCase;
 use sk\mid\ENG;
 use sk\mid\exception\MissingOrInvalidParameterException;
@@ -9,6 +10,7 @@ use sk\mid\HashType;
 use sk\mid\MobileIdClient;
 use sk\mid\rest\dao\response\AuthenticationResponse;
 use sk\mid\rest\dao\SessionStatus;
+use sk\mid\rest\MobileIdRestConnector;
 use sk\mid\rest\SessionStatusPoller;
 use sk\mid\util\DigestCalculator;
 use sk\mid\util\Logger;
@@ -58,6 +60,7 @@ class MobileIdAuthenticationIT extends TestCase
         $this->assertThat($sessionStatus->getResult(), $this->equalTo('OK'));
         $this->assertThat($sessionStatus->getState(), $this->equalTo('COMPLETE'));
         $this->assertThat($sessionStatus->getSignature()->getAlgorithmName(), $this->equalTo('SHA256WithECEncryption'));
+        $this->assertThat($sessionStatus->getSignature()->getValueInBase64(), $this->equalTo(''));
     }
 
     /**
@@ -133,12 +136,14 @@ class MobileIdAuthenticationIT extends TestCase
      * @test
      * @expectedException MissingOrInvalidParameterException
      */
-    public function mobileAuthenticate_relyingPartyUUID_shouldThrowParameterMissingException()
+    public function mobileAuthenticate_relyingPartyUUIDEmpty_shouldThrowParameterMissingException()
     {
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID("")
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withNetworkConnectionConfig("")
+            ->withMobileIdConnector(MobileIdRestConnector::newBuilder()->build())
             ->build();
 
         $resp = self::generateSessionId($client);

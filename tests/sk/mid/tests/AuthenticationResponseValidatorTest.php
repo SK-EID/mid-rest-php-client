@@ -32,6 +32,15 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
+     * @expectedException MidInternalErrorException;
+     */
+    public function validate_certificateIsNull_shouldThrowException() {
+        $authentication = $this->createMobileIdAuthenticationWithNullCertificate("OK", TestData::VALID_SIGNATURE_IN_BASE64);
+        $this->validator->validate($authentication);
+    }
+
+    /**
+     * @test
      * @throws Exception
      */
     public function validate_whenRSA_shouldReturnValidAuthenticationResult()
@@ -200,6 +209,20 @@ class AuthenticationResponseValidatorTest extends TestCase
                 ->withResult($result)
                 ->withSignatureValueInBase64($signatureInBase64)
                 ->withCertificate(CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE))
+                ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
+                ->withHashType(new Sha512())
+                ->build();
+        } catch (ReflectionException $e) {
+            return $e;
+        }
+    }
+
+    private function createMobileIdAuthenticationWithNullCertificate($result, $signatureInBase64) {
+        try {
+            return MobileIdAuthentication::newBuilder()
+                ->withResult($result)
+                ->withSignatureValueInBase64($signatureInBase64)
+                ->withCertificate(null)
                 ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
                 ->withHashType(new Sha512())
                 ->build();

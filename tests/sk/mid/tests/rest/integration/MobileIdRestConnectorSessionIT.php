@@ -2,6 +2,7 @@
 namespace sk\mid\tests\rest\integration;
 use sk\mid\exception\MidSessionNotFoundException;
 use sk\mid\rest\dao\request\SessionStatusRequest;
+use sk\mid\rest\dao\SessionStatus;
 use sk\mid\rest\MobileIdRestConnector;
 use sk\mid\rest\SessionStatusPoller;
 use sk\mid\tests\mock\TestData;
@@ -58,5 +59,16 @@ class MobileIdRestConnectorSessionIT extends TestCase
         $request = new SessionStatusRequest(TestData::SESSION_ID);
         $this->getConnector()->getAuthenticationSessionStatus($request);
     }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function getCorrectSessionStatusResponseSocketTimeoutMs() {
+        $request = new SessionStatusRequest(TestData::SESSION_ID, 2);
+        self::assertEquals(2000, $request->getSessionStatusResponseSocketTimeoutMs());
+    }
+
+
 
 }

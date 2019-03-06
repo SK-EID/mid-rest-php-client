@@ -115,12 +115,6 @@ class MobileIdRestServiceRequestDummy
         $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }
 
-    private static function calculateHashInBase64(HashType $hashType) : string
-    {
-        $digestValue = $hashType->calculateDigest(TestData::DATA_TO_SIGN);
-        return base64_encode($digestValue);
-    }
-
     public static function calculateMobileIdAuthenticationHash() : MobileIdAuthenticationHashToSign
     {
         $digestValue = new Sha512();

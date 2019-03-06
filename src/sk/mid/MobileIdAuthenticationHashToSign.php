@@ -25,8 +25,10 @@
  * #L%
  */
 namespace sk\mid;
+use sk\mid\exception\MissingOrInvalidParameterException;
 use sk\mid\HashType;
 use sk\mid\VerificationCodeCalculator;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 class MobileIdAuthenticationHashToSign
 {
@@ -107,7 +109,7 @@ class MobileIdAuthenticationHashToSign
             case 'sha512':
                 return new Sha512();
         }
-        return null;
+        throw new InvalidParameterException();
 
     }
 
@@ -134,12 +136,8 @@ class MobileIdAuthenticationHashToSignBuilder
 
     public function withHashType(string $hashType) : MobileIdAuthenticationHashToSignBuilder
     {
-        if (is_string($hashType)) {
-            $this->hashType = MobileIdAuthenticationHashToSign::strToHashType($hashType);
+        $this->hashType = MobileIdAuthenticationHashToSign::strToHashType($hashType);
 
-        } else {
-            $this->hashType = $hashType;
-        }
         return $this;
     }
 

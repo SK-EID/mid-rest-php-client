@@ -27,6 +27,7 @@
 namespace sk\mid\rest\dao;
 use sk\mid\exception\MissingOrInvalidParameterException;
 use sk\mid\MobileIdSignature;
+
 class SessionStatus
 {
     /** @var string $state */
