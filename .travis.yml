@@ -2,9 +2,9 @@ language: php
 php:
   - '7.1'
 
-branches:
-  only:
-    master
 before_install:
   - composer install
-script: phpunit --exclude-group FITS --bootstrap vendor/autoload.php tests
+script: phpunit --coverage-clover=coverage.xml --bootstrap vendor/autoload.php tests
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
