@@ -60,7 +60,8 @@ class MobileIdAuthenticationIT extends TestCase
         $this->assertThat($sessionStatus->getResult(), $this->equalTo('OK'));
         $this->assertThat($sessionStatus->getState(), $this->equalTo('COMPLETE'));
         $this->assertThat($sessionStatus->getSignature()->getAlgorithmName(), $this->equalTo('SHA256WithECEncryption'));
-        $this->assertThat($sessionStatus->getSignature()->getValueInBase64(), $this->equalTo(''));
+        $this->assertEquals(true, !is_null($sessionStatus->getSignature()->getValueInBase64()));
+        $this->assertEquals(true, !empty($sessionStatus->getSignature()->getValueInBase64()));
     }
 
     /**

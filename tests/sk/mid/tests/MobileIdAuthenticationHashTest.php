@@ -3,7 +3,7 @@ namespace sk\mid\tests;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use sk\mid\HashType;
+use sk\mid\hashtype\HashType;
 use sk\mid\MobileIdAuthenticationHashToSign;
 use sk\mid\hashtype\Sha256;
 use sk\mid\hashtype\Sha384;
@@ -48,7 +48,7 @@ class MobileIdAuthenticationHashTest extends TestCase
     {
         $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfType(HashType::SHA256);
         $this->assertEquals(new Sha256(), $mobileIdAuthenticationHash->getHashType());
-        $this->assertEquals(64, strlen($mobileIdAuthenticationHash->getHashInBase64()));
+        $this->assertEquals(44, strlen($mobileIdAuthenticationHash->getHashInBase64()));
     }
 
     /**

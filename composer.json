@@ -13,8 +13,8 @@
   },
   "autoload": {
     "psr-0": {
-      "sk\\mid": "src/",
-      "sk\\mid\\tests": "tests/"
+      "sk\\mid": "./src/",
+      "sk\\mid\\tests": "./tests/"
     }
   }
 }

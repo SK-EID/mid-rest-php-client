@@ -100,7 +100,7 @@ class AuthenticationResponseValidator
                 elseif ( strcasecmp( $property->getName(), 'SERIALNUMBER' ) === 0 )
                 {
                     $identityCode = $property->getValue( $subject );
-                    $identity->setIdentityCode(preg_replace('^PNO[A-Z][A-Z]-','',$identityCode));
+                    $identity->setIdentityCode(preg_replace('(^PNO[A-Z][A-Z]-)','',$identityCode));
                 }
                 elseif ( strcasecmp( $property->getName(), 'C' ) === 0 )
                 {
