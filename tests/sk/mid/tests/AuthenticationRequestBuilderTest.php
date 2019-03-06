@@ -302,18 +302,6 @@ class AuthenticationRequestBuilderTest extends TestCase
      * @test
      * @expectedException MissingOrInvalidParameterException
      */
-    public function authenticate_withMobileIdSignatureWithEmptyBase64Value_shouldThrowException()
-    {
-        $signature = MobileIdSignature::newBuilder()
-            ->withValueInBase64("")
-            ->withAlgorithmName("sha512WithRSAEncryption")
-            ->build();
-    }
-
-    /**
-     * @test
-     * @expectedException MissingOrInvalidParameterException
-     */
     public function authenticate_withMobileIdSignatureWithNullBase64Value_shouldThrowException()
     {
         $signature = MobileIdSignature::newBuilder()
