@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../../../ee.sk.mid/rest/MobileIdRestConnector.php';
-require_once __DIR__ . '/../../../ee.sk.mid/exception/UnauthorizedException.php';
+require_once __DIR__ . '/../../../../../src/sk/mid/rest/MobileIdRestConnector.php';
+require_once __DIR__ . '/../../../../../src/sk/mid/exception/UnauthorizedException.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../../mock/MobileIdRestServiceResponseDummy.php';
 require_once __DIR__ . '/../../mock/TestData.php';

@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdAuthenticationHashToSign.php';
 
 /**
  * Created by PhpStorm.

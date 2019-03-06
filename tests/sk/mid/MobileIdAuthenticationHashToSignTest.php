@@ -2,9 +2,9 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
-require_once __DIR__ . '/../ee.sk.mid/VerificationCodeCalculator.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/MissingOrInvalidParameterException.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../../../src/sk/mid/VerificationCodeCalculator.php';
+require_once __DIR__ . '/../../../src/sk/mid/exception/MissingOrInvalidParameterException.php';
 
 /**
  * Created by PhpStorm.

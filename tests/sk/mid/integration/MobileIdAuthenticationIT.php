@@ -2,14 +2,14 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../ee.sk.mid/util/Logger.php';
+require_once __DIR__ . '/../../../../src/sk/mid/util/Logger.php';
 
 require_once __DIR__ . '/../mock/TestData.php';
-require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
-require_once __DIR__ . '/../../ee.sk.mid/Language.php';
-require_once __DIR__ . '/../../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
-require_once __DIR__ . '/../../ee.sk.mid/MobileIdClient.php';
-require_once __DIR__ . '/../../ee.sk.mid/exception/NotMidClientException.php';
+require_once __DIR__ . '/../../../../src/sk/mid/rest/dao/request/AuthenticationRequest.php';
+require_once __DIR__ . '/../../../../src/sk/mid/Language.php';
+require_once __DIR__ . '/../../../../src/sk/mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../../../../src/sk/mid/MobileIdClient.php';
+require_once __DIR__ . '/../../../../src/sk/mid/exception/NotMidClientException.php';
 
 class MobileIdAuthenticationIT extends TestCase
 {

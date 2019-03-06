@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../ee.sk.mid/rest/MobileIdConnector.php';
-require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
+require_once __DIR__ . '/../../../../src/sk/mid/rest/MobileIdConnector.php';
+require_once __DIR__ . '/../../../../src/sk/mid/rest/dao/request/AuthenticationRequest.php';
 
 
 /**

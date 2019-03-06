@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../ee.sk.mid/AuthenticationResponseValidator.php';
-require_once __DIR__ . '/../ee.sk.mid/HashType.php';
-require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthentication.php';
+require_once __DIR__ . '/../../../src/sk/mid/AuthenticationResponseValidator.php';
+require_once __DIR__ . '/../../../src/sk/mid/HashType.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdAuthentication.php';
 require_once __DIR__ . '/mock/TestData.php';
 
 use PHPUnit\Framework\TestCase;

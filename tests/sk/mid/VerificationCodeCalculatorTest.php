@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../ee.sk.mid/VerificationCodeCalculator.php';
-require_once __DIR__ . '/../ee.sk.mid/HashType.php';
-require_once __DIR__ . '/../ee.sk.mid/util/DigestCalculator.php';
+require_once __DIR__ . '/../../../src/sk/mid/VerificationCodeCalculator.php';
+require_once __DIR__ . '/../../../src/sk/mid/HashType.php';
+require_once __DIR__ . '/../../../src/sk/mid/util/DigestCalculator.php';
 use PHPUnit\Framework\TestCase;
 
 final class VerificationCodeCalculatorTest extends TestCase

@@ -2,15 +2,15 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../ee.sk.mid/AuthenticationResponseValidator.php';
-require_once __DIR__ . '/../ee.sk.mid/Language.php';
-require_once __DIR__ . '/../ee.sk.mid/DisplayTextFormat.php';
-require_once __DIR__ . '/../ee.sk.mid/MobileIdClient.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/UnauthorizedException.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/CertificateRequest.php';
-require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
-require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationResult.php';
+require_once __DIR__ . '/../../../src/sk/mid/AuthenticationResponseValidator.php';
+require_once __DIR__ . '/../../../src/sk/mid/Language.php';
+require_once __DIR__ . '/../../../src/sk/mid/DisplayTextFormat.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdClient.php';
+require_once __DIR__ . '/../../../src/sk/mid/exception/UnauthorizedException.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/dao/request/AuthenticationRequest.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/dao/request/CertificateRequest.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdAuthenticationResult.php';
 
 
 /**

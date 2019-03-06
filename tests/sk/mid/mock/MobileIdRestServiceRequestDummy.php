@@ -1,10 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
-require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/CertificateRequest.php';
-require_once __DIR__ . '/../../ee.sk.mid/HashType.php';
-require_once __DIR__ . '/../../ee.sk.mid/Language.php';
-require_once __DIR__ . '/../../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../../../../src/sk/mid/rest/dao/request/AuthenticationRequest.php';
+require_once __DIR__ . '/../../../../src/sk/mid/rest/dao/request/CertificateRequest.php';
+require_once __DIR__ . '/../../../../src/sk/mid/HashType.php';
+require_once __DIR__ . '/../../../../src/sk/mid/Language.php';
+require_once __DIR__ . '/../../../../src/sk/mid/MobileIdAuthenticationHashToSign.php';
 require_once __DIR__ . '/TestData.php';
 
 use PHPUnit\Framework\TestCase;

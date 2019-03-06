@@ -4,8 +4,8 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../mock/MobileIdRestServiceRequestDummy.php';
 require_once __DIR__ . '/../mock/TestData.php';
-require_once __DIR__ . '/../../ee.sk.mid/MobileIdClient.php';
-require_once __DIR__ . '/../../ee.sk.mid/exception/NotMidClientException.php';
+require_once __DIR__ . '/../../../../src/sk/mid/MobileIdClient.php';
+require_once __DIR__ . '/../../../../src/sk/mid/exception/NotMidClientException.php';
 
 class MobileIdCertificateIT extends TestCase
 {

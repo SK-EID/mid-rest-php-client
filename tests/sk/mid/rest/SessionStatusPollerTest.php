@@ -2,12 +2,12 @@
 
 use PHPUnit\Framework\TestCase;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../../vendor/autoload.php';
 
 require_once __DIR__ . '/../mock/SessionStatusDummy.php';
 require_once __DIR__ . '/../mock/MobileIdConnectorStub.php';
 require_once __DIR__ . '/../mock/TestData.php';
-require_once __DIR__ . '/../../ee.sk.mid/rest/SessionStatusPoller.php';
+require_once __DIR__ . '/../../../../src/sk/mid/rest/SessionStatusPoller.php';
 
 /**
  * Created by PhpStorm.

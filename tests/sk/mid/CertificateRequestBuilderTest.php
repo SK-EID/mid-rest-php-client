@@ -2,13 +2,13 @@
 require_once __DIR__ . '/mock/MobileIdConnectorSpy.php';
 require_once __DIR__ . '/mock/TestData.php';
 
-require_once __DIR__ . '/../ee.sk.mid/MobileIdClient.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/MobileIdRestConnector.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/CertificateRequest.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/response/CertificateChoiceResponse.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdClient.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/MobileIdRestConnector.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/dao/request/CertificateRequest.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/dao/response/CertificateChoiceResponse.php';
 
-require_once __DIR__ . '/../ee.sk.mid/exception/MissingOrInvalidParameterException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/MidInternalErrorException.php';
+require_once __DIR__ . '/../../../src/sk/mid/exception/MissingOrInvalidParameterException.php';
+require_once __DIR__ . '/../../../src/sk/mid/exception/MidInternalErrorException.php';
 
 use PHPUnit\Framework\TestCase;
 

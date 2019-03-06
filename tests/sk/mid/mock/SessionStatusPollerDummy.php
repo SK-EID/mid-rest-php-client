@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../ee.sk.mid/rest/dao/request/SessionStatusRequest.php';
+require_once __DIR__ . '/../../../../src/sk/mid/rest/dao/request/SessionStatusRequest.php';
 /**
  * Created by PhpStorm.
  * User: mikks

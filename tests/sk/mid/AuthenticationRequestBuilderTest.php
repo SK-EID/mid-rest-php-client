@@ -3,19 +3,19 @@ require_once __DIR__ . '/mock/MobileIdConnectorSpy.php';
 require_once __DIR__ . '/mock/SessionStatusDummy.php';
 require_once __DIR__ . '/mock/TestData.php';
 
-require_once __DIR__ . '/../ee.sk.mid/exception/MissingOrInvalidParameterException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/MidSessionTimeoutException.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/MidInternalErrorException.php';
+require_once __DIR__ . '/../../../src/sk/mid/exception/MissingOrInvalidParameterException.php';
+require_once __DIR__ . '/../../../src/sk/mid/exception/MidSessionTimeoutException.php';
+require_once __DIR__ . '/../../../src/sk/mid/exception/MidInternalErrorException.php';
 
-require_once __DIR__ . '/../ee.sk.mid/Language.php';
-require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthenticationHashToSign.php';
-require_once __DIR__ . '/../ee.sk.mid/MobileIdClient.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/MobileIdRestConnector.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/SessionStatusPoller.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/SessionSignature.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/SessionStatus.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/request/AuthenticationRequest.php';
-require_once __DIR__ . '/../ee.sk.mid/rest/dao/response/AuthenticationResponse.php';
+require_once __DIR__ . '/../../../src/sk/mid/Language.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdAuthenticationHashToSign.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdClient.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/MobileIdRestConnector.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/SessionStatusPoller.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/dao/SessionSignature.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/dao/SessionStatus.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/dao/request/AuthenticationRequest.php';
+require_once __DIR__ . '/../../../src/sk/mid/rest/dao/response/AuthenticationResponse.php';
 
 
 use PHPUnit\Framework\TestCase;

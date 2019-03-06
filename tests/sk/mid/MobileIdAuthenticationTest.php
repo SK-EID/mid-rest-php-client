@@ -6,10 +6,10 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/mock/TestData.php';
 
 
-require_once __DIR__ . '/../ee.sk.mid/HashType.php';
-require_once __DIR__ . '/../ee.sk.mid/CertificateParser.php';
-require_once __DIR__ . '/../ee.sk.mid/MobileIdAuthentication.php';
-require_once __DIR__ . '/../ee.sk.mid/exception/MissingOrInvalidParameterException.php';
+require_once __DIR__ . '/../../../src/sk/mid/HashType.php';
+require_once __DIR__ . '/../../../src/sk/mid/CertificateParser.php';
+require_once __DIR__ . '/../../../src/sk/mid/MobileIdAuthentication.php';
+require_once __DIR__ . '/../../../src/sk/mid/exception/MissingOrInvalidParameterException.php';
 
 /**
  * Created by PhpStorm.
