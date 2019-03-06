@@ -3,7 +3,7 @@
   "type": "library",
   "description": "Mobile-ID Relying Party PHP Api v5 client",
   "require": {
-    "php": "^7.1",
+    "php": "^7.2",
     "ext-openssl": "*",
     "ext-curl": "*",
     "ext-json": "*"
@@ -13,8 +13,9 @@
   },
   "autoload": {
     "psr-0": {
-      "sk\\mid": "src/",
+      "sk\\mid\\": "src/",
       "sk\\mid\\tests": "tests/"
     }
   }
+
 }
