@@ -20,7 +20,7 @@ class MobileIdClientTest extends TestCase
 {
     private $client;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
