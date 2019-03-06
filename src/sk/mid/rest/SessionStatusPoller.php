@@ -24,16 +24,18 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/../util/Logger.php';
-require_once __DIR__ . '/dao/SessionStatus.php';
-require_once __DIR__ . '/dao/request/SessionStatusRequest.php';
-require_once __DIR__ . '/../exception/MidInternalErrorException.php';
-require_once __DIR__ . '/../exception/MidSessionTimeoutException.php';
-require_once __DIR__ . '/../exception/NotMidClientException.php';
-require_once __DIR__ . '/../exception/UserCancellationException.php';
-require_once __DIR__ . '/../exception/PhoneNotAvailableException.php';
-require_once __DIR__ . '/../exception/DeliveryException.php';
-require_once __DIR__ . '/../exception/InvalidUserConfigurationException.php';
+namespace sk\mid\rest;
+use sk\mid\util\Logger;
+use sk\mid\rest\dao\SessionStatus;
+use sk\mid\rest\dao\request\SessionStatusRequest;
+use sk\mid\exception\MidInternalErrorException;
+use sk\mid\exception\MidSessionNotFoundException;
+use sk\mid\exception\NotMidClientException;
+use sk\mid\exception\UserCancellationException;
+use sk\mid\exception\PhoneNotAvailableException;
+use sk\mid\exception\DeliveryException;
+use sk\mid\exception\InvalidUserConfigurationException;
+use sk\mid\exception\MidSessionTimeoutException;
 
 class SessionStatusPoller
 {

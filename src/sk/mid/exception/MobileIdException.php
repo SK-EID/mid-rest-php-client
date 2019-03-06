@@ -24,6 +24,8 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid\exception;
+use RuntimeException;
 class MobileIdException extends RuntimeException {
 
     public function __construct($message = null, $cause = null)

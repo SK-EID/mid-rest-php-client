@@ -25,8 +25,10 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/../../../util/Logger.php';
-require_once __DIR__ . '/../../../exception/MissingOrInvalidParameterException.php';
+namespace sk\mid\rest\dao\request;
+use sk\mid\util\Logger;
+use sk\mid\exception\MissingOrInvalidParameterException;
+
 class CertificateRequestBuilder
 {
     /** @var Logger $logger */

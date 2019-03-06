@@ -24,11 +24,13 @@
  * THE SOFTWARE.
  * #L%
  */
-
-require_once __DIR__ . '/dao/request/AuthenticationRequest.php';
-require_once __DIR__ . '/dao/request/CertificateRequest.php';
-require_once __DIR__ . '/dao/request/SessionStatusRequest.php';
-require_once __DIR__ . '/dao/response/CertificateChoiceResponse.php';
+namespace sk\mid\rest;
+use sk\mid\rest\dao\request\AuthenticationRequest;
+use sk\mid\rest\dao\request\CertificateRequest;
+use sk\mid\rest\dao\request\SessionStatusRequest;
+use sk\mid\rest\dao\response\CertificateChoiceResponse;
+use sk\mid\rest\dao\response\AuthenticationResponse;
+use sk\mid\rest\dao\SessionStatus;
 
 interface MobileIdConnector
 {

@@ -24,9 +24,11 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid;
 
-
-require_once __DIR__ . '/VerificationCodeCalculator.php';
+use sk\mid\VerificationCodeCalculator;
+use sk\mid\rest\dao\AuthenticationCertificate;
+use sk\mid\exception\MissingOrInvalidParameterException;
 
 class MobileIdAuthentication
 {

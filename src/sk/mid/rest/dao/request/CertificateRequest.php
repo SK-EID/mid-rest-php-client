@@ -24,8 +24,10 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once 'AbstractRequest.php';
-require_once 'CertificateRequestBuilder.php';
+namespace sk\mid\rest\dao\request;
+use JsonSerializable;
+use sk\mid\rest\dao\request\AbstractRequest;
+use sk\mid\rest\dao\request\CertificateRequestBuilder;
 class CertificateRequest extends AbstractRequest implements JsonSerializable
 {
 

@@ -24,11 +24,12 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/../../../MobileIdAuthenticationHashToSign.php';
-require_once __DIR__ . '/../../../util/Logger.php';
-require_once __DIR__ . '/../../../exception/MissingOrInvalidParameterException.php';
-require_once __DIR__ . '/../../../exception/MissingOrInvalidParameterException.php';
-
+namespace sk\mid\rest\dao\request;
+use sk\mid\MobileIdAuthenticationHashToSign;
+use sk\mid\util\Logger;
+use sk\mid\exception\MissingOrInvalidParameterException;
+use sk\mid\Language;
+use sk\mid\HashType;
 class AuthenticationRequestBuilder
 {
     /** @var string $relyingPartyName */

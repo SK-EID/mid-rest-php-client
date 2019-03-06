@@ -24,10 +24,9 @@
  * THE SOFTWARE.
  * #L%
  */
-
-
-require_once 'HashType.php';
-require_once 'VerificationCodeCalculator.php';
+namespace sk\mid;
+use sk\mid\HashType;
+use sk\mid\VerificationCodeCalculator;
 
 class MobileIdAuthenticationHashToSign
 {

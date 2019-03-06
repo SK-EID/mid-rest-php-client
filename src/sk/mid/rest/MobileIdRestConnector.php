@@ -24,17 +24,24 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/../util/Logger.php';
-require_once __DIR__ . '/../util/Curl.php';
-require_once __DIR__ . '/../exception/MidSessionNotFoundException.php';
-require_once __DIR__ . '/../exception/MobileIdException.php';
-require_once __DIR__ . '/../exception/NotMidClientException.php';
-require_once __DIR__ . '/dao/request/AuthenticationRequest.php';
-require_once __DIR__ . '/dao/response/CertificateChoiceResponse.php';
-require_once __DIR__ . '/dao/response/AuthenticationResponse.php';
-require_once __DIR__ . '/dao/SessionStatus.php';
-require_once 'MobileIdConnector.php';
-require_once 'MobileIdRestConnectorBuilder.php';
+namespace sk\mid\rest;
+use sk\mid\util\Logger;
+use sk\mid\util\Curl;
+use sk\mid\exception\MidSessionNotFoundException;
+use sk\mid\exception\MissingOrInvalidParameterException;
+use sk\mid\exception\MidInternalErrorException;
+use sk\mid\exception\UnauthorizedException;
+use sk\mid\exception\MobileIdException;
+use sk\mid\exception\NotMidClientException;
+use sk\mid\rest\dao\request\AuthenticationRequest;
+use sk\mid\rest\dao\response\CertificateChoiceResponse;
+use sk\mid\rest\dao\response\AuthenticationResponse;
+use sk\mid\rest\dao\SessionStatus;
+use sk\mid\rest\MobileIdConnector;
+use sk\mid\rest\MobileIdRestConnectorBuilder;
+use sk\mid\rest\dao\request\CertificateRequest;
+use sk\mid\rest\dao\request\AbstractRequest;
+use sk\mid\rest\dao\request\SessionStatusRequest;
 
 class MobileIdRestConnector implements MobileIdConnector
 {

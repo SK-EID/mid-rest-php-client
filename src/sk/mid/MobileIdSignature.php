@@ -24,6 +24,10 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid;
+
+use sk\mid\exception\MissingOrInvalidParameterException;
+
 class MobileIdSignature
 {
     /** @var string $valueInBase64 */

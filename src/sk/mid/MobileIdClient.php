@@ -24,14 +24,19 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/util/Logger.php';
-require_once __DIR__ . '/rest/SessionStatusPoller.php';
-require_once __DIR__ . '/exception/MidInternalErrorException.php';
-require_once __DIR__ . '/rest/MobileIdRestConnector.php';
-require_once 'MobileIdSignature.php';
-require_once 'MobileIdAuthentication.php';
-require_once 'CertificateParser.php';
-require_once 'MobileIdClientBuilder.php';
+namespace sk\mid;
+use sk\mid\exception\NotMidClientException;
+use sk\mid\rest\dao\response\CertificateChoiceResponse;
+use sk\mid\rest\dao\SessionStatus;
+use sk\mid\rest\MobileIdConnector;
+use sk\mid\util\Logger;
+use sk\mid\rest\SessionStatusPoller;
+use sk\mid\exception\MidInternalErrorException;
+use sk\mid\rest\MobileIdRestConnector;
+use sk\mid\MobileIdSignature;
+use sk\mid\MobileIdAuthentication;
+use sk\mid\CertificateParser;
+use sk\mid\MobileIdClientBuilder;
 
 class MobileIdClient
 {

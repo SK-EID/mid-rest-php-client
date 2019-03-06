@@ -24,7 +24,10 @@
  * THE SOFTWARE.
  * #L%
  */
-abstract class Language {
+
+namespace sk\mid;
+abstract class Language
+{
 
     const EST = 'EST';
     const ENG = 'ENG';
@@ -42,50 +45,7 @@ abstract class Language {
     {
         return $this->languageName;
     }
+}
 
-}
-class EST extends Language
-{
-    public function __construct()
-    {
-        parent::__construct("EST");
-    }
 
-    public static function asType() : Language
-    {
-        return new EST();
-    }
-}
-class ENG extends Language
-{
-    public function __construct()
-    {
-        parent::__construct("ENG");
-    }
-    public static function asType() : Language
-    {
-        return new ENG();
-    }
-}
-class RUS extends Language
-{
-    public function __construct()
-    {
-        parent::__construct("RUS");
-    }
-    public static function asType() : Language
-    {
-        return new RUS();
-    }
-}
-class LIT extends Language
-{
-    public function __construct()
-    {
-        parent::__construct("LIT");
-    }
-    public static function asType() : Language
-    {
-        return new LIT();
-    }
-}
+

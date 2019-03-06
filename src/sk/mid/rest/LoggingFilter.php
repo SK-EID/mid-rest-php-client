@@ -24,7 +24,8 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/../util/Logger.php';
+namespace sk\mid\rest;
+use sk\mid\util\Logger;
 class LoggingFilter
 {
     /** @var Logger $logger */

@@ -1,5 +1,6 @@
 <?php
-
+namespace sk\mid\rest\dao;
+use sk\mid\util\PropertyMapper;
 class AuthenticationCertificateSubject extends PropertyMapper
 {
   /**

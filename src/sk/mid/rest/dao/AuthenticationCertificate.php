@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../../util/PropertyMapper.php';
+namespace sk\mid\rest\dao;
+use sk\mid\util\PropertyMapper;
 class AuthenticationCertificate extends PropertyMapper
 {
   /**

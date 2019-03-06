@@ -24,6 +24,8 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid\rest\dao;
+
 class SessionSignature
 {
     /** @var string $algorithm */

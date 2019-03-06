@@ -24,6 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid\util;
 class DigestCalculator
 {
 

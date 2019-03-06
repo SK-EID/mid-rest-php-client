@@ -24,7 +24,9 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/../../MobileIdSignature.php';
+namespace sk\mid\rest\dao;
+use sk\mid\exception\MissingOrInvalidParameterException;
+use sk\mid\MobileIdSignature;
 class SessionStatus
 {
     /** @var string $state */

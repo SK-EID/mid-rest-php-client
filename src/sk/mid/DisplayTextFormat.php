@@ -24,6 +24,8 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid;
+
 class DisplayTextFormat
 {
 

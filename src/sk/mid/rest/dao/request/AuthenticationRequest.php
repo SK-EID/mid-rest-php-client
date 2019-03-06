@@ -24,8 +24,12 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once 'AbstractRequest.php';
-require_once 'AuthenticationRequestBuilder.php';
+namespace sk\mid\rest\dao\request;
+use JsonSerializable;
+use \sk\mid\DisplayTextFormat;
+use sk\mid\Language;
+use sk\mid\rest\dao\request\AuthenticationRequestBuilder;
+use sk\mid\rest\dao\request\AbstractRequest;
 class AuthenticationRequest extends AbstractRequest implements JsonSerializable
 {
     /**
@@ -132,6 +136,7 @@ class AuthenticationRequest extends AbstractRequest implements JsonSerializable
     {
         return new AuthenticationRequestBuilder();
     }
+
 
     public function jsonSerialize() : array {
         $params = [

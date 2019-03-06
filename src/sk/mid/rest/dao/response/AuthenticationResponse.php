@@ -24,6 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid\rest\dao\response;
 class AuthenticationResponse
 {
 

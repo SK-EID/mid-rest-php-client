@@ -24,6 +24,8 @@
  * THE SOFTWARE.
  * #L%
  */
+namespace sk\mid;
+
 abstract class MobileIdAuthenticationError
 {
     const INVALID_RESULT = 'Response result verification failed';

@@ -1,7 +1,12 @@
 <?php
-require_once __DIR__ . '/../rest/dao/AuthenticationCertificateSubject.php';
-require_once __DIR__ . '/../rest/dao/AuthenticationCertificateIssuer.php';
-require_once __DIR__ . '/../rest/dao/AuthenticationCertificateExtensions.php';
+namespace sk\mid\util;
+use ReflectionMethod;
+use ReflectionProperty;
+use sk\mid\rest\dao\AuthenticationCertificateSubject;
+use sk\mid\rest\dao\AuthenticationCertificateIssuer;
+use sk\mid\rest\dao\AuthenticationCertificateExtensions;
+use PHPUnit\Runner\Exception;
+use ReflectionException;
 abstract class PropertyMapper
 {
   /**
@@ -15,12 +20,13 @@ abstract class PropertyMapper
     }
   }
 
-  /**
-   * @param string $key
-   * @param array $arguments
-   * @throws Exception
-   * @return mixed
-   */
+    /**
+     * @param string $key
+     * @param array $arguments
+     * @throws Exception
+     * @throws ReflectionException
+     * @return mixed
+     */
   public function __call( $key, array $arguments )
   {
     if ( method_exists( $this, $key ) )

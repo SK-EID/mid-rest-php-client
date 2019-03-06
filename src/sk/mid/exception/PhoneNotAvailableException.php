@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once 'MobileIdException.php';
+namespace sk\mid\exception;
 class PhoneNotAvailableException extends MobileIdException {
 
     public function __construct()

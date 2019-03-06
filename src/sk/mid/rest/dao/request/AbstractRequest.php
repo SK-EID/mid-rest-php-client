@@ -25,7 +25,7 @@
  * THE SOFTWARE.
  * #L%
  */
-
+namespace sk\mid\rest\dao\request;
 abstract class AbstractRequest
 {
     /** @var string $relyingPartyUUID */

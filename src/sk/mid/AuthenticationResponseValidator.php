@@ -24,12 +24,17 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/util/Logger.php';
-require_once __DIR__ . '/exception/MidInternalErrorException.php';
-require_once 'MobileIdAuthenticationResult.php';
-require_once 'MobileIdAuthenticationError.php';
-require_once 'AuthenticationIdentity.php';
-require_once 'CertificateParser.php';
+namespace sk\mid;
+use ReflectionClass;
+use ReflectionException;
+use sk\mid\rest\dao\AuthenticationCertificate;
+use sk\mid\util\Logger;
+use sk\mid\exception\MidInternalErrorException;
+use sk\mid\MobileIdAuthenticationResult;
+use sk\mid\MobileIdAuthenticationError;
+use sk\mid\AuthenticationIdentity;
+use sk\mid\CertificateParser;
+use sk\mid\MobileIdAuthentication;
 
 class AuthenticationResponseValidator
 {
@@ -107,11 +112,6 @@ class AuthenticationResponseValidator
         }
         return $identity;
 
-    }
-
-    private function getIdentityNumber(string $serialNumber) : string
-    {
-        return preg_replace('^PNO[A-Z][A-Z]-', '', $serialNumber);
     }
 
     private function isResultOk(MobileIdAuthentication $authentication) : bool

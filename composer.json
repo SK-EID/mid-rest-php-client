@@ -10,5 +10,11 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^8"
+  },
+  "autoload": {
+    "psr-0": {
+      "sk\\mid": "src/",
+      "sk\\mid\\tests": "tests/"
+    }
   }
 }

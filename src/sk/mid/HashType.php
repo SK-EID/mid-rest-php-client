@@ -24,7 +24,8 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/util/DigestCalculator.php';
+namespace sk\mid;
+use sk\mid\util\DigestCalculator;
 abstract class HashType
 {
 
@@ -83,28 +84,3 @@ abstract class HashType
 
 }
 
-class Sha256 extends HashType
-{
-    public function __construct()
-    {
-        parent::__construct("SHA-256", "SHA256", 256, array(48, 49, 48, 13, 6, 9, 96, -122, 72, 1, 101, 3, 4, 2, 1, 5, 0, 4, 32));
-    }
-}
-
-class Sha384 extends HashType
-{
-    public function __construct()
-    {
-        parent::__construct("SHA-384", "SHA384", 384, array(48, 65, 48, 13, 6, 9, 96, -122, 72, 1, 101, 3, 4, 2, 2, 5, 0, 4, 48));
-    }
-}
-
-class Sha512 extends HashType
-{
-
-    public function __construct()
-    {
-        parent::__construct("SHA-512", "SHA512", 512, array(48, 81, 48, 13, 6, 9, 96, -122, 72, 1, 101, 3, 4, 2, 3, 5, 0, 4, 64));
-    }
-
-}

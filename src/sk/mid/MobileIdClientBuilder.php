@@ -24,7 +24,10 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once 'MobileIdClient.php';
+namespace sk\mid;
+use sk\mid\MobileIdClient;
+use sk\mid\rest\MobileIdRestConnector;
+
 class MobileIdClientBuilder
 {
 

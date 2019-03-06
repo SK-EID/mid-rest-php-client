@@ -24,8 +24,10 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once __DIR__ . '/util/Logger.php';
-require_once __DIR__ . '/rest/dao/AuthenticationCertificate.php';
+namespace sk\mid;
+use sk\mid\util\Logger;
+use sk\mid\rest\dao\AuthenticationCertificate;
+use sk\mid\exception\MidInternalErrorException;
 class CertificateParser
 {
     /** @var Logger $logger */

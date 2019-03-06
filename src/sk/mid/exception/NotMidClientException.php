@@ -24,13 +24,11 @@
  * THE SOFTWARE.
  * #L%
  */
-require_once 'MobileIdException.php';
+namespace sk\mid\exception;
 class NotMidClientException extends MobileIdException {
 
     public function __construct()
     {
         parent::__construct('User has no active certificates, and thus is not Mobile-ID client');
     }
-
-
 }
