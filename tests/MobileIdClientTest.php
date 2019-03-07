@@ -8,22 +8,12 @@
 
 namespace Sk\Mid\Tests;
 
-
 use PHPUnit\Framework\TestCase;
-use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\MobileIdClient;
-use Sk\Mid\MobileIdClientBuilder;
-use Sk\Mid\Rest\Dao\SessionStatus;
 use Sk\Mid\Tests\Mock\TestData;
 
 class MobileIdClientTest extends TestCase
 {
-    private $client;
-
-    private function getClient() : MobileIdClient
-    {
-        return $this->client;
-    }
 
     protected function setUp() : void
     {
@@ -34,5 +24,13 @@ class MobileIdClientTest extends TestCase
             ->build();
     }
 
+    /** @test */
+    public function shouldReturnConnector() {
+        $client = MobileIdClient::newBuilder()
+                ->withHostUrl(TestData::DEMO_HOST_URL)
+                ->build();
+
+        $this->assertThat($client->getMobileIdConnector(), $this->logicalNot($this->isNull()));
+    }
 
 }
