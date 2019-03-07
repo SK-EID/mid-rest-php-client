@@ -28,8 +28,6 @@ class MobileIdAuthenticationHashToSignTest extends TestCase
             ->withHashType(HashType::SHA384)
             ->build();
 
-        // TODO asser
-
         $this->assertEquals(4, strlen($MobileIdAuthenticationHashToSign->calculateVerificationCode()));
     }
 

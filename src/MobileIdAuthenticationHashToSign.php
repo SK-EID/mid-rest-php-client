@@ -30,7 +30,6 @@ use Sk\Mid\Hashtype\HashType;
 use Sk\Mid\Hashtype\Sha256;
 use Sk\Mid\Hashtype\Sha384;
 use Sk\Mid\Hashtype\Sha512;
-use Sk\Mid\VerificationCodeCalculator;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 class MobileIdAuthenticationHashToSign
