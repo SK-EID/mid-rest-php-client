@@ -5,7 +5,7 @@ use Sk\Mid\AuthenticationResponseValidator;
 use Sk\Mid\CertificateParser;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\MobileIdAuthentication;
-use Sk\Mid\Rest1\Dao\AuthenticationCertificate;
+use Sk\Mid\Rest\Dao\AuthenticationCertificate;
 use Sk\Mid\HashType\Sha512;
 use Sk\Mid\Tests\Mock\TestData;
 

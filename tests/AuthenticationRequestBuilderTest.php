@@ -7,7 +7,7 @@ use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\Exception\PhoneNotAvailableException;
 use Sk\Mid\Exception\UserCancellationException;
 
-use Sk\Mid\Rest1\MobileIdConnector;
+use Sk\Mid\Rest\MobileIdConnector;
 
 use Sk\Mid\Tests\Mock\SessionStatusDummy;
 
@@ -15,17 +15,17 @@ use Sk\Mid\Exception\MidSessionTimeoutException;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\MobileIdClient;
-use Sk\Mid\Rest1\MobileIdRestConnector;
-use Sk\Mid\Rest1\SessionStatusPoller;
+use Sk\Mid\Rest\MobileIdRestConnector;
+use Sk\Mid\Rest\SessionStatusPoller;
 
-use Sk\Mid\Rest1\Dao\Request\AuthenticationRequest;
+use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 
 
 use Sk\Mid\Tests\Mock\MobileIdConnectorSpy;
-use Sk\Mid\Rest1\Dao\Response1\AuthenticationResponse;
+use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\MobileIdSignature;
-use Sk\Mid\Rest1\Dao\SessionStatus;
+use Sk\Mid\Rest\Dao\SessionStatus;
 
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 

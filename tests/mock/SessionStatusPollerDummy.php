@@ -6,9 +6,9 @@
  * Time: 1:12 PM
  */
 namespace Sk\Mid\Tests\Mock;
-use Sk\Mid\Rest1\Dao\SessionStatus;
-use Sk\Mid\Rest1\MobileIdRestConnector;
-use Sk\Mid\Rest1\Dao\Request\SessionStatusRequest;
+use Sk\Mid\Rest\Dao\SessionStatus;
+use Sk\Mid\Rest\MobileIdRestConnector;
+use Sk\Mid\Rest\Dao\Request\SessionStatusRequest;
 
 class SessionStatusPollerDummy
 {

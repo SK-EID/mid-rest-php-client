@@ -1,7 +1,7 @@
 <?php
 namespace Sk\Mid\Tests\integration;
 use PHPUnit\Framework\TestCase;
-use Sk\Mid\Rest1\Dao\Request\CertificateRequest;
+use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceRequestDummy;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\MobileIdClient;

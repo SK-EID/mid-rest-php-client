@@ -12,7 +12,7 @@ use Sk\Mid\Exception\UserCancellationException;
 use Sk\Mid\Tests\Mock\SessionStatusDummy;
 use Sk\Mid\Tests\Mock\MobileIdConnectorStub;
 use Sk\Mid\Tests\Mock\TestData;
-use Sk\Mid\Rest1\SessionStatusPoller;
+use Sk\Mid\Rest\SessionStatusPoller;
 
 
 /**

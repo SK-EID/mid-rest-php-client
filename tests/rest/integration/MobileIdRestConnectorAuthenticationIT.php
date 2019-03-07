@@ -2,8 +2,8 @@
 namespace Sk\Mid\Tests\Rest\Integration;
 use Sk\Mid\Language\EST;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
-use Sk\Mid\Rest1\Dao\Request\AuthenticationRequest;
-use Sk\Mid\Rest1\MobileIdRestConnector;
+use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
+use Sk\Mid\Rest\MobileIdRestConnector;
 use Sk\Mid\Exception\UnauthorizedException;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceRequestDummy;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceResponseDummy;

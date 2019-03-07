@@ -11,12 +11,12 @@ use Sk\Mid\DisplayTextFormat;
 use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Exception\UnauthorizedException;
-use Sk\Mid\Rest1\Dao\Request\AuthenticationRequest;
-use Sk\Mid\Rest1\Dao\Request\CertificateRequest;
+use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
+use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\MobileIdAuthenticationResult;
-use Sk\Mid\Rest1\Dao\Response1\AuthenticationResponse;
-use Sk\Mid\Rest1\Dao\SessionStatus;
+use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
+use Sk\Mid\Rest\Dao\SessionStatus;
 
 
 /**

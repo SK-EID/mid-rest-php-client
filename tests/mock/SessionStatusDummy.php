@@ -7,7 +7,7 @@
  */
 namespace Sk\Mid\Tests\Mock;
 
-use Sk\Mid\Rest1\Dao\SessionStatus;
+use Sk\Mid\Rest\Dao\SessionStatus;
 
 class SessionStatusDummy
 {

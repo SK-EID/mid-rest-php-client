@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid;
 use Sk\Mid\Util\Logger;
-use Sk\Mid\Rest1\Dao\AuthenticationCertificate;
+use Sk\Mid\Rest\Dao\AuthenticationCertificate;
 use Sk\Mid\Exception\MidInternalErrorException;
 class CertificateParser
 {

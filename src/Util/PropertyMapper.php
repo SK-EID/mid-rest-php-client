@@ -2,9 +2,9 @@
 namespace Sk\Mid\Util;
 use ReflectionMethod;
 use ReflectionProperty;
-use Sk\Mid\Rest1\Dao\AuthenticationCertificateSubject;
-use Sk\Mid\Rest1\Dao\AuthenticationCertificateIssuer;
-use Sk\Mid\Rest1\Dao\AuthenticationCertificateExtensions;
+use Sk\Mid\Rest\Dao\AuthenticationCertificateSubject;
+use Sk\Mid\Rest\Dao\AuthenticationCertificateIssuer;
+use Sk\Mid\Rest\Dao\AuthenticationCertificateExtensions;
 use PHPUnit\Runner\Exception;
 use ReflectionException;
 abstract class PropertyMapper
