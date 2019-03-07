@@ -1,6 +1,6 @@
 <?php
 namespace Sk\Mid\Tests\Rest\Integration;
-use Sk\Mid\Language1\EST;
+use Sk\Mid\Language\EST;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\MobileIdRestConnector;

@@ -1,8 +1,8 @@
 <?php
 namespace Sk\Mid\Tests\integration;
 use PHPUnit\Framework\TestCase;
-use Sk\Mid\HashType1\HashType;
-use Sk\Mid\Language1\ENG;
+use Sk\Mid\HashType\HashType;
+use Sk\Mid\Language\ENG;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;

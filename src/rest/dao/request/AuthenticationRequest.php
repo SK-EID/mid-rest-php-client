@@ -27,7 +27,7 @@
 namespace Sk\Mid\Rest\Dao\Request;
 use JsonSerializable;
 use \sk\mid\DisplayTextFormat;
-use Sk\Mid\Language1\Language;
+use Sk\Mid\Language\Language;
 class AuthenticationRequest extends AbstractRequest implements JsonSerializable
 {
     /**
