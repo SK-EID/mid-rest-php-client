@@ -26,13 +26,13 @@
  */
 namespace Sk\Mid;
 use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Rest\Dao\Response\CertificateChoiceResponse;
-use Sk\Mid\Rest\Dao\SessionStatus;
-use Sk\Mid\Rest\MobileIdConnector;
+use Sk\Mid\Rest1\Dao\Response1\CertificateChoiceResponse;
+use Sk\Mid\Rest1\Dao\SessionStatus;
+use Sk\Mid\Rest1\MobileIdConnector;
 use Sk\Mid\Util\Logger;
-use Sk\Mid\Rest\SessionStatusPoller;
+use Sk\Mid\Rest1\SessionStatusPoller;
 use Sk\Mid\Exception\MidInternalErrorException;
-use Sk\Mid\Rest\MobileIdRestConnector;
+use Sk\Mid\Rest1\MobileIdRestConnector;
 use Sk\Mid\MobileIdSignature;
 use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\CertificateParser;

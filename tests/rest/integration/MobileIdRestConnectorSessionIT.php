@@ -1,10 +1,10 @@
 <?php
 namespace Sk\Mid\Tests\Rest\Integration;
 use Sk\Mid\Exception\MidSessionNotFoundException;
-use Sk\Mid\Rest\Dao\Request\SessionStatusRequest;
-use Sk\Mid\Rest\Dao\SessionStatus;
-use Sk\Mid\Rest\MobileIdRestConnector;
-use Sk\Mid\Rest\SessionStatusPoller;
+use Sk\Mid\Rest1\Dao\Request\SessionStatusRequest;
+use Sk\Mid\Rest1\Dao\SessionStatus;
+use Sk\Mid\Rest1\MobileIdRestConnector;
+use Sk\Mid\Rest1\SessionStatusPoller;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceRequestDummy;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceResponseDummy;

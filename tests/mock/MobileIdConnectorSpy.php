@@ -1,13 +1,13 @@
 <?php
 namespace Sk\Mid\Tests\Mock;
-use Sk\Mid\Rest\Dao\Request\CertificateRequest;
-use Sk\Mid\Rest\Dao\Request\SessionStatusRequest;
-use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
-use Sk\Mid\Rest\Dao\Response\CertificateChoiceResponse;
-use Sk\Mid\Rest\Dao\SessionStatus;
-use Sk\Mid\Rest\MobileIdConnector;
-use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
-use Sk\Mid\Rest\SessionStatusPoller;
+use Sk\Mid\Rest1\Dao\Request\CertificateRequest;
+use Sk\Mid\Rest1\Dao\Request\SessionStatusRequest;
+use Sk\Mid\Rest1\Dao\Response1\AuthenticationResponse;
+use Sk\Mid\Rest1\Dao\Response1\CertificateChoiceResponse;
+use Sk\Mid\Rest1\Dao\SessionStatus;
+use Sk\Mid\Rest1\MobileIdConnector;
+use Sk\Mid\Rest1\Dao\Request\AuthenticationRequest;
+use Sk\Mid\Rest1\SessionStatusPoller;
 
 
 /**

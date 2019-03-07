@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid;
 use Sk\Mid\MobileIdClient;
-use Sk\Mid\Rest\MobileIdRestConnector;
+use Sk\Mid\Rest1\MobileIdRestConnector;
 
 class MobileIdClientBuilder
 {

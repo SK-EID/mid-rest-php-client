@@ -28,7 +28,7 @@ namespace Sk\Mid;
 
 use Sk\Mid\HashType\HashType;
 use Sk\Mid\VerificationCodeCalculator;
-use Sk\Mid\Rest\Dao\AuthenticationCertificate;
+use Sk\Mid\Rest1\Dao\AuthenticationCertificate;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 
 class MobileIdAuthentication

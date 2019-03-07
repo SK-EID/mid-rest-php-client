@@ -1,14 +1,14 @@
 <?php
 namespace Sk\Mid\Tests;
 use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Rest\MobileIdConnector;
+use Sk\Mid\Rest1\MobileIdConnector;
 use Sk\Mid\Tests\Mock\MobileIdConnectorSpy;
 use Sk\Mid\Tests\Mock\TestData;
 
 use Sk\Mid\MobileIdClient;
-use Sk\Mid\Rest\MobileIdRestConnector;
-use Sk\Mid\Rest\Dao\Request\CertificateRequest;
-use Sk\Mid\Rest\Dao\Response\CertificateChoiceResponse;
+use Sk\Mid\Rest1\MobileIdRestConnector;
+use Sk\Mid\Rest1\Dao\Request\CertificateRequest;
+use Sk\Mid\Rest1\Dao\Response1\CertificateChoiceResponse;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\Exception\MidInternalErrorException;
 

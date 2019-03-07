@@ -27,7 +27,7 @@
 namespace Sk\Mid;
 use ReflectionClass;
 use ReflectionException;
-use Sk\Mid\Rest\Dao\AuthenticationCertificate;
+use Sk\Mid\Rest1\Dao\AuthenticationCertificate;
 use Sk\Mid\Util\Logger;
 use Sk\Mid\Exception\MidInternalErrorException;
 

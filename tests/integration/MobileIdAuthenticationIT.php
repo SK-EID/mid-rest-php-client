@@ -5,10 +5,10 @@ use Sk\Mid\HashType\HashType;
 use Sk\Mid\Language\ENG;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\MobileIdClient;
-use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
-use Sk\Mid\Rest\MobileIdRestConnector;
+use Sk\Mid\Rest1\Dao\Response1\AuthenticationResponse;
+use Sk\Mid\Rest1\MobileIdRestConnector;
 use Sk\Mid\Tests\Mock\TestData;
-use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
+use Sk\Mid\Rest1\Dao\Request\AuthenticationRequest;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 
 class MobileIdAuthenticationIT extends TestCase

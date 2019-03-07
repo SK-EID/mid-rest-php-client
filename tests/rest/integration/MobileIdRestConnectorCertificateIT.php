@@ -1,11 +1,11 @@
 <?php
 namespace Sk\Mid\Tests\Rest\Integration;
 use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Rest\Dao\Request\CertificateRequest;
+use Sk\Mid\Rest1\Dao\Request\CertificateRequest;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceRequestDummy;
 use Sk\Mid\Exception\UnauthorizedException;
 use Sk\Mid\Tests\Mock\TestData;
-use Sk\Mid\Rest\MobileIdRestConnector;
+use Sk\Mid\Rest1\MobileIdRestConnector;
 
 use PHPUnit\Framework\TestCase;
 
