@@ -40,7 +40,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function validate_whenRSA_shouldReturnValidAuthenticationResult()
     {
@@ -53,7 +52,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function validate_whenECC_shouldReturnValidAuthenticationResult()
     {
@@ -66,7 +64,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function validate_whenResultLowerCase_shouldReturnValidAuthenticationResult()
     {
@@ -85,7 +82,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function validate_whenResultNotOk_shouldReturnInvalidAuthenticationResult()
     {
@@ -100,7 +96,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function validate_shouldReturnValidIdentity()
     {
@@ -151,7 +146,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function constructAuthenticationIdentity_withEECertificate()
     {
@@ -166,7 +160,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function constructAuthenticationIdentity_withLVCertificate()
     {
@@ -181,7 +174,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function constructAuthenticationIdentity_withLTCertificate()
     {

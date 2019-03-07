@@ -23,7 +23,6 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function mobileAuthenticateTest()
     {
@@ -40,7 +39,6 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function mobileAuthenticate_usingCorrectSessionId_getCorrectSessionStatus()
     {
@@ -64,7 +62,6 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function mobileAuthenticate_usingCorrectSessionStatus_getCorrectMobileIdAuthentication()
     {

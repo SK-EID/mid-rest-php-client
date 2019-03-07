@@ -38,7 +38,6 @@ class SessionStatusPollerTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function getFirstCompleteResponse()
     {
@@ -51,7 +50,6 @@ class SessionStatusPollerTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function pollAndGetThirdCompleteResponse()
     {

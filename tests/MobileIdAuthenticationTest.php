@@ -33,7 +33,6 @@ class MobileIdAuthenticationTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function createMobileIdAuthentication()
     {

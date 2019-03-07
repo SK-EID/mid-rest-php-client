@@ -12,7 +12,6 @@ class MobileIdCertificateIT extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function getCertificateTest()
     {

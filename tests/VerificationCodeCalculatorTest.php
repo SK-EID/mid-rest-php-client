@@ -13,7 +13,6 @@ final class VerificationCodeCalculatorTest extends TestCase
     const HACKERMAN_SHA512 = "HACKERMAN_SHA512";
 
     /** @test
-     * @throws Exception
      */
     public function calculateVerificationCode_verifyExampleMidInDocumentation()
     {
@@ -24,7 +23,6 @@ final class VerificationCodeCalculatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function calculateVerificationCode_calculateVerificationCode_withSHA256()
     {
@@ -34,7 +32,6 @@ final class VerificationCodeCalculatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function calculateVerificationCode_withSHA384()
     {
@@ -44,7 +41,6 @@ final class VerificationCodeCalculatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function calculateVerificationCode_withSHA512()
     {
@@ -54,7 +50,6 @@ final class VerificationCodeCalculatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function calculateVerificationCode_withTooShortHash()
     {
@@ -64,7 +59,6 @@ final class VerificationCodeCalculatorTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function calculateVerificationCode_withNullHash()
     {

@@ -20,7 +20,6 @@ class MobileIdAuthenticationHashToSignTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function setHashInBase64_calculateVerificationCode_withSHA384()
     {
@@ -44,7 +43,6 @@ class MobileIdAuthenticationHashToSignTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function setHashInBase64_calculateVerificationCode_withSHA512()
     {
@@ -67,7 +65,6 @@ class MobileIdAuthenticationHashToSignTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function correctHashToSign() {
         $hashToSign = MobileIdAuthenticationHashToSign::newBuilder()

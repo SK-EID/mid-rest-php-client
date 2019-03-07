@@ -64,7 +64,6 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function documentConfigureTheClient()
     {
@@ -79,7 +78,6 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function documentClientWithPollingTimeout()
     {
@@ -110,7 +108,6 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function documentGetAuthenticationResponse()
     {
@@ -137,7 +134,6 @@ class ReadmeTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function documentHowToVerifyAuthenticationResult()
     {

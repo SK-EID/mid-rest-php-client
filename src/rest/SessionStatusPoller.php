@@ -152,7 +152,7 @@ class SessionStatusPoller
                 throw new PhoneNotAvailableException();
             case 'SIGNATURE_HASH_MISMATCH':
                 $this->logger->error('Hash does not match with certificate type');
-                throw new InvalidUserConfigurationException(); // TODO
+                throw new InvalidUserConfigurationException();
             case 'SIM_ERROR':
             case 'DELIVERY_ERROR':
                 $this->logger->error('SMS sending or SIM error');

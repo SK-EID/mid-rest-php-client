@@ -18,7 +18,6 @@ class LanguageTest extends TestCase
 {
     /**
      * @test
-     * @throws Exception
      */
     public function getEstLanguageInstanceAsType() {
         $estLanguage = new EST();
@@ -27,7 +26,6 @@ class LanguageTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function getEngLanguageInstanceAsType() {
         $engLanguage = new ENG();
@@ -36,7 +34,6 @@ class LanguageTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function getRusLanguageInstanceAsType() {
         $rusLanguage = new RUS();
@@ -45,7 +42,6 @@ class LanguageTest extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function getLitLanguageInstanceAsType() {
         $litLanguage = new LIT();

@@ -42,7 +42,6 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
 
     /**
      * @test
-     * @throws Exception
      */
     public function authenticate_withDisplayText()
     {
