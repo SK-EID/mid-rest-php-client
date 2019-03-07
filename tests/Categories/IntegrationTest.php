@@ -8,5 +8,4 @@
 namespace Sk\Mid\Tests\Categories;
 interface IntegrationTest
 {
-git
 }
