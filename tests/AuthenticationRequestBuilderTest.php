@@ -1,7 +1,7 @@
 <?php
 namespace Sk\Mid\Tests;
 
-use Sk\Mid\Language1\EST;
+use Sk\Mid\Language\EST;
 use Sk\Mid\Exception\DeliveryException;
 use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\Exception\PhoneNotAvailableException;

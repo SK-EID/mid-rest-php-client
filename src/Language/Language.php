@@ -25,7 +25,7 @@
  * #L%
  */
 
-namespace Sk\Mid\Language1;
+namespace Sk\Mid\Language;
 abstract class Language
 {
 

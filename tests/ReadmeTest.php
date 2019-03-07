@@ -2,11 +2,11 @@
 namespace Sk\Mid\Tests;
 use PHPUnit\Framework\TestCase;
 use Sk\Mid\AuthenticationResponseValidator;
-use Sk\Mid\Language1\ENG;
+use Sk\Mid\Language\ENG;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\HashType1\HashType;
-use Sk\Mid\Language1\Language;
+use Sk\Mid\HashType\HashType;
+use Sk\Mid\Language\Language;
 use Sk\Mid\DisplayTextFormat;
 use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\MobileIdClient;

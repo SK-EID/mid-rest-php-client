@@ -8,10 +8,10 @@
 
 namespace Sk\Mid\Tests;
 use PHPUnit\Framework\TestCase;
-use Sk\Mid\Language1\ENG;
-use Sk\Mid\Language1\EST;
-use Sk\Mid\Language1\LIT;
-use Sk\Mid\Language1\RUS;
+use Sk\Mid\Language\ENG;
+use Sk\Mid\Language\EST;
+use Sk\Mid\Language\LIT;
+use Sk\Mid\Language\RUS;
 
 
 class LanguageTest extends TestCase

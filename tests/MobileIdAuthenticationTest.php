@@ -2,9 +2,9 @@
 namespace Sk\Mid\Tests;
 use PHPUnit\Framework\TestCase;
 
-use Sk\Mid\HashType1\Sha512;
+use Sk\Mid\HashType\Sha512;
 use Sk\Mid\Tests\Mock\TestData;
-use Sk\Mid\HashType1;
+use Sk\Mid\HashType;
 use Sk\Mid\CertificateParser;
 use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;

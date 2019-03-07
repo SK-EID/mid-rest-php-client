@@ -26,10 +26,10 @@
  */
 namespace Sk\Mid;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
-use Sk\Mid\HashType1\HashType;
-use Sk\Mid\HashType1\Sha256;
-use Sk\Mid\HashType1\Sha384;
-use Sk\Mid\HashType1\Sha512;
+use Sk\Mid\HashType\HashType;
+use Sk\Mid\HashType\Sha256;
+use Sk\Mid\HashType\Sha384;
+use Sk\Mid\HashType\Sha512;
 
 class MobileIdAuthenticationHashToSign
 {

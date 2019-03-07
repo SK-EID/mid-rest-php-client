@@ -1,7 +1,7 @@
 <?php
 namespace Sk\Mid\Tests;
 use Sk\Mid\VerificationCodeCalculator;
-use Sk\Mid\HashType1\HashType;
+use Sk\Mid\HashType\HashType;
 use Sk\Mid\Util\DigestCalculator;
 
 use PHPUnit\Framework\TestCase;

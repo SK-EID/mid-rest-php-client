@@ -1,6 +1,6 @@
 <?php
 
-namespace Sk\Mid\Language1;
+namespace Sk\Mid\Language;
 
 
 class RUS extends Language
