@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\Rest1;
+namespace Sk\Mid\Rest;
 use Sk\Mid\Util\Logger;
 use Sk\Mid\Util\Curl;
 use Sk\Mid\Exception\MidSessionNotFoundException;
@@ -33,15 +33,15 @@ use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\UnauthorizedException;
 use Sk\Mid\Exception\MobileIdException;
 use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Rest1\Dao\Request\AuthenticationRequest;
-use Sk\Mid\Rest1\Dao\Response1\CertificateChoiceResponse;
-use Sk\Mid\Rest1\Dao\Response1\AuthenticationResponse;
-use Sk\Mid\Rest1\Dao\SessionStatus;
-use Sk\Mid\Rest1\MobileIdConnector;
-use Sk\Mid\Rest1\MobileIdRestConnectorBuilder;
-use Sk\Mid\Rest1\Dao\Request\CertificateRequest;
-use Sk\Mid\Rest1\Dao\Request\AbstractRequest;
-use Sk\Mid\Rest1\Dao\Request\SessionStatusRequest;
+use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
+use Sk\Mid\Rest\Dao\Response\CertificateChoiceResponse;
+use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
+use Sk\Mid\Rest\Dao\SessionStatus;
+use Sk\Mid\Rest\MobileIdConnector;
+use Sk\Mid\Rest\MobileIdRestConnectorBuilder;
+use Sk\Mid\Rest\Dao\Request\CertificateRequest;
+use Sk\Mid\Rest\Dao\Request\AbstractRequest;
+use Sk\Mid\Rest\Dao\Request\SessionStatusRequest;
 
 class MobileIdRestConnector implements MobileIdConnector
 {

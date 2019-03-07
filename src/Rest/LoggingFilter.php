@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\Rest1;
+namespace Sk\Mid\Rest;
 use Sk\Mid\Util\Logger;
 class LoggingFilter
 {

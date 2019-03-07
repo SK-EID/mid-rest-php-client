@@ -24,10 +24,10 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\Rest1;
+namespace Sk\Mid\Rest;
 use Sk\Mid\Util\Logger;
-use Sk\Mid\Rest1\Dao\SessionStatus;
-use Sk\Mid\Rest1\Dao\Request\SessionStatusRequest;
+use Sk\Mid\Rest\Dao\SessionStatus;
+use Sk\Mid\Rest\Dao\Request\SessionStatusRequest;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\Exception\UserCancellationException;

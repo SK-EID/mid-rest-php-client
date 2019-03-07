@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\Rest1\Dao\Request;
+namespace Sk\Mid\Rest\Dao\Request;
 class SessionStatusRequest
 {
     /** @var string $sessionId */

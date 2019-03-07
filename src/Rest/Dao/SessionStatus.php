@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\Rest1\Dao;
+namespace Sk\Mid\Rest\Dao;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\MobileIdSignature;
 

@@ -24,10 +24,10 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\Rest1\Dao\Request;
+namespace Sk\Mid\Rest\Dao\Request;
 use JsonSerializable;
-use Sk\Mid\Rest1\Dao\Request\AbstractRequest;
-use Sk\Mid\Rest1\Dao\Request\CertificateRequestBuilder;
+use Sk\Mid\Rest\Dao\Request\AbstractRequest;
+use Sk\Mid\Rest\Dao\Request\CertificateRequestBuilder;
 class CertificateRequest extends AbstractRequest implements JsonSerializable
 {
 
