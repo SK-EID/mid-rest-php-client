@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid\Exception;
 
-class InvalidUserConfigurationException extends \RuntimeException {
+class InvalidUserConfigurationException extends MobileIdException {
 
     public function __construct()
     {

@@ -27,6 +27,7 @@
 namespace Sk\Mid;
 use ReflectionClass;
 use ReflectionException;
+use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\Rest\Dao\AuthenticationCertificate;
 use Sk\Mid\Util\Logger;
 use Sk\Mid\Exception\MidInternalErrorException;
@@ -50,12 +51,12 @@ class AuthenticationResponseValidator
         if (!$this->isResultOk($authentication)) {
             $authenticationResult->setValid(false);
             $authenticationResult->addError(MobileIdAuthenticationError::INVALID_RESULT);
-            throw new MidInternalErrorException();
+            throw new MidInternalErrorException($authenticationResult->getErrorsAsString());
         }
         if ( !$this->verifyCertificateExpiry( $authentication->getCertificate() ) ) {
             $authenticationResult->setValid( false );
             $authenticationResult->addError( MobileIdAuthenticationError::CERTIFICATE_EXPIRED );
-            throw new MidInternalErrorException();
+            throw new NotMidClientException();
         }
 
         return $authenticationResult;

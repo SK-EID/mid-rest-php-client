@@ -130,7 +130,7 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $this->logger->debug('Sending get request to ' . $url);
         $responseAsArray = $this->getRequest($url);
-        if (isset($responseAsArray['error'])) throw new MidSessionNotFoundException();
+        if (isset($responseAsArray['error'])) throw new MidSessionNotFoundException($request->getSessionId());
         return new SessionStatus($responseAsArray);
     }
 

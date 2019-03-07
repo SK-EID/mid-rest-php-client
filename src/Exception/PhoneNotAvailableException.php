@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid\Exception;
 
-class PhoneNotAvailableException extends \RuntimeException {
+class PhoneNotAvailableException extends MobileIdException {
 
     public function __construct()
     {

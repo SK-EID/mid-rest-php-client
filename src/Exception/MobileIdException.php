@@ -26,19 +26,11 @@
  */
 namespace Sk\Mid\Exception;
 
-class MobileIdException extends \RuntimeException {
+abstract class MobileIdException extends \RuntimeException {
 
-    public function __construct($message = null, $cause = null)
+    public function __construct($message)
     {
-        if (is_null($message) && is_null($cause)) {
-            parent::__construct();
-        }
-        if (!is_null($message) && is_null($cause)) {
-            parent::__construct($message);
-        }
-        if (!is_null($message) && !is_null($cause)) {
-            parent::__construct($message, $cause);
-        }
+        parent::__construct($message);
     }
 
 }

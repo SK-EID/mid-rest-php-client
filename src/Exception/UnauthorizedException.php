@@ -26,10 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
-class UnauthorizedException extends \RuntimeException {
+class UnauthorizedException extends MobileIdException {
 
     public function __construct($message = null)
     {
-        parent::__construct($message);
+        parent::__construct("Unauthorized: ".$message);
     }
 }

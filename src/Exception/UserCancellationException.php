@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid\Exception;
 
-class UserCancellationException extends \RuntimeException {
+class UserCancellationException extends MobileIdException {
 
     public function __construct()
     {

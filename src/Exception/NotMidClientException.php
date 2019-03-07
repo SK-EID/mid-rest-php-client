@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid\Exception;
 
-class NotMidClientException extends \RuntimeException {
+class NotMidClientException extends MobileIdException {
 
     public function __construct()
     {

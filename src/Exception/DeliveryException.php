@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid\Exception;
 
-class DeliveryException extends \RuntimeException {
+class DeliveryException extends MobileIdException {
 
     public function __construct()
     {

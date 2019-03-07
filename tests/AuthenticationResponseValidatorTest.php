@@ -4,6 +4,7 @@ use ReflectionException;
 use Sk\Mid\AuthenticationResponseValidator;
 use Sk\Mid\CertificateParser;
 use Sk\Mid\Exception\MidInternalErrorException;
+use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\Rest\Dao\AuthenticationCertificate;
 use Sk\Mid\HashType\Sha512;
@@ -32,7 +33,7 @@ class AuthenticationResponseValidatorTest extends TestCase
      * @test
      */
     public function validate_certificateIsNull_shouldThrowException() {
-        $this->expectException(MidInternalErrorException::class);
+        $this->expectException(NotMidClientException::class);
 
         $authentication = $this->createMobileIdAuthenticationWithNullCertificate("OK", TestData::VALID_SIGNATURE_IN_BASE64);
         $this->validator->validate($authentication);
@@ -113,7 +114,7 @@ class AuthenticationResponseValidatorTest extends TestCase
      */
     public function validate_whenCertificateIsNull_shouldThrowException()
     {
-        $this->expectException(MidInternalErrorException::class);
+        $this->expectException(NotMidClientException::class);
 
         $authentication = MobileIdAuthentication::newBuilder()
             ->withResult("OK")

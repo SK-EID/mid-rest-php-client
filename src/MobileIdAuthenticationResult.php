@@ -67,6 +67,11 @@ class MobileIdAuthenticationResult
         return $this->errors;
     }
 
+    public function getErrorsAsString() : string
+    {
+        return implode("; ", $this->getErrors());
+    }
+
     public function addError(string $error) : void
     {
         array_push($this->errors, $error);

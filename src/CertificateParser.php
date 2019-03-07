@@ -45,7 +45,7 @@ class CertificateParser
         $certificateString = self::getPemCertificate(  $certificateValue );
         $result = openssl_x509_parse( $certificateString );
         if ($result == null) {
-            throw new MidInternalErrorException();
+            throw new MidInternalErrorException('Failed to parse certificate');
         }
         return $result;
     }

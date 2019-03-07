@@ -26,10 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
-class MidSessionNotFoundException extends \RuntimeException {
+class MidSessionNotFoundException extends MobileIdException {
 
-    public function __construct()
+    public function __construct($sessionId)
     {
-        parent::__construct();
+        parent::__construct("MID session ".$sessionId." was not found");
     }
 }

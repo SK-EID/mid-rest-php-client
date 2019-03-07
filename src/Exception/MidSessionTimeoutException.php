@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid\Exception;
 
-class MidSessionTimeoutException extends \RuntimeException {
+class MidSessionTimeoutException extends MobileIdException {
 
     public function __construct()
     {
