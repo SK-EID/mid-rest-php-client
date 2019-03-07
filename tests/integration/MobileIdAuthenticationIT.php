@@ -1,22 +1,15 @@
 <?php
 namespace Sk\Mid\Tests\integration;
-use phpDocumentor\Reflection\Types\This;
 use PHPUnit\Framework\TestCase;
-use Sk\Mid\Hashtype\HashType;
-use Sk\Mid\Language\ENG;
+use Sk\Mid\HashType1\HashType;
+use Sk\Mid\Language1\ENG;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
-use Sk\Mid\Rest\Dao\SessionStatus;
 use Sk\Mid\Rest\MobileIdRestConnector;
-use Sk\Mid\Rest\SessionStatusPoller;
-use Sk\Mid\Util\DigestCalculator;
-use Sk\Mid\Util\Logger;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
-use Sk\Mid\Language;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
-use Sk\Mid\Exception\NotMidClientException;
 
 class MobileIdAuthenticationIT extends TestCase
 {

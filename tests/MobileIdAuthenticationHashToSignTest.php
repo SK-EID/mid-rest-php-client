@@ -1,7 +1,7 @@
 <?php
 namespace Sk\Mid\Tests;
 use PHPUnit\Framework\TestCase;
-use Sk\Mid\Hashtype\HashType;
+use Sk\Mid\HashType1\HashType;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\VerificationCodeCalculator;

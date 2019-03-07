@@ -1,14 +1,14 @@
 <?php
 namespace Sk\Mid\Tests\Mock;
 use Sk\Mid\AuthenticationResponseValidator;
-use Sk\Mid\Hashtype\HashType;
-use Sk\Mid\Language\EST;
+use Sk\Mid\HashType1\HashType;
+use Sk\Mid\Language1\EST;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
-use Sk\Mid\Language;
+use Sk\Mid\Language1;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
-use Sk\Mid\Hashtype\Sha512;
+use Sk\Mid\HashType1\Sha512;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\MobileIdAuthentication;
 

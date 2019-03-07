@@ -6,7 +6,7 @@
  * Time: 12:55 PM
  */
 
-namespace Sk\Mid\Hashtype;
+namespace Sk\Mid\HashType1;
 
 
 class Sha512 extends HashType

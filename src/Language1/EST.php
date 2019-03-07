@@ -1,6 +1,6 @@
 <?php
 
-namespace Sk\Mid\Language;
+namespace Sk\Mid\Language1;
 
 
 class EST extends Language
