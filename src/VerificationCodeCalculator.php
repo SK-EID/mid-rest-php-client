@@ -30,7 +30,7 @@ class VerificationCodeCalculator
 {
     const MINIMUM_HASH_LENGTH = 20;
 
-    public static function calculateMobileIdVerificationCode(?string $hash) : string
+    public static function calculateMobileIdVerificationCode(string $hash) : string
     {
         $binary = self::hexToBinary($hash);
         $sixLeftBits = substr($binary, 0, 6);
