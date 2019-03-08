@@ -141,7 +141,6 @@ class AuthenticationRequestBuilderTest extends TestCase
     {
         $this->expectException(MissingOrInvalidParameterException::class);
 
-        $mobileAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
         $request = AuthenticationRequest::newBuilder()
             ->withPhoneNumber(TestData::VALID_PHONE)
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)

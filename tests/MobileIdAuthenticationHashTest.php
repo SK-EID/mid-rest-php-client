@@ -15,19 +15,21 @@ use Sk\Mid\HashType\Sha512;
  */
 class MobileIdAuthenticationHashTest extends TestCase
 {
-
     /**
      * @test
+     * @throws \Exception
      */
     public function shouldGenerateRandomHashOfDefaultType_hasSHA256HashType()
     {
         $mobileIdAuthenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
+
         $this->assertEquals(new Sha256(), $mobileIdAuthenticationHash->getHashType());
         $this->assertEquals(44, strlen($mobileIdAuthenticationHash->getHashInBase64()));
     }
 
     /**
      * @test
+     * @throws \Exception
      */
     public function shouldGenerateDefaultHashOfType_SHA256_hashHasCorrectTypeAndLength()
     {
@@ -38,6 +40,7 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function shouldGenerateRandomHashOfType_SHA256_hashHasCorrectTypeAndLength()
     {
@@ -48,6 +51,7 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function shouldGenerateRandomHashOfType_SHA384_hashHasCorrectTypeAndLength()
     {
@@ -58,6 +62,7 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function shouldGenerateRandomHashOfType_SHA512_hashHasCorrectTypeAndLength()
     {
@@ -69,6 +74,7 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function calculateVerificationCode_notNull()
     {
@@ -77,6 +83,25 @@ class MobileIdAuthenticationHashTest extends TestCase
             ->build();
 
         $this->assertEquals(true, !is_null($authenticationHash->calculateVerificationCode()));
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function calculateVerificationCode_ensureVerificationCodesAreNotAlwaysEqual() {
+        $distinctCodes = array();
+
+        for ($i=0; $i < 5; $i++) {
+            $verificationCode = MobileIdAuthenticationHashToSign::generateRandomHashOfType(HashType::SHA512)->calculateVerificationCode();
+
+            $distinctCodes[''.$verificationCode] = $i;
+        }
+
+        $differentKeysCount = sizeof($distinctCodes);
+
+        $this->assertThat($differentKeysCount, $this->greaterThan(1),
+                'Generated 5 hashes, calculated verification codes and every time ended up with '.array_keys($distinctCodes)[0]);
     }
 
 

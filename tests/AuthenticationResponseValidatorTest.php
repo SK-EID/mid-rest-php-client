@@ -65,6 +65,7 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function validate_whenResultLowerCase_shouldReturnValidAuthenticationResult()
     {
@@ -97,12 +98,38 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function validate_shouldReturnValidIdentity()
     {
         $authentication = $this->createValidMobileIdAuthentication();
         $authenticationResult = $this->validator->validate($authentication);
 
+        $this->assertTrue($authenticationResult->isValid());
+        $this->assertEquals("MARY ÄNN", $authenticationResult->getAuthenticationIdentity()->getGivenName());
+        $this->assertEquals("O’CONNEŽ-ŠUSLIK TESTNUMBER", $authenticationResult->getAuthenticationIdentity()->getSurName());
+        $this->assertEquals("60001019906", $authenticationResult->getAuthenticationIdentity()->getIdentityCode());
+        $this->assertEquals("EE", $authenticationResult->getAuthenticationIdentity()->getCountry());
+    }
+
+    /**
+     * @test
+     * @throws \Exception
+     */
+    public function validate_certWithBeginAndEndCert_shouldReturnValidIdentity()
+    {
+        $validAuthentication = MobileIdAuthentication::newBuilder()
+                ->withResult("OK")
+                ->withSignatureValueInBase64(TestData::VALID_SIGNATURE_IN_BASE64)
+                ->withCertificate(CertificateParser::parseX509Certificate("-----BEGIN CERTIFICATE-----".TestData::AUTH_CERTIFICATE_EE."-----END CERTIFICATE-----"))
+                ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
+                ->withHashType(new Sha512())
+                ->build();
+
+
+        $authenticationResult = $this->validator->validate($validAuthentication);
+
+        $this->assertTrue($authenticationResult->isValid());
         $this->assertEquals("MARY ÄNN", $authenticationResult->getAuthenticationIdentity()->getGivenName());
         $this->assertEquals("O’CONNEŽ-ŠUSLIK TESTNUMBER", $authenticationResult->getAuthenticationIdentity()->getSurName());
         $this->assertEquals("60001019906", $authenticationResult->getAuthenticationIdentity()->getIdentityCode());
@@ -199,17 +226,13 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     private function createMobileIdAuthentication($result, $signatureInBase64)
     {
-        try {
-            return MobileIdAuthentication::newBuilder()
-                ->withResult($result)
-                ->withSignatureValueInBase64($signatureInBase64)
-                ->withCertificate(CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE))
-                ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
-                ->withHashType(new Sha512())
-                ->build();
-        } catch (ReflectionException $e) {
-            return $e;
-        }
+        return MobileIdAuthentication::newBuilder()
+            ->withResult($result)
+            ->withSignatureValueInBase64($signatureInBase64)
+            ->withCertificate(CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE))
+            ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
+            ->withHashType(new Sha512())
+            ->build();
     }
 
     private function createMobileIdAuthenticationWithNullCertificate($result, $signatureInBase64) {

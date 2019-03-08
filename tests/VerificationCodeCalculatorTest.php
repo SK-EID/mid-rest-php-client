@@ -1,6 +1,6 @@
 <?php
 namespace Sk\Mid\Tests;
-use Sk\Mid\Exception\MidInternalErrorException;
+use InvalidArgumentException;
 use Sk\Mid\VerificationCodeCalculator;
 use Sk\Mid\HashType\HashType;
 use Sk\Mid\Util\DigestCalculator;
@@ -10,9 +10,6 @@ use TypeError;
 
 final class VerificationCodeCalculatorTest extends TestCase
 {
-    const HACKERMAN_SHA256 = "HACKERMAN_SHA256";
-    const HACKERMAN_SHA384 = "HACKERMAN_SHA384";
-    const HACKERMAN_SHA512 = "HACKERMAN_SHA512";
 
     /** @test
      * @throws \Exception
@@ -30,7 +27,7 @@ final class VerificationCodeCalculatorTest extends TestCase
      */
     public function calculateVerificationCode_calculateVerificationCode_withSHA256()
     {
-        $hash = DigestCalculator::calculateDigest(self::HACKERMAN_SHA256, HashType::SHA256);
+        $hash = DigestCalculator::calculateDigest("HACKERMAN_SHA256", HashType::SHA256);
         $verificationCode = VerificationCodeCalculator::calculateMobileIdVerificationCode($hash);
         $this->assertEquals('6008', $verificationCode);
     }
@@ -41,7 +38,7 @@ final class VerificationCodeCalculatorTest extends TestCase
      */
     public function calculateVerificationCode_withSHA384()
     {
-        $hash = DigestCalculator::calculateDigest(self::HACKERMAN_SHA384, HashType::SHA384);
+        $hash = DigestCalculator::calculateDigest("HACKERMAN_SHA384", HashType::SHA384);
         $verificationCode = VerificationCodeCalculator::calculateMobileIdVerificationCode($hash);
         $this->assertEquals('7230', $verificationCode);
     }
@@ -52,7 +49,7 @@ final class VerificationCodeCalculatorTest extends TestCase
      */
     public function calculateVerificationCode_withSHA512()
     {
-        $hash = DigestCalculator::calculateDigest(self::HACKERMAN_SHA512, HashType::SHA512);
+        $hash = DigestCalculator::calculateDigest("HACKERMAN_SHA512", HashType::SHA512);
         $verificationCode = VerificationCodeCalculator::calculateMobileIdVerificationCode($hash);
         $this->assertEquals('3843', $verificationCode);
     }
@@ -62,8 +59,8 @@ final class VerificationCodeCalculatorTest extends TestCase
      */
     public function calculateVerificationCode_withTooShortHash()
     {
-        $this->expectException(MidInternalErrorException::class);
-        $verificationCode = VerificationCodeCalculator::calculateMobileIdVerificationCode("1001000110100");
+        $this->expectException(InvalidArgumentException::class);
+        VerificationCodeCalculator::calculateMobileIdVerificationCode("1001000110100");
     }
 
     /**
@@ -73,7 +70,8 @@ final class VerificationCodeCalculatorTest extends TestCase
     {
         $this->expectException(TypeError::class);
 
-        $verificationCode = VerificationCodeCalculator::calculateMobileIdVerificationCode(null);
+        VerificationCodeCalculator::calculateMobileIdVerificationCode(null);
     }
+
 
 }

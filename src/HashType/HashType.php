@@ -63,21 +63,6 @@ abstract class HashType
         return $this->hashTypeName;
     }
 
-    public function getLengthInBits(): int
-    {
-        return $this->lengthInBits;
-    }
-
-    public function getDigestInfoPrefix(): array
-    {
-        return $this->digestInfoPrefix;
-    }
-
-    public function calculateDigest(string $dataToDigest ) : string
-    {
-        return DigestCalculator::calculateDigest($dataToDigest, $this->getHashTypeName());
-    }
-
     public function getLengthInBytes() : int {
         return $this->lengthInBits / 8;
     }

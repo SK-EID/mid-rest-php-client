@@ -116,8 +116,6 @@ class MobileIdRestServiceRequestDummy
 
     public static function calculateMobileIdAuthenticationHash() : MobileIdAuthenticationHashToSign
     {
-        $digestValue = new Sha512();
-        $digestValue->calculateDigest(TestData::DATA_TO_SIGN);
         return MobileIdAuthenticationHashToSign::newBuilder()
             ->withHashType(HashType::SHA512)
             ->build();
