@@ -26,6 +26,8 @@
  */
 namespace Sk\Mid;
 
+use Sk\Mid\Exception\MidInternalErrorException;
+
 class VerificationCodeCalculator
 {
     const MINIMUM_HASH_LENGTH = 20;
@@ -35,8 +37,10 @@ class VerificationCodeCalculator
         $binary = self::hexToBinary($hash);
         $sixLeftBits = substr($binary, 0, 6);
         $sevenRightBits = substr($binary, -7);
-        $result = self::validateHash($hash) ? str_pad(bindec($sixLeftBits.$sevenRightBits), 4, "0", STR_PAD_LEFT) : str_repeat("0",4);
-        return $result;
+        if (self::validateHash($hash)) {
+            return str_pad(bindec($sixLeftBits.$sevenRightBits), 4, "0", STR_PAD_LEFT);
+        }
+        throw new MidInternalErrorException("Invalid hash.");
     }
 
     private static function validateHash($hash) : bool

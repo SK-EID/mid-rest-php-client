@@ -67,7 +67,7 @@ class MobileIdAuthenticationHashToSign
 
     public function calculateVerificationCode() : string
     {
-        return VerificationCodeCalculator::calculateMobileIdVerificationCode($this->hash);
+        return VerificationCodeCalculator::calculateMobileIdVerificationCode(bin2hex($this->hash));
     }
 
     public static function generateRandomHashOfDefaultType() : MobileIdAuthenticationHashToSign

@@ -1,5 +1,6 @@
 <?php
 namespace Sk\Mid\Tests;
+use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\VerificationCodeCalculator;
 use Sk\Mid\HashType\HashType;
 use Sk\Mid\Util\DigestCalculator;
@@ -58,24 +59,21 @@ final class VerificationCodeCalculatorTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function calculateVerificationCode_withTooShortHash()
     {
+        $this->expectException(MidInternalErrorException::class);
         $verificationCode = VerificationCodeCalculator::calculateMobileIdVerificationCode("1001000110100");
-        $this->assertEquals('0000', $verificationCode);
     }
 
     /**
      * @test
-     * @throws \Exception
      */
     public function calculateVerificationCode_withNullHash_shouldThrowTypeError()
     {
         $this->expectException(TypeError::class);
 
         $verificationCode = VerificationCodeCalculator::calculateMobileIdVerificationCode(null);
-        $this->assertEquals('0000', $verificationCode);
     }
 
 }
