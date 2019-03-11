@@ -36,13 +36,13 @@ There is a [demo application](https://github.com/SK-EID/mid-rest-php-demo) that 
 
 Here are examples of authentication with Mobile-ID PHP client
 
-## Make it available for your application
+### Make it available for your application
 
 ```
 require_once __DIR__ . '/vendor/autoload.php';
 ```
 
-## Example of configuring the client
+### Example of configuring the client
 
 ```
 use Sk\Mid\MobileIdClient;
@@ -67,4 +67,44 @@ public function mobileIdClient() : MobileIdClient
 }
 ```
 
-## Example of authentication
+### Example of authentication
+
+#### Creating an authentication request
+
+```
+$userRequest = $authenticationSessionInfo->getUserRequest();
+$authenticationHash = $authenticationSessionInfo->getAuthenticationHash();
+$request = AuthenticationRequest::newBuilder()
+    ->withRelyingPartyUUID($this->client->getRelyingPartyUUID())
+    ->withRelyingPartyName($this->client->getRelyingPartyName())
+    ->withPhoneNumber($userRequest->getPhoneNumber())
+    ->withNationalIdentityNumber($userRequest->getNationalIdentityNumber())
+    ->withHashToSign($authenticationHash)
+    ->withLanguage(ENG::asType())
+    ->withDisplayText($this->midAuthDisplayText)
+    ->withDisplayTextFormat('GSM7')
+    ->build();
+```
+
+#### Getting the authentication response
+
+```
+$authenticationResult = null;
+try {
+
+    $response = $this->client->getMobileIdConnector()->authenticate($request);
+    $sessionStatus = $this->client->getSessionStatusPoller()->fetchFinalSessionStatus(
+        $response->getSessionId()
+    );
+
+    $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
+    $validator = new AuthenticationResponseValidator();
+    $authenticationResult = $validator->validate($authentication);
+} catch (NotMidClientException $e) {
+    throw new MidAuthException($e->getMessage());
+}
+if (!$authenticationResult->isValid()) {
+    throw new MidAuthException($authenticationResult->getErrors());
+}
+return $authenticationResult->getAuthenticationIdentity();
+```
