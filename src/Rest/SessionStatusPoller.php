@@ -131,9 +131,6 @@ class SessionStatusPoller
     {
         $result = strtoupper($result);
 
-        echo 'result is'.$result;
-
-
         switch ($result) {
             case 'OK':
                 return;
