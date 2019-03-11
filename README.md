@@ -108,3 +108,15 @@ if (!$authenticationResult->isValid()) {
 }
 return $authenticationResult->getAuthenticationIdentity();
 ```
+
+
+## Handling intentional exceptions
+
+There are some exceptions, that are thrown, so that one who integrates this client can informatively
+notify user of what happened. They correspond to "[Expected results]"(https://github.com/SK-EID/MID/wiki/Test-number-for-automated-testing-in-DEMO#test-numbers-for-automated-testing) that MID service provides.
+
+All of those exceptions extend one exception class called ```MobileIdException```.
+Few of the exceptions to keep an eye for are:
+* ```DeliveryException```
+* ```NotMidClientException```
+* ```PhoneNotAvailableException```
