@@ -50,11 +50,11 @@ use Sk\Middemo\Model\UserMidSession;
 
 public function mobileIdClient() : MobileIdClient
 {
-       return MobileIdClient::newBuilder()
-           ->withRelyingPartyUUID('00000000-0000-0000-0000-000000000000')
-           ->withRelyingPartyName('DEMO')
-           ->withHostUrl('https://tsp.demo.sk.ee/mid-api')
-           ->build();
+        return MobileIdClient::newBuilder()
+            ->withRelyingPartyUUID('00000000-0000-0000-0000-000000000000')
+            ->withRelyingPartyName('DEMO')
+            ->withHostUrl('https://tsp.demo.sk.ee/mid-api')
+            ->build();
 }
 ```
 
@@ -71,7 +71,7 @@ $request = AuthenticationRequest::newBuilder()
     ->withHashToSign($authenticationHash)
     ->withLanguage(ENG::asType())
     ->withDisplayText($this->midAuthDisplayText)
-    ->withDisplayTextFormat('GSM7')
+    ->withDisplayTextFormat(DisplayTextFormat::GSM7)
     ->build();
 ```
 
@@ -89,11 +89,26 @@ try {
     $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     $validator = new AuthenticationResponseValidator();
     $authenticationResult = $validator->validate($authentication);
-} catch (Exception $e) {
-    throw new MidAuthException($e->getMessage());
+} catch (UserCancellationException $e) {
+    throw new MidOperationException("You cancelled operation from your phone.");
+} catch (NotMidClientException $e) {
+    throw new MidOperationException("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
+} catch (MidSessionTimeoutException $e) {
+    throw new MidOperationException("You didn't type in PIN code into your phone or there was a communication error.");
+} catch (PhoneNotAvailableException $e) {
+    throw new MidOperationException("Unable to reach your phone. Please make sure your phone has mobile coverage.");
+} catch (DeliveryException $e) {
+    throw new MidOperationException("Communication error. Unable to reach your phone.");
+} catch (InvalidUserConfigurationException $e) {
+    throw new MidOperationException("Mobile-ID configuration on your SIM card differs from what is configured on service provider's side. Please contact your mobile operator.");
+} catch (MidSessionNotFoundException | MissingOrInvalidParameterException | UnauthorizedException $e) {
+    throw new MidOperationException("Client side error with mobile-ID integration.", $e->getCode());
+} catch (MidInternalErrorException $e) {
+    throw new MidOperationException("MID internal error", $e->getCode());
 }
+
 if (!$authenticationResult->isValid()) {
-    throw new MidAuthException($authenticationResult->getErrors());
+    throw new MidOperationException($authenticationResult->getErrors());
 }
 return $authenticationResult->getAuthenticationIdentity();
 ```
@@ -109,3 +124,27 @@ Few of the exceptions to keep an eye for are:
 * ```DeliveryException```
 * ```NotMidClientException```
 * ```PhoneNotAvailableException```
+
+## Certificates
+
+The client also supports to ask for a certificate.
+ An example:
+ ```PHP
+$client = MobileIdClient::newBuilder()
+   ->withRelyingPartyUUID("00000000-0000-0000-0000-000000000000")
+   ->withRelyingPartyName("DEMO)
+   ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+   ->build();
+
+
+$certRequest = CertificateRequest::newBuilder()
+   ->withNationalIdentityNumber(60001019906)
+   ->withPhoneNumber("+37200000766")
+   ->build();
+
+$resp = $client->getMobileIdConnector()->getCertificate($certRequest);
+ ```
+
+## Signing
+
+Signing is not supported.
