@@ -38,13 +38,13 @@ Here are examples of authentication with Mobile-ID PHP client
 
 ### Make it available for your application
 
-```
+``` PHP
 require_once __DIR__ . '/vendor/autoload.php';
 ```
 
 ### Example of configuring the client
 
-```
+``` PHP
 use Sk\Mid\MobileIdClient;
 use Sk\Middemo\Model\UserMidSession;
 
@@ -71,7 +71,7 @@ public function mobileIdClient() : MobileIdClient
 
 #### Creating an authentication request
 
-```
+``` PHP
 $userRequest = $authenticationSessionInfo->getUserRequest();
 $authenticationHash = $authenticationSessionInfo->getAuthenticationHash();
 $request = AuthenticationRequest::newBuilder()
@@ -88,7 +88,7 @@ $request = AuthenticationRequest::newBuilder()
 
 #### Getting the authentication response
 
-```
+``` PHP
 $authenticationResult = null;
 try {
 
