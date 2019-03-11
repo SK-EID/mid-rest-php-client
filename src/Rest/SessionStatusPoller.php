@@ -69,10 +69,10 @@ class SessionStatusPoller
 
     public function fetchFinalSessionStatus(string $sessionId, int $longPollSeconds = null) : SessionStatus
     {
-        $this->logger->debug('Starting to poll session status for session ' . $sessionId);
+//        $this->logger->debug('Starting to poll session status for session ' . $sessionId);
         $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $longPollSeconds);
         $this->validateResult($sessionStatus);
-        $this->logger->debug('Session status is ' . $sessionStatus->getResult());
+//        $this->logger->debug('Session status is ' . $sessionStatus->getResult());
         return $sessionStatus;
     }
 
@@ -86,17 +86,17 @@ class SessionStatusPoller
                 return $sessionStatus;
             }
 
-            $this->logger->debug('Sleeping for ' . $this->pollingSleepTimeoutSeconds . ' seconds');
+//            $this->logger->debug('Sleeping for ' . $this->pollingSleepTimeoutSeconds . ' seconds');
             sleep($this->pollingSleepTimeoutSeconds);
         }
 
-        $this->logger->debug('Got session final session status response');
+//        $this->logger->debug('Got session final session status response');
         return $sessionStatus;
     }
 
     private function pollSessionStatus(string $sessionId, ?int $longPollSeconds = null) : SessionStatus
     {
-        $this->logger->debug('Polling session status');
+//        $this->logger->debug('Polling session status');
         $request = $this->createSessionStatusRequest($sessionId, $longPollSeconds);
         return $this->connector->getAuthenticationSessionStatus($request);
     }
@@ -110,7 +110,7 @@ class SessionStatusPoller
     {
         $result = $sessionStatus->getResult();
         if ($result == null) {
-            $this->logger->error('Result is missing in the session status response');
+//            $this->logger->error('Result is missing in the session status response');
             throw new MidInternalErrorException('Result is missing in the session status response');
         } else {
             $this->validateResultOfString($result);
@@ -136,23 +136,23 @@ class SessionStatusPoller
                 return;
             case 'TIMEOUT':
             case 'EXPIRED_TRANSACTION':
-                $this->logger->error('Session timeout');
+//                $this->logger->error('Session timeout');
                 throw new MidSessionTimeoutException();
             case 'NOT_MID_CLIENT':
-                $this->logger->error('Given user has no active certificates and is not M-ID client');
+//                $this->logger->error('Given user has no active certificates and is not M-ID client');
                 throw new NotMidClientException();
             case 'USER_CANCELLED':
-                $this->logger->error('User cancelled the operation');
+//                $this->logger->error('User cancelled the operation');
                 throw new UserCancellationException();
             case 'PHONE_ABSENT':
-                $this->logger->error('Sim not available');
+//                $this->logger->error('Sim not available');
                 throw new PhoneNotAvailableException();
             case 'SIGNATURE_HASH_MISMATCH':
-                $this->logger->error('Hash does not match with certificate type');
+//                $this->logger->error('Hash does not match with certificate type');
                 throw new InvalidUserConfigurationException();
             case 'SIM_ERROR':
             case 'DELIVERY_ERROR':
-                $this->logger->error('SMS sending or SIM error');
+//                $this->logger->error('SMS sending or SIM error');
                 throw new DeliveryException();
             default:
                 throw new MidInternalErrorException("MID returned error code '" . $result . "'");
@@ -162,7 +162,7 @@ class SessionStatusPoller
 
     public function setPollingSleepTimeSeconds(int $pollingSleepTimeSeconds) : void
     {
-        $this->logger->debug('Polling sleep time is ' . $pollingSleepTimeSeconds . ' second(s)');
+//        $this->logger->debug('Polling sleep time is ' . $pollingSleepTimeSeconds . ' second(s)');
         $this->pollingSleepTimeoutSeconds = $pollingSleepTimeSeconds;
     }
 

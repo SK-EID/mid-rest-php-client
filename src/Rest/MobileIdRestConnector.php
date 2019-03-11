@@ -89,9 +89,9 @@ class MobileIdRestConnector implements MobileIdConnector
     {
         $this->setRequestRelyingPartyDetailsIfMissing($request);
 
-        $this->logger->debug('Getting certificate for phone number: ' . $request->toString());
+//        $this->logger->debug('Getting certificate for phone number: ' . $request->toString());
         $uri = $this->endpointUrl . '/certificate';
-        $this->logger->debug('From uri: ' . $uri);
+//        $this->logger->debug('From uri: ' . $uri);
 
         $certificateResponse = $this->postCertificateRequest($uri, $request);
         return $certificateResponse;
@@ -128,7 +128,7 @@ class MobileIdRestConnector implements MobileIdConnector
             $url = $url . '?timeoutMs='.$request->getSessionStatusResponseSocketTimeoutMs();
         }
 
-        $this->logger->debug('Sending get request to ' . $url);
+//        $this->logger->debug('Sending get request to ' . $url);
         $responseAsArray = $this->getRequest($url);
         if (isset($responseAsArray['error'])) throw new MidSessionNotFoundException($request->getSessionId());
         return new SessionStatus($responseAsArray);
@@ -155,10 +155,10 @@ class MobileIdRestConnector implements MobileIdConnector
                 return;
             case 'NOT_FOUND':
             case 'NOT_ACTIVE':
-                $this->logger->error("No certificate for the user were found");
+//                $this->logger->error("No certificate for the user were found");
                 throw new NotMidClientException();
             default:
-                $this->logger->error("MID returned error code '" . $result . "'");
+//                $this->logger->error("MID returned error code '" . $result . "'");
                 throw new MidInternalErrorException("MID returned error code '" . $result . "'");
         }
         
@@ -173,7 +173,7 @@ class MobileIdRestConnector implements MobileIdConnector
     private function postRequest(string $url, AbstractRequest $paramsForJson) : array
     {
         $json = json_encode($paramsForJson);
-        $this->logger->debug('POST '.$url.' contents: ' . $json);
+//        $this->logger->debug('POST '.$url.' contents: ' . $json);
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -188,7 +188,7 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        $this->logger->debug('Response was '.$result.', status code was '.$httpcode);
+//        $this->logger->debug('Response was '.$result.', status code was '.$httpcode);
         $responseAsArray = json_decode($result, true);
 
         switch ($httpcode) {
@@ -224,7 +224,7 @@ class MobileIdRestConnector implements MobileIdConnector
         );
         $result = curl_exec($ch);
 
-        $this->logger->debug('Result is '. $result);
+//        $this->logger->debug('Result is '. $result);
 
         return json_decode($result, true);
     }

@@ -65,13 +65,13 @@ class AuthenticationResponseValidator
     private function validateAuthentication(Mobileidauthentication $authentication) : void
     {
         if (is_null($authentication->getCertificate())) {
-            $this->logger->error('Certificate is not present in the authentication response');
+//            $this->logger->error('Certificate is not present in the authentication response');
             throw new MidInternalErrorException('Certificate is not present in the authentication response');
         } else if (empty($authentication->getSignatureValueInBase64())) {
-            $this->logger->error('Signature is not present in the authentication response');
+//            $this->logger->error('Signature is not present in the authentication response');
             throw new MidInternalErrorException('Signature is not present in the authentication response');
         } else if (is_null($authentication->getHashType())) {
-            $this->logger->error('Hash type is not present in the authentication response');
+//            $this->logger->error('Hash type is not present in the authentication response');
             throw new MidInternalErrorException('Hash type is not present in the authentication response');
         }
     }
