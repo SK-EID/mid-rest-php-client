@@ -132,7 +132,7 @@ The client also supports to ask for a certificate.
  ```PHP
 $client = MobileIdClient::newBuilder()
    ->withRelyingPartyUUID("00000000-0000-0000-0000-000000000000")
-   ->withRelyingPartyName("DEMO)
+   ->withRelyingPartyName("DEMO")
    ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
    ->build();
 
