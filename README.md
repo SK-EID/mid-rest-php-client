@@ -48,22 +48,13 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Sk\Mid\MobileIdClient;
 use Sk\Middemo\Model\UserMidSession;
 
-/** @var string $midRelyingPartyUuid */
-private $midRelyingPartyUuid = '00000000-0000-0000-0000-000000000000';
-
-/** @var string $midRelyingPartyName */
-private $midRelyingPartyName = 'DEMO';
-
-/** @var string $midApplicationProviderHost */
-private $midApplicationProviderHost = 'https://tsp.demo.sk.ee/mid-api';
-
 public function mobileIdClient() : MobileIdClient
 {
-    return MobileIdClient::newBuilder()
-        ->withRelyingPartyUUID($this->midRelyingPartyUuid)
-        ->withRelyingPartyName($this->midRelyingPartyName)
-        ->withHostUrl($this->midApplicationProviderHost)
-        ->build();
+       return MobileIdClient::newBuilder()
+           ->withRelyingPartyUUID('00000000-0000-0000-0000-000000000000')
+           ->withRelyingPartyName('DEMO')
+           ->withHostUrl('https://tsp.demo.sk.ee/mid-api')
+           ->build();
 }
 ```
 
@@ -75,8 +66,6 @@ public function mobileIdClient() : MobileIdClient
 $userRequest = $authenticationSessionInfo->getUserRequest();
 $authenticationHash = $authenticationSessionInfo->getAuthenticationHash();
 $request = AuthenticationRequest::newBuilder()
-    ->withRelyingPartyUUID($this->client->getRelyingPartyUUID())
-    ->withRelyingPartyName($this->client->getRelyingPartyName())
     ->withPhoneNumber($userRequest->getPhoneNumber())
     ->withNationalIdentityNumber($userRequest->getNationalIdentityNumber())
     ->withHashToSign($authenticationHash)
@@ -100,7 +89,7 @@ try {
     $authentication = $this->client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     $validator = new AuthenticationResponseValidator();
     $authenticationResult = $validator->validate($authentication);
-} catch (NotMidClientException $e) {
+} catch (Exception $e) {
     throw new MidAuthException($e->getMessage());
 }
 if (!$authenticationResult->isValid()) {
