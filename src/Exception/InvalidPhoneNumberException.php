@@ -29,8 +29,8 @@ namespace Sk\Mid\Exception;
 
 class InvalidPhoneNumberException extends MissingOrInvalidParameterException {
 
-    public function __construct($nationalIdentityNumberInput) {
-        parent::__construct('Invalid phone number '. $nationalIdentityNumberInput);
+    public function __construct($phoneNumberInput) {
+        parent::__construct('Invalid phone number '. $phoneNumberInput);
     }
 
 }
