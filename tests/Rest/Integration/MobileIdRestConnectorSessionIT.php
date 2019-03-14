@@ -41,11 +41,13 @@ class MobileIdRestConnectorSessionIT extends TestCase
         $authenticationRequest = MobileIdRestServiceRequestDummy::createValidAuthenticationRequest();
         MobileIdRestServiceRequestDummy::assertCorrectAuthenticationRequestMade($authenticationRequest);
 
-        $authenticationResponse = $this->getConnector()->authenticate($authenticationRequest);
+        $authenticationResponse = $this->getConnector()->initAuthentication($authenticationRequest);
         assert(!is_null($authenticationResponse->getSessionId()) && !empty($authenticationResponse->getSessionId()));
 
         $sessionStatusRequest = new SessionStatusRequest($authenticationResponse->getSessionId());
-        $poller = new SessionStatusPoller($this->getConnector());
+        $poller = SessionStatusPoller::newBuilder()
+                ->withConnector($this->getConnector())
+                ->build();
         $sessionStatus = $poller->fetchFinalAuthenticationSession($sessionStatusRequest->getSessionId());
         MobileIdRestServiceResponseDummy::assertAuthenticationPolled($sessionStatus);
     }
@@ -58,7 +60,7 @@ class MobileIdRestConnectorSessionIT extends TestCase
         $this->expectException(MidSessionNotFoundException::class);
 
         $request = new SessionStatusRequest(TestData::SESSION_ID);
-        $this->getConnector()->getAuthenticationSessionStatus($request);
+        $this->getConnector()->pullAuthenticationSessionStatus($request);
     }
 
     /**

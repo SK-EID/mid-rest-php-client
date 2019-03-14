@@ -65,23 +65,22 @@ class Logger
         $this->debugEnabled = $debugEnabled;
     }
 
-
     public function error(string $errorMessage) : void
     {
-        echo $this->debug_to_console(date("H:i:s").' '.$this->className.' error: '.$errorMessage);
+        $this->debug_to_console(date("H:i:s").' '.$this->className.' error: '.$errorMessage);
     }
 
     public function debug(string $debugMessage) : void
     {
-        echo $this->debug_to_console(date("H:i:s").' '.$this->className.' debug: '.$debugMessage);
+        $this->debug_to_console(date("H:i:s").' '.$this->className.' debug: '.$debugMessage);
     }
 
     public function trace(string $traceMessage) : void
     {
-        echo $this->debug_to_console(date("H:i:s").' '.$this->className.' trace: '.$traceMessage);
+        $this->debug_to_console(date("H:i:s").' '.$this->className.' trace: '.$traceMessage);
     }
 
-    private function debug_to_console(string $message) : string {
-        return $message.PHP_EOL;
+    private function debug_to_console(string $message) : void {
+        // you can add logging here
     }
 }

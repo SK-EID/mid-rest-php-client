@@ -26,10 +26,9 @@
  */
 namespace Sk\Mid;
 
-use Sk\Mid\HashType\HashType;
-use Sk\Mid\VerificationCodeCalculator;
-use Sk\Mid\Rest\Dao\AuthenticationCertificate;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
+use Sk\Mid\HashType\HashType;
+use Sk\Mid\Rest\Dao\MidCertificate;
 
 class MobileIdAuthentication
 {
@@ -49,7 +48,7 @@ class MobileIdAuthentication
     /** @var string $algorithmName */
     private $algorithmName;
 
-    /** @var AuthenticationCertificate $certificate */
+    /** @var MidCertificate $certificate */
     private $certificate;
 
     public function __construct(MobileIdAuthenticationBuilder $builder)
@@ -97,14 +96,26 @@ class MobileIdAuthentication
         return $this->algorithmName;
     }
 
-    public function getCertificate() : AuthenticationCertificate
+    public function getCertificate() : MidCertificate
     {
-        return new AuthenticationCertificate($this->certificate);
+        return new MidCertificate($this->certificate);
     }
 
     public static function newBuilder() : MobileIdAuthenticationBuilder
     {
         return new MobileIdAuthenticationBuilder();
+    }
+
+    public function constructAuthenticationIdentity() : MidIdentity
+    {
+        return MidIdentity::parseFromCertificate($this->getCertificate());
+    }
+
+    public function getValidatedAuthenticationResult() : MobileIdAuthenticationResult
+    {
+        $authenticationResponseValidator = new AuthenticationResponseValidator();
+        return $authenticationResponseValidator->validate($this);
+
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Sk\Mid\Rest\Dao;
 use Sk\Mid\Util\PropertyMapper;
-class AuthenticationCertificate extends PropertyMapper
+class MidCertificate extends PropertyMapper
 {
   /**
    * @var string

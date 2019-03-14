@@ -29,6 +29,8 @@ use Sk\Mid\MobileIdAuthenticationHashToSign;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\Language\Language;
 use Sk\Mid\HashType\HashType;
+use Sk\Mid\Util\MidInputUtil;
+
 class AuthenticationRequestBuilder
 {
     /** @var string $relyingPartyName */
@@ -125,10 +127,7 @@ class AuthenticationRequestBuilder
 
     private function validateParameters()
     {
-
-        if (empty($this->phoneNumber) || empty($this->nationalIdentityNumber)) {
-            throw new MissingOrInvalidParameterException('Phone number and national identity must be set');
-        }
+        MidInputUtil::validateUserInput($this->phoneNumber, $this->nationalIdentityNumber);
 
         if (is_null($this->hashToSign)) {
             throw new MissingOrInvalidParameterException("hashToSign must be set");

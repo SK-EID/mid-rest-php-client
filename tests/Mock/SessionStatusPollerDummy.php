@@ -18,7 +18,7 @@ class SessionStatusPollerDummy
         while ($sessionStatus == null || strcasecmp("RUNNING", $sessionStatus->getState()) == 0)
         {
             $request = new SessionStatusRequest($sessionId);
-            $sessionStatus = $connector->getAuthenticationSessionStatus($request);
+            $sessionStatus = $connector->pullAuthenticationSessionStatus($request);
             sleep(1);
         }
         assert($sessionStatus->getState() == "COMPLETE");

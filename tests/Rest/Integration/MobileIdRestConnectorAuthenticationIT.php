@@ -49,7 +49,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
         $request->setDisplayText("Log into internet banking system");
         MobileIdRestServiceRequestDummy::assertCorrectAuthenticationRequestMade($request);
 
-        $response = $this->getConnector()->authenticate($request);
+        $response = $this->getConnector()->initAuthentication($request);
         $this->assertNotEmpty($response->getSessionId());
 
         $sessionStatus = SessionStatusPollerDummy::pollSessionStatus($this->connector, $response->getSessionId());
@@ -72,7 +72,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
             ->withLanguage(EST::asType())
             ->build();
 
-        $this->getConnector()->authenticate($request);
+        $this->getConnector()->initAuthentication($request);
     }
 
     /**
@@ -85,7 +85,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::WRONG_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
         );
-        $this->getConnector()->authenticate($request);
+        $this->getConnector()->initAuthentication($request);
     }
 
     /**
@@ -98,7 +98,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::DEMO_RELYING_PARTY_UUID, TestData::WRONG_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
         );
-        $this->getConnector()->authenticate($request);
+        $this->getConnector()->initAuthentication($request);
     }
 
     /**
@@ -111,7 +111,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::DEMO_RELYING_PARTY_UUID, TestData::UNKNOWN_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
         );
-        $this->getConnector()->authenticate($request);
+        $this->getConnector()->initAuthentication($request);
     }
 
     /**
@@ -124,7 +124,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::UNKNOWN_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
         );
-        $this->getConnector()->authenticate($request);
+        $this->getConnector()->initAuthentication($request);
     }
 
 

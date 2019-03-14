@@ -25,9 +25,9 @@
  * #L%
  */
 namespace Sk\Mid;
-use Sk\Mid\Util\Logger;
-use Sk\Mid\Rest\Dao\AuthenticationCertificate;
 use Sk\Mid\Exception\MidInternalErrorException;
+use Sk\Mid\Util\Logger;
+
 class CertificateParser
 {
     /** @var Logger $logger */

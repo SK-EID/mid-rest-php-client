@@ -44,14 +44,16 @@ class MobileIdClientBuilder
     private $networkConnectionConfig;
 
     /** @var int $pollingSleepTimeoutSeconds */
-    private $pollingSleepTimeoutSeconds;
+    private $pollingSleepTimeoutSeconds = 0;
+
+    /** @var int $longPollingTimeoutSeconds */
+    private $longPollingTimeoutSeconds = 0;
 
     /** @var MobileIdRestConnector $connector */
     private $connector;
 
     public function __construct()
     {
-        $this->pollingSleepTimeoutSeconds = 1;
     }
 
     public function getRelyingPartyUUID() : ?string
@@ -77,6 +79,11 @@ class MobileIdClientBuilder
     public function getPollingSleepTimeoutSeconds() : int
     {
         return $this->pollingSleepTimeoutSeconds;
+    }
+
+    public function getLongPollingTimeoutSeconds() : int
+    {
+        return $this->longPollingTimeoutSeconds;
     }
 
     public function getConnector() : ?MobileIdRestConnector
@@ -111,6 +118,12 @@ class MobileIdClientBuilder
     public function withPollingSleepTimeoutSeconds(int $pollingSleepTimeoutSeconds) : MobileIdClientBuilder
     {
         $this->pollingSleepTimeoutSeconds = $pollingSleepTimeoutSeconds;
+        return $this;
+    }
+
+    public function withLongPollingTimeoutSeconds(int $longPollingTimeoutSeconds) : MobileIdClientBuilder
+    {
+        $this->longPollingTimeoutSeconds = $longPollingTimeoutSeconds;
         return $this;
     }
 

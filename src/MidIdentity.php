@@ -25,7 +25,12 @@
  * #L%
  */
 namespace Sk\Mid;
-class AuthenticationIdentity
+use ReflectionClass;
+use ReflectionException;
+use Sk\Mid\Exception\MidInternalErrorException;
+use Sk\Mid\Rest\Dao\MidCertificate;
+
+class MidIdentity
 {
 
     /** @var string $givenName */
@@ -88,7 +93,45 @@ class AuthenticationIdentity
     {
         return "AuthenticationIdentity{<br/>givenName=" . $this->givenName . ",<br/> surName=" . $this->surName . ",<br/> identityCode=" . $this->identityCode . ",<br/> country=" . $this->country . "<br/>)<br/><br/>";
     }
-    
 
+    public static function parseFromRawCertificate(array $certificate) : MidIdentity
+    {
+        $authenticationCertificate = new MidCertificate($certificate);
+        return self::parseFromCertificate($authenticationCertificate);
+    }
+
+    public static function parseFromCertificate(MidCertificate $certificate) : MidIdentity
+    {
+
+        $identity = new MidIdentity();
+        $subject = $certificate->getSubject();
+        try {
+            $subjectReflection = new ReflectionClass($subject);
+            foreach ( $subjectReflection->getProperties() as $property )
+            {
+                $property->setAccessible( true );
+                if ( strcasecmp( $property->getName(), 'GN' ) === 0 )
+                {
+                    $identity->setGivenName( $property->getValue( $subject ) );
+                }
+                elseif ( strcasecmp( $property->getName(), 'SN' ) === 0 )
+                {
+                    $identity->setSurName( $property->getValue( $subject ) );
+                }
+                elseif ( strcasecmp( $property->getName(), 'SERIALNUMBER' ) === 0 )
+                {
+                    $identityCode = $property->getValue( $subject );
+                    $identity->setIdentityCode(preg_replace('(^PNO[A-Z][A-Z]-)','',$identityCode));
+                }
+                elseif ( strcasecmp( $property->getName(), 'C' ) === 0 )
+                {
+                    $identity->setCountry( $property->getValue( $subject ) );
+                }
+            }
+        } catch (ReflectionException $e) {
+            throw new MidInternalErrorException("Error parsing certificate");
+        }
+        return $identity;
+    }
 
 }

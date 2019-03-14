@@ -25,18 +25,15 @@
  * #L%
  */
 namespace Sk\Mid;
+use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Rest\Dao\Response\CertificateChoiceResponse;
+use Sk\Mid\Rest\Dao\MidCertificate;
+use Sk\Mid\Rest\Dao\Response\CertificateResponse;
 use Sk\Mid\Rest\Dao\SessionStatus;
 use Sk\Mid\Rest\MobileIdConnector;
-use Sk\Mid\Util\Logger;
-use Sk\Mid\Rest\SessionStatusPoller;
-use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Rest\MobileIdRestConnector;
-use Sk\Mid\MobileIdSignature;
-use Sk\Mid\MobileIdAuthentication;
-use Sk\Mid\CertificateParser;
-use Sk\Mid\MobileIdClientBuilder;
+use Sk\Mid\Rest\SessionStatusPoller;
+use Sk\Mid\Util\Logger;
 
 class MobileIdClient
 {
@@ -56,9 +53,6 @@ class MobileIdClient
     /** @var string $networkConnectionConfig */
     private $networkConnectionConfig;
 
-    /** @var int $pollingSleepTimeoutSeconds */
-    private $pollingSleepTimeoutSeconds;
-
     /** @var MobileIdRestConnector $connector */
     private $connector;
 
@@ -72,9 +66,12 @@ class MobileIdClient
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->hostUrl = $builder->getHostUrl();
         $this->networkConnectionConfig = $builder->getNetworkConnectionConfig();
-        $this->pollingSleepTimeoutSeconds = $builder->getPollingSleepTimeoutSeconds();
         $this->connector = $builder->getConnector();
-        $this->createSessionStatusPoller();
+        $this->sessionStatusPoller = SessionStatusPoller::newBuilder()
+                ->withConnector($this->getMobileIdConnector())
+                ->withPollingSleepTimeoutSeconds($builder->getPollingSleepTimeoutSeconds())
+                ->withLongPollingTimeoutSeconds($builder->getLongPollingTimeoutSeconds())
+                ->build();
     }
 
     public function getMobileIdConnector(): MobileIdConnector
@@ -105,20 +102,21 @@ class MobileIdClient
         return $this->relyingPartyName;
     }
 
-    private function createSessionStatusPoller(): SessionStatusPoller
-    {
-        $sessionStatusPoller = new SessionStatusPoller($this->getMobileIdConnector());
-        $sessionStatusPoller->setPollingSleepTimeSeconds($this->pollingSleepTimeoutSeconds);
-        $this->sessionStatusPoller = $sessionStatusPoller;
-        return $sessionStatusPoller;
-    }
-
-    public function createMobileIdCertificate(CertificateChoiceResponse $certificateChoiceResponse): array
+    public function createMobileIdCertificate(CertificateResponse $certificateChoiceResponse): array
     {
         $this->validateCertificateResult($certificateChoiceResponse->getResult());
         $this->validateCertificateResponse($certificateChoiceResponse);
         return CertificateParser::parseX509Certificate($certificateChoiceResponse->getCert());
     }
+
+    public function parseMobileIdIdentity(CertificateResponse $certificateChoiceResponse): MidIdentity
+    {
+        $midCertificateArray = $this->createMobileIdCertificate($certificateChoiceResponse);
+
+        $midCertificate = new MidCertificate($midCertificateArray);
+        return MidIdentity::parseFromCertificate($midCertificate);
+    }
+
 
     public function createMobileIdAuthentication(SessionStatus $sessionStatus, MobileIdAuthenticationHashToSign $hash): MobileIdAuthentication
     {
@@ -151,7 +149,7 @@ class MobileIdClient
         }
     }
 
-    private function validateCertificateResponse(CertificateChoiceResponse $certificateChoiceResponse): void
+    private function validateCertificateResponse(CertificateResponse $certificateChoiceResponse): void
     {
         if (is_null($certificateChoiceResponse->getCert()) || empty($certificateChoiceResponse->getCert())) {
             self::$logger->error('Certificate was not present in the session status response');

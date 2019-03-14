@@ -32,8 +32,10 @@ class SessionStatusPollerTest extends TestCase
     protected function setUp() : void
     {
         $this->connector = new MobileIdConnectorStub();
-        $this->poller = new SessionStatusPoller($this->connector);
-        $this->poller->setPollingSleepTimeSeconds(1);
+        $this->poller = SessionStatusPoller::newBuilder()
+                ->withConnector($this->connector)
+                ->withPollingSleepTimeoutSeconds(1)
+                ->build();
     }
 
     /**

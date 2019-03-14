@@ -46,7 +46,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
         $request->setNationalIdentityNumber(TestData::VALID_NAT_IDENTITY);
         MobileIdRestServiceRequestDummy::assertCorrectCertificateRequestMade($request);
 
-        $response = $this->getConnector()->getCertificate($request);
+        $response = $this->getConnector()->pullCertificate($request);
 
         assert(!is_null($response));
         try {
@@ -68,7 +68,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
             ->build();
 
-        $this->getConnector()->getCertificate($request);
+        $this->getConnector()->pullCertificate($request);
     }
 
     /**
@@ -84,7 +84,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
                 ->build();
 
 
-        $this->getConnector()->getCertificate($request);
+        $this->getConnector()->pullCertificate($request);
     }
 
     /**
@@ -103,7 +103,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
         $request = new CertificateRequest();
         $request->setPhoneNumber(TestData::VALID_PHONE);
         $request->setNationalIdentityNumber(TestData::VALID_NAT_IDENTITY);
-        $connector->getCertificate($request);
+        $connector->pullCertificate($request);
     }
 
     /**
@@ -122,7 +122,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
         $request = new CertificateRequest();
         $request->setPhoneNumber(TestData::VALID_PHONE);
         $request->setNationalIdentityNumber(TestData::VALID_NAT_IDENTITY);
-        $connector->getCertificate($request);
+        $connector->pullCertificate($request);
     }
 
     /**
@@ -141,7 +141,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
         $request = new CertificateRequest();
         $request->setPhoneNumber(TestData::VALID_PHONE);
         $request->setNationalIdentityNumber(TestData::VALID_NAT_IDENTITY);
-        $connector->getCertificate($request);
+        $connector->pullCertificate($request);
     }
 
     /**
@@ -160,7 +160,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
         $request = new CertificateRequest();
         $request->setPhoneNumber(TestData::VALID_PHONE);
         $request->setNationalIdentityNumber(TestData::VALID_NAT_IDENTITY);
-        $connector->getCertificate($request);
+        $connector->pullCertificate($request);
     }
 
 

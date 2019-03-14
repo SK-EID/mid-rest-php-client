@@ -24,57 +24,13 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid;
+namespace Sk\Mid\Exception;
 
-class MobileIdAuthenticationResult
-{
 
-    /** @var MidIdentity $authenticationIdentity */
-    private $authenticationIdentity;
+class InvalidPhoneNumberException extends MissingOrInvalidParameterException {
 
-    /** @var bool $valid */
-    private $valid = true;
-
-    /** @var array $errors */
-    private $errors = array();
-
-    public function __construct()
-    {
-    }
-
-    public function getAuthenticationIdentity() : ?MidIdentity
-    {
-        return $this->authenticationIdentity;
-    }
-
-    public function setAuthenticationIdentity(MidIdentity $authenticationIdentity)
-    {
-        $this->authenticationIdentity = $authenticationIdentity;
-    }
-
-    public function isValid() : bool
-    {
-        return $this->valid;
-    }
-
-    public function setValid(bool $valid) : void
-    {
-        $this->valid = $valid;
-    }
-
-    public function getErrors() : array
-    {
-        return $this->errors;
-    }
-
-    public function getErrorsAsString() : string
-    {
-        return implode("; ", $this->getErrors());
-    }
-
-    public function addError(string $error) : void
-    {
-        array_push($this->errors, $error);
+    public function __construct($nationalIdentityNumberInput) {
+        parent::__construct('Invalid phone number '. $nationalIdentityNumberInput);
     }
 
 }

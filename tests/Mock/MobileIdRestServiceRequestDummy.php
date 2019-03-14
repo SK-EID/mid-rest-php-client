@@ -47,7 +47,7 @@ class MobileIdRestServiceRequestDummy
             ->build();
 
         self::assertCorrectCertificateRequestMade($request);
-        $response = $client->getMobileIdConnector()->getCertificate($request);
+        $response = $client->getMobileIdConnector()->pullCertificate($request);
         return $client->createMobileIdCertificate($response);
     }
 
@@ -59,14 +59,14 @@ class MobileIdRestServiceRequestDummy
             ->withHashToSign($authenticationHash)
             ->withLanguage(EST::asType())
             ->build();
-        $response = $client->getMobileIdConnector()->authenticate($request);
+        $response = $client->getMobileIdConnector()->initAuthentication($request);
         $sessionStatus = $client->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
         return $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }
 
     public static function sendAuthentication(MobileIdClient $client, AuthenticationRequest $request, MobileIdAuthenticationHashToSign $authenticationHash) : MobileIdAuthentication
     {
-        $response = $client->getMobileIdConnector()->authenticate($request);
+        $response = $client->getMobileIdConnector()->initAuthentication($request);
         $sessionStatus = $client->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
         return $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }
@@ -84,7 +84,7 @@ class MobileIdRestServiceRequestDummy
             ->withPhoneNumber($phoneNumber)
             ->withNationalIdentityNumber($nationalIdentityNumber)
             ->build();
-        $response = $client->getMobileIdConnector()->getCertificate($request);
+        $response = $client->getMobileIdConnector()->pullCertificate($request);
         $client->createMobileIdCertificate($response);
     }
 
@@ -109,7 +109,7 @@ class MobileIdRestServiceRequestDummy
             ->withLanguage(EST::asType())
             ->build();
 
-        $response = $client->getMobileIdConnector()->authenticate($request);
+        $response = $client->getMobileIdConnector()->initAuthentication($request);
         $sessionStatus = $client->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionId(), TestData::AUTHENTICATION_SESSION_PATH);
         $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);
     }

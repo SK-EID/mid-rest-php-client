@@ -25,12 +25,10 @@
  * #L%
  */
 namespace Sk\Mid;
-use ReflectionClass;
-use ReflectionException;
-use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Rest\Dao\AuthenticationCertificate;
-use Sk\Mid\Util\Logger;
 use Sk\Mid\Exception\MidInternalErrorException;
+use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Rest\Dao\MidCertificate;
+use Sk\Mid\Util\Logger;
 
 class AuthenticationResponseValidator
 {
@@ -46,8 +44,7 @@ class AuthenticationResponseValidator
     {
         $this->validateAuthentication($authentication);
         $authenticationResult = new MobileIdAuthenticationResult();
-        $identity = $this->constructAuthenticationIdentity($authentication->getCertificate());
-        $authenticationResult->setAuthenticationIdentity($identity);
+
         if (!$this->isResultOk($authentication)) {
             $authenticationResult->setValid(false);
             $authenticationResult->addError(MobileIdAuthenticationError::INVALID_RESULT);
@@ -59,63 +56,31 @@ class AuthenticationResponseValidator
             throw new NotMidClientException();
         }
 
+        $identity = $authentication->constructAuthenticationIdentity();
+        $authenticationResult->setAuthenticationIdentity($identity);
+
         return $authenticationResult;
     }
 
     private function validateAuthentication(Mobileidauthentication $authentication) : void
     {
         if (is_null($authentication->getCertificate())) {
-//            $this->logger->error('Certificate is not present in the authentication response');
             throw new MidInternalErrorException('Certificate is not present in the authentication response');
         } else if (empty($authentication->getSignatureValueInBase64())) {
-//            $this->logger->error('Signature is not present in the authentication response');
             throw new MidInternalErrorException('Signature is not present in the authentication response');
         } else if (is_null($authentication->getHashType())) {
-//            $this->logger->error('Hash type is not present in the authentication response');
             throw new MidInternalErrorException('Hash type is not present in the authentication response');
         }
     }
 
-    public function constructAuthenticationIdentity(AuthenticationCertificate $certificate) : AuthenticationIdentity
-    {
-        $identity = new AuthenticationIdentity();
-        $subject = $certificate->getSubject();
-        try {
-            $subjectReflection = new ReflectionClass($subject);
-            foreach ( $subjectReflection->getProperties() as $property )
-            {
-                $property->setAccessible( true );
-                if ( strcasecmp( $property->getName(), 'GN' ) === 0 )
-                {
-                    $identity->setGivenName( $property->getValue( $subject ) );
-                }
-                elseif ( strcasecmp( $property->getName(), 'SN' ) === 0 )
-                {
-                    $identity->setSurName( $property->getValue( $subject ) );
-                }
-                elseif ( strcasecmp( $property->getName(), 'SERIALNUMBER' ) === 0 )
-                {
-                    $identityCode = $property->getValue( $subject );
-                    $identity->setIdentityCode(preg_replace('(^PNO[A-Z][A-Z]-)','',$identityCode));
-                }
-                elseif ( strcasecmp( $property->getName(), 'C' ) === 0 )
-                {
-                    $identity->setCountry( $property->getValue( $subject ) );
-                }
-            }
-        } catch (ReflectionException $e) {
 
-        }
-        return $identity;
-
-    }
 
     private function isResultOk(MobileIdAuthentication $authentication) : bool
     {
         return strcasecmp('OK', $authentication->getResult()) == 0;
     }
 
-    private function verifyCertificateExpiry( AuthenticationCertificate $authenticationCertificate )
+    private function verifyCertificateExpiry(MidCertificate $authenticationCertificate )
     {
         return $authenticationCertificate !== null && $authenticationCertificate->getValidTo() > time();
     }

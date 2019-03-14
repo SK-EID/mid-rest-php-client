@@ -63,7 +63,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withEndpointUrl(TestData::LOCALHOST_URL)
             ->build();
 
-        $connector->authenticate($request);
+        $connector->initAuthentication($request);
     }
 
     /**
@@ -85,7 +85,7 @@ class AuthenticationRequestBuilderTest extends TestCase
         $connector = MobileIdRestConnector::newBuilder()
             ->withEndpointUrl(TestData::LOCALHOST_URL)
             ->build();
-        $connector->authenticate($request);
+        $connector->initAuthentication($request);
     }
 
     /**
@@ -108,7 +108,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
-        $connector->authenticate($request);
+        $connector->initAuthentication($request);
     }
 
     /**
@@ -131,7 +131,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
-        $connector->authenticate($request);
+        $connector->initAuthentication($request);
     }
 
     /**
@@ -153,7 +153,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
-        $connector->authenticate($request);
+        $connector->initAuthentication($request);
     }
 
     /**
@@ -176,7 +176,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
-        $connector->authenticate($request);
+        $connector->initAuthentication($request);
     }
 
     /**
@@ -333,9 +333,11 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->withLanguage(EST::asType())
             ->build();
 
-        $response = $connector->authenticate($request);
+        $response = $connector->initAuthentication($request);
 
-        $poller = new SessionStatusPoller($connector);
+        $poller = SessionStatusPoller::newBuilder()
+                ->withConnector($connector)
+                ->build();
         $sessionStatus = $poller->fetchFinalSessionStatus($response->getSessionId());
 
         $client = MobileIdClient::newBuilder()

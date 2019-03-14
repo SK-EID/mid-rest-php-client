@@ -1,14 +1,12 @@
 <?php
 namespace Sk\Mid\Tests\Mock;
+use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 use Sk\Mid\Rest\Dao\Request\SessionStatusRequest;
 use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
-use Sk\Mid\Rest\Dao\Response\CertificateChoiceResponse;
+use Sk\Mid\Rest\Dao\Response\CertificateResponse;
 use Sk\Mid\Rest\Dao\SessionStatus;
 use Sk\Mid\Rest\MobileIdConnector;
-use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
-use Sk\Mid\Rest\SessionStatusPoller;
-
 
 /**
  * Created by PhpStorm.
@@ -22,7 +20,7 @@ class MobileIdConnectorSpy implements MobileIdConnector
     /** @var SessionStatus $sessionStatusToRespond */
     private $sessionStatusToRespond;
 
-    /** @var CertificateChoiceResponse $certificateChoiceResponseToRespond */
+    /** @var CertificateResponse $certificateChoiceResponseToRespond */
     private $certificateChoiceResponseToRespond;
 
     /** @var AuthenticationResponse $authenticationResponseToRespond */
@@ -51,12 +49,12 @@ class MobileIdConnectorSpy implements MobileIdConnector
         $this->sessionStatusToRespond = $sessionStatusToRespond;
     }
 
-    public function getCertificateChoiceResponseToRespond(): CertificateChoiceResponse
+    public function getCertificateChoiceResponseToRespond(): CertificateResponse
     {
         return $this->certificateChoiceResponseToRespond;
     }
 
-    public function setCertificateChoiceResponseToRespond(CertificateChoiceResponse $certificateChoiceResponseToRespond): void
+    public function setCertificateChoiceResponseToRespond(CertificateResponse $certificateChoiceResponseToRespond): void
     {
         $this->certificateChoiceResponseToRespond = $certificateChoiceResponseToRespond;
     }
@@ -91,7 +89,7 @@ class MobileIdConnectorSpy implements MobileIdConnector
         return $this->signatureRequestUsed;
     }
 
-    public function getCertificate(CertificateRequest $request) : CertificateChoiceResponse
+    public function pullCertificate(CertificateRequest $request) : CertificateResponse
     {
         $this->certificateRequestUsed = $request;
         return $this->certificateChoiceResponseToRespond;
@@ -103,7 +101,7 @@ class MobileIdConnectorSpy implements MobileIdConnector
         return $this->signatureResponseToRespond;
     }
 
-    public function authenticate(AuthenticationRequest $request) : AuthenticationResponse
+    public function initAuthentication(AuthenticationRequest $request) : AuthenticationResponse
     {
         $this->authenticationRequestUsed = $request;
         return $this->authenticationResponseToRespond;
@@ -115,7 +113,7 @@ class MobileIdConnectorSpy implements MobileIdConnector
         return $this->sessionStatusToRespond;
     }
 
-    public function getAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus
+    public function pullAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus
     {
         return $this->getSessionStatus($request);
     }

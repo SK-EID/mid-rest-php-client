@@ -5,7 +5,7 @@ use Sk\Mid\Rest\Dao\SessionStatus;
 use Sk\Mid\Rest\MobileIdConnector;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
-use Sk\Mid\Rest\Dao\Response\CertificateChoiceResponse;
+use Sk\Mid\Rest\Dao\Response\CertificateResponse;
 use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
 /**
  * Created by PhpStorm.
@@ -49,7 +49,7 @@ class MobileIdConnectorStub implements MobileIdConnector
     }
 
 
-    public function getCertificate(CertificateRequest $request) : CertificateChoiceResponse
+    public function pullCertificate(CertificateRequest $request) : CertificateResponse
     {
         return null;
     }
@@ -59,7 +59,7 @@ class MobileIdConnectorStub implements MobileIdConnector
         return null;
     }
 
-    public function authenticate(AuthenticationRequest $request) : AuthenticationResponse
+    public function initAuthentication(AuthenticationRequest $request) : AuthenticationResponse
     {
         return null;
     }
@@ -67,11 +67,10 @@ class MobileIdConnectorStub implements MobileIdConnector
     public function getSessionStatus(SessionStatusRequest $request) : SessionStatus
     {
         $this->sessionIdUsed = $request->getSessionId();
-        $requestUsed = $request;
         return $this->responses[$this->responseNumber++];
     }
 
-    public function getAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus
+    public function pullAuthenticationSessionStatus(SessionStatusRequest $request) : SessionStatus
     {
         return $this->getSessionStatus($request);
     }

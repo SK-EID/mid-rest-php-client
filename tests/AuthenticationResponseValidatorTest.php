@@ -1,16 +1,14 @@
 <?php
 namespace Sk\Mid\Tests;
+use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Sk\Mid\AuthenticationResponseValidator;
 use Sk\Mid\CertificateParser;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\MobileIdAuthentication;
-use Sk\Mid\Rest\Dao\AuthenticationCertificate;
 use Sk\Mid\HashType\Sha512;
+use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\Tests\Mock\TestData;
-
-use PHPUnit\Framework\TestCase;
 
 /**
  * Created by PhpStorm.
@@ -41,6 +39,7 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function validate_whenRSA_shouldReturnValidAuthenticationResult()
     {
@@ -53,6 +52,7 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function validate_whenECC_shouldReturnValidAuthenticationResult()
     {
@@ -84,6 +84,7 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function validate_whenResultNotOk_shouldReturnInvalidAuthenticationResult()
     {
@@ -172,47 +173,7 @@ class AuthenticationResponseValidatorTest extends TestCase
         $this->validator->validate($authentication);
     }
 
-    /**
-     * @test
-     */
-    public function constructAuthenticationIdentity_withEECertificate()
-    {
-        $cerificateEe = CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE);
-        $authenticationIdentity = $this->validator->constructAuthenticationIdentity(new AuthenticationCertificate($cerificateEe));
 
-        $this->assertEquals("MARY ÄNN", $authenticationIdentity->getGivenName());
-        $this->assertEquals("O’CONNEŽ-ŠUSLIK TESTNUMBER", $authenticationIdentity->getSurName());
-        $this->assertEquals("60001019906", $authenticationIdentity->getIdentityCode());
-        $this->assertEquals("EE", $authenticationIdentity->getCountry());
-    }
-
-    /**
-     * @test
-     */
-    public function constructAuthenticationIdentity_withLVCertificate()
-    {
-        $certificateLv = CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_LV);
-        $authenticationIdentity = $this->validator->constructAuthenticationIdentity(new AuthenticationCertificate($certificateLv));
-
-        $this->assertEquals("FORENAME-010117-21234", $authenticationIdentity->getGivenName());
-        $this->assertEquals("SURNAME-010117-21234", $authenticationIdentity->getSurName());
-        $this->assertEquals("010117-21234", $authenticationIdentity->getIdentityCode());
-        $this->assertEquals("LV", $authenticationIdentity->getCountry());
-    }
-
-    /**
-     * @test
-     */
-    public function constructAuthenticationIdentity_withLTCertificate()
-    {
-        $certificateLt = CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_LT);
-        $authenticationIdentity = $this->validator->constructAuthenticationIdentity(new AuthenticationCertificate($certificateLt));
-
-        $this->assertEquals("FORENAMEPNOLT-36009067968", $authenticationIdentity->getGivenName());
-        $this->assertEquals("SURNAMEPNOLT-36009067968", $authenticationIdentity->getSurName());
-        $this->assertEquals("36009067968", $authenticationIdentity->getIdentityCode());
-        $this->assertEquals("LT", $authenticationIdentity->getCountry());
-    }
 
     private function createValidMobileIdAuthentication()
     {

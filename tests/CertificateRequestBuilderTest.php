@@ -8,7 +8,7 @@ use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\MobileIdRestConnector;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
-use Sk\Mid\Rest\Dao\Response\CertificateChoiceResponse;
+use Sk\Mid\Rest\Dao\Response\CertificateResponse;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\Exception\MidInternalErrorException;
 
@@ -52,7 +52,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
-        $connector->getCertificate($request);
+        $connector->pullCertificate($request);
     }
 
     /**
@@ -72,7 +72,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->build();
 
-        $connector->getCertificate($request);
+        $connector->pullCertificate($request);
     }
 
     /**
@@ -92,7 +92,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
-        $connector->getCertificate($request);
+        $connector->pullCertificate($request);
     }
 
     /**
@@ -112,7 +112,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
-        $connector->getCertificate($request);
+        $connector->pullCertificate($request);
     }
 
     /**
@@ -188,7 +188,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
             ->build();
 
-        $response = $connector->getCertificate($request);
+        $response = $connector->pullCertificate($request);
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
@@ -201,7 +201,7 @@ class CertificateRequestBuilderTest extends TestCase
     {
         $params = array('result' => 'OK', 'cert' => TestData::AUTH_CERTIFICATE_EE);
 
-        return new CertificateChoiceResponse($params);
+        return new CertificateResponse($params);
 
     }
 

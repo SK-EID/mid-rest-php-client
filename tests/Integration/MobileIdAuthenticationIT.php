@@ -16,6 +16,7 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function mobileAuthenticateTest()
     {
@@ -25,13 +26,21 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
-        $resp = self::generateSessionId($client);
+        $authenticationRequest = AuthenticationRequest::newBuilder()
+                ->withNationalIdentityNumber(60001019906)
+                ->withPhoneNumber("+37200000766")
+                ->withLanguage(ENG::asType())
+                ->withHashToSign(MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType())
+                ->build();
 
-        $this->assertEquals(36, strlen($resp->getSessionId()));
+        $authResponse = $client->getMobileIdConnector()->initAuthentication($authenticationRequest);
+
+        $this->assertEquals(36, strlen($authResponse->getSessionId()));
     }
 
     /**
      * @test
+     * @throws \Exception
      */
     public function mobileAuthenticate_usingCorrectSessionId_getCorrectSessionStatus()
     {
@@ -55,6 +64,7 @@ class MobileIdAuthenticationIT extends TestCase
 
     /**
      * @test
+     * @throws \Exception
      */
     public function mobileAuthenticate_usingCorrectSessionStatus_getCorrectMobileIdAuthentication()
     {
@@ -151,7 +161,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withHashToSign(MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType())
             ->build();
 
-        $resp = $client->getMobileIdConnector()->authenticate($authenticationRequest);
+        $resp = $client->getMobileIdConnector()->initAuthentication($authenticationRequest);
         return $resp;
     }
 

@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid\Rest\Dao\Response;
 
-class CertificateChoiceResponse
+class CertificateResponse
 {
     /** @var string $result  */
     private $result;
