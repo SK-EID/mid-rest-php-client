@@ -1,0 +1,27 @@
+{
+  "name": "sk-id-solutions/mobile-id-php-client",
+  "type": "library",
+  "description": "Mobile-ID Relying Party PHP Api v5 client",
+  "license": "MIT",
+
+  "require": {
+    "php": "^7.2",
+    "ext-openssl": "*",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sk\\Mid\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Sk\\Mid\\Tests\\": "tests/"
+    }
+  }
+}
+
