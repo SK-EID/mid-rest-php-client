@@ -19,7 +19,8 @@ class TestData
 
     const LOCALHOST_URL = "http://localhost:9000/mid-api";
     const DEMO_HOST_URL = "https://tsp.demo.sk.ee/mid-api";
-    const TEST_URL = self::LOCALHOST_URL;
+    const DEV_HOST_URL = "http://sk-mid-test2.webmedia.int:9000/mid-api/";
+    const TEST_URL = self::DEV_HOST_URL;
 
     const SESSION_ID = "97f5058e-e308-4c83-ac14-7712b0eb9d86";
 
