@@ -41,6 +41,9 @@ class MobileIdRestConnectorBuilder
     /** @var string $relyingPartyName */
     private $relyingPartyName;
 
+    /** @var array $customHeaders */
+    private $customHeaders = array();
+
     public function getEndpointUrl() : ?string
     {
         return $this->endpointUrl;
@@ -59,6 +62,14 @@ class MobileIdRestConnectorBuilder
     public function getRelyingPartyName() : ?string
     {
         return $this->relyingPartyName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCustomHeaders(): ?array
+    {
+        return $this->customHeaders;
     }
 
     public function withEndpointUrl(?string $endpointUrl) : MobileIdRestConnectorBuilder
@@ -82,6 +93,12 @@ class MobileIdRestConnectorBuilder
     public function withRelyingPartyName(?string $relyingPartyName) : MobileIdRestConnectorBuilder
     {
         $this->relyingPartyName = $relyingPartyName;
+        return $this;
+    }
+
+    public function withCustomHeaders(?array $customHeaders) : MobileIdRestConnectorBuilder
+    {
+        $this->customHeaders = $customHeaders;
         return $this;
     }
 

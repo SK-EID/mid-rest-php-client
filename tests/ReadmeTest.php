@@ -50,8 +50,8 @@ class ReadmeTest extends TestCase
     {
         $this->client = MobileIdClient::newBuilder()
             ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
-            ->withRelyingPartyUUID("00000000-0000-0000-0000-000000000000")
-            ->withRelyingPartyName("DEMO")
+            ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
+            ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
         $sessionStatus = new SessionStatus();

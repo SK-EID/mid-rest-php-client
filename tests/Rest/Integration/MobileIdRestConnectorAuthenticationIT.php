@@ -31,7 +31,8 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
     protected function setUp() : void
     {
         $this->connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::DEMO_HOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
+            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
             ->build();
     }
 

@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Sk\Mid\AuthenticationResponseValidator;
 use Sk\Mid\CertificateParser;
+use Sk\Mid\Exception\CertificateNotTrustedException;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\NotMidClientException;
 use Sk\Mid\HashType\Sha512;
@@ -34,6 +35,23 @@ class AuthenticationResponseValidatorTest extends TestCase
         $this->expectException(NotMidClientException::class);
 
         $authentication = $this->createMobileIdAuthenticationWithNullCertificate("OK", TestData::VALID_SIGNATURE_IN_BASE64);
+        $this->validator->validate($authentication);
+    }
+
+    /**
+     * @test
+     */
+    public function validate_NoTrustedRootCertificate_shouldThrowException() {
+        $this->expectException(CertificateNotTrustedException::class);
+
+        $authentication = MobileIdAuthentication::newBuilder()
+            ->withResult("OK")
+            ->withSignatureValueInBase64(TestData::VALID_SIGNATURE_IN_BASE64)
+            ->withCertificate(CertificateParser::parseX509Certificate(TestData::RANDOM_CERTIFICATE))
+            ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
+            ->withHashType(new Sha512())
+            ->build();
+
         $this->validator->validate($authentication);
     }
 

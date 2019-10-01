@@ -20,14 +20,14 @@ class MobileIdClientTest extends TestCase
         $this->client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
             ->build();
     }
 
     /** @test */
     public function shouldReturnConnector() {
         $client = MobileIdClient::newBuilder()
-                ->withHostUrl(TestData::DEMO_HOST_URL)
+                ->withHostUrl(TestData::TEST_URL)
                 ->build();
 
         $this->assertThat($client->getMobileIdConnector(), $this->logicalNot($this->isNull()));

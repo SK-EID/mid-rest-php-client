@@ -60,7 +60,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->build();
 
         $connector->initAuthentication($request);
@@ -83,7 +83,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->build();
         $connector->initAuthentication($request);
     }
@@ -103,7 +103,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -126,7 +126,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -148,7 +148,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -171,7 +171,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -343,7 +343,7 @@ class AuthenticationRequestBuilderTest extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::LOCALHOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
             ->build();
 
         $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);

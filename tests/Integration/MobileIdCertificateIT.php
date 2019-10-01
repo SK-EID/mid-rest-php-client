@@ -19,13 +19,14 @@ class MobileIdCertificateIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
+            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
             ->build();
 
 
         $certRequest = CertificateRequest::newBuilder()
-            ->withNationalIdentityNumber(60001019906)
-            ->withPhoneNumber("+37200000766")
+            ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
+            ->withPhoneNumber(TestData::VALID_PHONE)
             ->build();
 
         $resp = $client->getMobileIdConnector()->pullCertificate($certRequest);
@@ -45,7 +46,8 @@ class MobileIdCertificateIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
+            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
             ->build();
 
         $certRequest = CertificateRequest::newBuilder()
@@ -66,7 +68,8 @@ class MobileIdCertificateIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
+            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
             ->build();
 
         $certRequest = CertificateRequest::newBuilder()

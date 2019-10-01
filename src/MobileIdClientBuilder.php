@@ -52,6 +52,9 @@ class MobileIdClientBuilder
     /** @var MobileIdRestConnector $connector */
     private $connector;
 
+    /** @var array $customHeaders */
+    private $customHeaders = array();
+
     public function __construct()
     {
     }
@@ -86,6 +89,11 @@ class MobileIdClientBuilder
         return $this->longPollingTimeoutSeconds;
     }
 
+    public function getCustomHeaders(): array
+    {
+        return $this->customHeaders;
+    }
+
     public function getConnector() : ?MobileIdRestConnector
     {
         return $this->connector;
@@ -94,6 +102,12 @@ class MobileIdClientBuilder
     public function withRelyingPartyUUID(?string $relyingPartyUUID) : MobileIdClientBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
+        return $this;
+    }
+
+    public function withCustomHeaders(?array $customHeaders) :MobileIdClientBuilder
+    {
+        $this->customHeaders = $customHeaders;
         return $this;
     }
 
