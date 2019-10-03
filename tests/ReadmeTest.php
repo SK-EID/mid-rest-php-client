@@ -49,7 +49,7 @@ class ReadmeTest extends TestCase
     protected function setUp() : void
     {
         $this->client = MobileIdClient::newBuilder()
-            ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+            ->withHostUrl(TestData::TEST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -102,9 +102,9 @@ class ReadmeTest extends TestCase
         // step #2 - create client with long-polling
 
         $client = MobileIdClient::newBuilder()
-                ->withRelyingPartyUUID("00000000-0000-0000-0000-000000000000")
-                ->withRelyingPartyName("DEMO")
-                ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+                ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
+                ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
+                ->withHostUrl(TestData::TEST_URL)
                 ->withLongPollingTimeoutSeconds(60)
                 ->withPollingSleepTimeoutSeconds(2)
                 ->build();
@@ -206,9 +206,9 @@ class ReadmeTest extends TestCase
     public function documentRetrieveSigningCert()
     {
         $client = MobileIdClient::newBuilder()
-                ->withRelyingPartyUUID("00000000-0000-0000-0000-000000000000")
-                ->withRelyingPartyName("DEMO")
-                ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+                ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
+                ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
+                ->withHostUrl(TestData::TEST_URL)
                 ->build();
 
         $request = CertificateRequest::newBuilder()
