@@ -27,9 +27,14 @@
 namespace Sk\Mid;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\MobileIdRestConnector;
+use Sk\Mid\Rest\MobileIdRestConnectorBuilder;
 
 class MobileIdClientBuilder
 {
+
+    const
+            PIN_SHA256_VALID_FROM_2019_03_21_TO_2021_03_25 = "sha256//fqp7yWK7iGGKj+3unYdm2DA3VCPDkwtyX+DrdZYSC6o=",
+            DEMO_PIN_SHA256_VALID_FROM_2019_01_02_TO_2020_01_07 = "sha256//XgrOHbcGDbQJaXjL9ISo+y7bsXAcVOLLEzeeNO6BXDM=";
 
     /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
@@ -51,6 +56,8 @@ class MobileIdClientBuilder
 
     /** @var MobileIdRestConnector $connector */
     private $connector;
+
+    private $sslPublicKeys = self::DEMO_PIN_SHA256_VALID_FROM_2019_01_02_TO_2020_01_07.";".self::PIN_SHA256_VALID_FROM_2019_03_21_TO_2021_03_25;
 
     /** @var array $customHeaders */
     private $customHeaders = array();
@@ -99,6 +106,14 @@ class MobileIdClientBuilder
         return $this->connector;
     }
 
+    /**
+     * @return string
+     */
+    public function getSslPublicKeys(): string
+    {
+        return $this->sslPublicKeys;
+    }
+
     public function withRelyingPartyUUID(?string $relyingPartyUUID) : MobileIdClientBuilder
     {
         $this->relyingPartyUUID = $relyingPartyUUID;
@@ -144,6 +159,24 @@ class MobileIdClientBuilder
     public function withMobileIdConnector(MobileIdRestConnector $mobileIdConnector) : MobileIdClientBuilder
     {
         $this->connector = $mobileIdConnector;
+        return $this;
+    }
+
+    public function withSslPublicKeys(string $publicKeys) : MobileIdClientBuilder
+    {
+        $this->sslPublicKeys = $publicKeys;
+        return $this;
+    }
+
+    public function withDemoEnvPublicKeys() : MobileIdClientBuilder
+    {
+        $this->sslPublicKeys = self::DEMO_PIN_SHA256_VALID_FROM_2019_01_02_TO_2020_01_07;
+        return $this;
+    }
+
+    public function withLiveEnvPublicKeys() : MobileIdClientBuilder
+    {
+        $this->sslPublicKeys = self::PIN_SHA256_VALID_FROM_2019_03_21_TO_2021_03_25;
         return $this;
     }
 
