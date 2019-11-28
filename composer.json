@@ -1,7 +1,7 @@
 {
   "name": "sk-id-solutions/mobile-id-php-client",
   "type": "library",
-  "description": "Mobile-ID Relying Party PHP Api v5 client",
+  "description": "Mobile-ID Relying Party PHP Api vclient",
   "license": "MIT",
 
   "require": {
