@@ -1,6 +1,6 @@
 # Mobile-ID (MID) PHP Rest Client
 
-[![Build Status](https://api.travis-ci.org/SK-EID/mid-rest-php-client.svg?branch=master)](https://travis-ci.org/SK-EID/mid-rest-php-client)
+[![Build Status](https://api.travis-ci.com/SK-EID/mid-rest-php-client.svg?branch=master)](https://travis-ci.com/SK-EID/mid-rest-php-client)
 [![Coverage Status](https://img.shields.io/codecov/c/github/SK-EID/mid-rest-php-client.svg)](https://codecov.io/gh/SK-EID/mid-rest-php-client)
 [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
