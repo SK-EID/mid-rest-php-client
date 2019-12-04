@@ -24,47 +24,52 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\HashType;
-abstract class HashType
-{
+namespace Sk\Mid;
 
-    const SHA256 = 'sha256';
-    const SHA384 = 'sha384';
-    const SHA512 = 'sha512';
+use Sk\Mid\Exception\MissingOrInvalidParameterException;
+
+class MobileIdSignatureBuilder
+{
+    /** @var string $valueInBase64 */
+    private $valueInBase64;
 
     /** @var string $algorithmName */
     private $algorithmName;
 
-    /** @var string $hashTypeName */
-    private $hashTypeName;
-
-    /** @var int $lengthInBits */
-    private $lengthInBits;
-
-    /** @var array $digestInfoPrefix */
-    private $digestInfoPrefix;
-
-    public function __construct(string $algorithmName, string $hashTypeName, int $lengthInBits, array $digestInfoPrefix)
+    public function __construct()
     {
-        $this->algorithmName = $algorithmName;
-        $this->hashTypeName = $hashTypeName;
-        $this->lengthInBits = $lengthInBits;
-        $this->digestInfoPrefix = $digestInfoPrefix;
     }
 
-    public function getAlgorithmName(): string
+    public function getValueInBase64() : string
+    {
+        return $this->valueInBase64;
+    }
+
+    public function getAlgorithmName() : string
     {
         return $this->algorithmName;
     }
 
-    public function getHashTypeName(): string
+    public function withValueInBase64(string $valueInBase64) : \Sk\Mid\MobileIdSignatureBuilder
     {
-        return $this->hashTypeName;
+        if (FALSE === base64_decode($valueInBase64))
+        {
+            throw new MissingOrInvalidParameterException("Failed to parse signature value. Input is not valid Base64 string: '" . $valueInBase64 . "'");
+        }
+
+        $this->valueInBase64 = $valueInBase64;
+        return $this;
     }
 
-    public function getLengthInBytes() : int {
-        return $this->lengthInBits / 8;
+    public function withAlgorithmName(string $algorithmName) : MobileIdSignatureBuilder
+    {
+        $this->algorithmName = $algorithmName;
+        return $this;
+    }
+
+    public function build() : MobileIdSignature
+    {
+        return new MobileIdSignature($this);
     }
 
 }
-

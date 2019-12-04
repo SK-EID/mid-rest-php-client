@@ -24,47 +24,56 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\HashType;
-abstract class HashType
+
+namespace Sk\Mid;
+
+use Sk\Mid\Exception\MissingOrInvalidParameterException;
+use Sk\Mid\HashType\HashType;
+
+class MobileIdAuthenticationHashToSignBuilder
 {
 
-    const SHA256 = 'sha256';
-    const SHA384 = 'sha384';
-    const SHA512 = 'sha512';
+    /** @var HashType $hashType */
+    private $hashType;
 
-    /** @var string $algorithmName */
-    private $algorithmName;
+    /** @var string $hash */
+    private $hash;
 
-    /** @var string $hashTypeName */
-    private $hashTypeName;
-
-    /** @var int $lengthInBits */
-    private $lengthInBits;
-
-    /** @var array $digestInfoPrefix */
-    private $digestInfoPrefix;
-
-    public function __construct(string $algorithmName, string $hashTypeName, int $lengthInBits, array $digestInfoPrefix)
+    public function getHashType(): ?HashType
     {
-        $this->algorithmName = $algorithmName;
-        $this->hashTypeName = $hashTypeName;
-        $this->lengthInBits = $lengthInBits;
-        $this->digestInfoPrefix = $digestInfoPrefix;
+        return $this->hashType;
     }
 
-    public function getAlgorithmName(): string
+    public function getHash(): ?string
     {
-        return $this->algorithmName;
+        return $this->hash;
     }
 
-    public function getHashTypeName(): string
+    public function withHashType(string $hashType): MobileIdAuthenticationHashToSignBuilder
     {
-        return $this->hashTypeName;
+        $this->hashType = MobileIdAuthenticationHashToSign::strToHashType($hashType);
+
+        return $this;
     }
 
-    public function getLengthInBytes() : int {
-        return $this->lengthInBits / 8;
+    public function withHashInBase64(string $hash): MobileIdAuthenticationHashToSignBuilder
+    {
+        $this->hash = $hash;
+        return $this;
+    }
+
+    function validateFields(): void
+    {
+        if (is_null($this->getHashType())) {
+            throw new MissingOrInvalidParameterException("Missing hash type");
+        }
+
+    }
+
+    public function build(): MobileIdAuthenticationHashToSign
+    {
+        $this->validateFields();
+        return new MobileIdAuthenticationHashToSign($this);
     }
 
 }
-
