@@ -72,6 +72,9 @@ class MobileIdRestConnector implements MobileIdConnector
     /** @var string $relyingPartyName */
     private $relyingPartyName;
 
+    /** @var array $customHeaders */
+    private $customHeaders = array();
+
     public function __construct(MobileIdRestConnectorBuilder $builder)
     {
         $this->logger = new Logger('MobileIdRestConnector');
@@ -79,6 +82,7 @@ class MobileIdRestConnector implements MobileIdConnector
         $this->clientConfig = $builder->getClientConfig();
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
+        $this->customHeaders = $builder->getCustomHeaders();
     }
 
     public function pullCertificate(CertificateRequest $request) : CertificateResponse
@@ -175,9 +179,9 @@ class MobileIdRestConnector implements MobileIdConnector
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->addCustomHeaders(array(
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen($json))
+                'Content-Length: ' . strlen($json)))
         );
 
         $result = curl_exec($ch);
@@ -214,7 +218,7 @@ class MobileIdRestConnector implements MobileIdConnector
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
-            array('Content-Type: application/json')
+            $this->addCustomHeaders(array('Content-Type: application/json'))
         );
         $result = curl_exec($ch);
 
@@ -223,5 +227,8 @@ class MobileIdRestConnector implements MobileIdConnector
         return json_decode($result, true);
     }
 
+    private function addCustomHeaders(array $headers){
+        return array_merge($this->customHeaders, $headers);
+    }
 
 }

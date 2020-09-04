@@ -101,6 +101,11 @@ class MobileIdAuthentication
         return new MidCertificate($this->certificate);
     }
 
+    public function getCertificateX509()
+    {
+        return $this->certificate;
+    }
+
     public static function newBuilder() : MobileIdAuthenticationBuilder
     {
         return new MobileIdAuthenticationBuilder();

@@ -48,7 +48,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
 
@@ -68,7 +68,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->build();
 
@@ -87,7 +87,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -107,7 +107,7 @@ class CertificateRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::LOCALHOST_URL)
+            ->withEndpointUrl(TestData::TEST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -192,7 +192,7 @@ class CertificateRequestBuilderTest extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::LOCALHOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
             ->build();
         $client->createMobileIdCertificate($response);
     }

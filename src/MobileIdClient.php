@@ -59,6 +59,9 @@ class MobileIdClient
     /** @var SessionStatusPoller $sessionStatusPoller */
     private $sessionStatusPoller;
 
+    /** @var array $customHeaders */
+    private $customHeaders;
+
     public function __construct(MobileIdClientBuilder $builder)
     {
         self::$logger = new Logger('MobileIdClient');
@@ -67,6 +70,7 @@ class MobileIdClient
         $this->hostUrl = $builder->getHostUrl();
         $this->networkConnectionConfig = $builder->getNetworkConnectionConfig();
         $this->connector = $builder->getConnector();
+        $this->customHeaders = $builder->getCustomHeaders();
         $this->sessionStatusPoller = SessionStatusPoller::newBuilder()
                 ->withConnector($this->getMobileIdConnector())
                 ->withPollingSleepTimeoutSeconds($builder->getPollingSleepTimeoutSeconds())
@@ -82,6 +86,7 @@ class MobileIdClient
                 ->withClientConfig($this->networkConnectionConfig)
                 ->withRelyingPartyUUID($this->relyingPartyUUID)
                 ->withRelyingPartyName($this->relyingPartyName)
+                ->withCustomHeaders($this->customHeaders)
                 ->build();
         }
         return $this->connector;

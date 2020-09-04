@@ -23,7 +23,8 @@ class MobileIdAuthenticationIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
+            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
             ->build();
 
         $authenticationRequest = AuthenticationRequest::newBuilder()
@@ -47,7 +48,8 @@ class MobileIdAuthenticationIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
+            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
             ->build();
 
         $authenticationResponse = self::generateSessionId($client);
@@ -71,7 +73,8 @@ class MobileIdAuthenticationIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
+            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
             ->build();
 
         $resp = self::generateSessionId($client);
@@ -96,7 +99,7 @@ class MobileIdAuthenticationIT extends TestCase
 
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
             ->build();
 
         self::generateSessionId($client);
@@ -112,7 +115,7 @@ class MobileIdAuthenticationIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName("")
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
             ->build();
 
         self::generateSessionId($client);
@@ -127,7 +130,7 @@ class MobileIdAuthenticationIT extends TestCase
 
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
             ->build();
 
         self::generateSessionId($client);
@@ -144,7 +147,7 @@ class MobileIdAuthenticationIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID("")
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withHostUrl(TestData::TEST_URL)
             ->withNetworkConnectionConfig("")
             ->withMobileIdConnector(MobileIdRestConnector::newBuilder()->build())
             ->build();
@@ -155,8 +158,8 @@ class MobileIdAuthenticationIT extends TestCase
     private static function generateSessionId(MobileIdClient $client) : AuthenticationResponse
     {
         $authenticationRequest = AuthenticationRequest::newBuilder()
-            ->withNationalIdentityNumber(60001019906)
-            ->withPhoneNumber("+37200000766")
+            ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
+            ->withPhoneNumber(TestData::VALID_PHONE)
             ->withLanguage(ENG::asType())
             ->withHashToSign(MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType())
             ->build();

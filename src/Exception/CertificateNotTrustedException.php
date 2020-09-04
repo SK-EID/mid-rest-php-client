@@ -24,12 +24,12 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid;
+namespace Sk\Mid\Exception;
 
-abstract class MobileIdAuthenticationError
-{
-    const INVALID_RESULT = 'Response result verification failed';
-    const SIGNATURE_VERIFICATION_FAILURE = 'Signature verification failed';
-    const CERTIFICATE_EXPIRED = 'Signer\'s certificate expired';
-    const CERTIFICATE_NOT_TRUSTED = 'Signer\'s certificate not trusted';
+class CertificateNotTrustedException extends MobileIdException {
+
+    public function __construct()
+    {
+        parent::__construct('The certificate is not issued by a Mobile ID certificate authority');
+    }
 }

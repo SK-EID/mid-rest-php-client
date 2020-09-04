@@ -27,6 +27,7 @@
 namespace Sk\Mid;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Util\Logger;
+use Spatie\SslCertificate\SslCertificate;
 
 class CertificateParser
 {
@@ -44,7 +45,8 @@ class CertificateParser
     {
         $certificateString = self::getPemCertificate(  $certificateValue );
         $result = openssl_x509_parse( $certificateString );
-        if ($result == null) {
+        $result['certificateAsString']=$certificateString;
+        if (count($result) <= 1) {
             throw new MidInternalErrorException('Failed to parse certificate');
         }
         return $result;

@@ -38,6 +38,9 @@ class MobileIdAuthenticationHashToSign
     /** @var string $hash */
     private $hash;
 
+    /** @var string $hash */
+    private $hashInBase64;
+
     /** @var HashType $hashType */
     private $hashType;
 
@@ -45,19 +48,27 @@ class MobileIdAuthenticationHashToSign
     public function __construct(MobileIdAuthenticationHashToSignBuilder $builder)
     {
         $this->hashType = $builder->getHashType();
-
-        if (null !== $builder->getHash()) {
+        if (null !== $builder->getHashInBase64()) {
+            $this->hashInBase64 = $builder->getHashInBase64();
+        }
+        else if (null !== $builder->getHash()) {
             $this->hash = $builder->getHash();
         }
         else {
             $this->hash = openssl_random_pseudo_bytes($builder->getHashType()->getLengthInBytes());
         }
 
+        $this->hashType = $builder->getHashType();
     }
 
     public function getHashInBase64() : string
     {
-        return base64_encode($this->hash);
+        if (null !== $this->hashInBase64) {
+            return $this->hashInBase64;
+        }
+        else {
+            return base64_encode($this->hash);
+        }
     }
 
     public function getHashType() : HashType
@@ -125,6 +136,8 @@ class MobileIdAuthenticationHashToSignBuilder
     /** @var string $hash */
     private $hash;
 
+    private $hashInBase64;
+
     public function getHashType() : ?HashType
     {
         return $this->hashType;
@@ -135,6 +148,11 @@ class MobileIdAuthenticationHashToSignBuilder
         return $this->hash;
     }
 
+    public function getHashInBase64() : ?string
+    {
+        return $this->hashInBase64;
+    }
+
     public function withHashType(string $hashType) : MobileIdAuthenticationHashToSignBuilder
     {
         $this->hashType = MobileIdAuthenticationHashToSign::strToHashType($hashType);
@@ -142,9 +160,15 @@ class MobileIdAuthenticationHashToSignBuilder
         return $this;
     }
 
-    public function withHashInBase64(string $hash) : MobileIdAuthenticationHashToSignBuilder
+    public function withHash(string $hash) : MobileIdAuthenticationHashToSignBuilder
     {
         $this->hash = $hash;
+        return $this;
+    }
+
+    public function withHashInBase64(string $hash) : MobileIdAuthenticationHashToSignBuilder
+    {
+        $this->hashInBase64 = $hash;
         return $this;
     }
 

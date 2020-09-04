@@ -1,0 +1,4 @@
+vendor/*
+.idea/*
+dump.rdb
+composer.lock

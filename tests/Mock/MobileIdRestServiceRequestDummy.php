@@ -34,7 +34,10 @@ class MobileIdRestServiceRequestDummy
             ->withRelyingPartyName($name)
             ->withPhoneNumber($phoneNumber)
             ->withNationalIdentityNumber($nationalIdentityNumber)
-            ->withHashToSign(MobileIdRestServiceRequestDummy::calculateMobileIdAuthenticationHash())
+            ->withHashToSign(MobileIdAuthenticationHashToSign::newBuilder()
+                ->withHashInBase64('kc42j4tGXa1Pc2LdMcJCKAgpOk9RCQgrBogF6fHA40VSPw1qITw8zQ8g5ZaLcW5jSlq67ehG3uSvQAWIFs3TOw==')
+                ->withHashType(HashType::SHA512)
+                ->build())
             ->withLanguage(EST::asType())
             ->build();
     }
@@ -172,7 +175,7 @@ class MobileIdRestServiceRequestDummy
         } catch (Exception $e) {
         }
         try {
-            TestCase::assertEquals(HashType::SHA512, $request->getHashType());
+            TestCase::assertEquals(strtolower(HashType::SHA512), strtolower($request->getHashType()));
         } catch (Exception $e) {
         }
         try {

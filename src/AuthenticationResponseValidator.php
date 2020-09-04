@@ -25,8 +25,10 @@
  * #L%
  */
 namespace Sk\Mid;
+use HRobertson\X509Verify\SslCertificate;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Exception\CertificateNotTrustedException;
 use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Util\Logger;
 
@@ -34,6 +36,8 @@ class AuthenticationResponseValidator
 {
     /** @var Logger $logger */
     private $logger;
+
+    private $certificatePath = "/resources/trusted_certificates/";
 
     public function __construct()
     {
@@ -54,6 +58,11 @@ class AuthenticationResponseValidator
             $authenticationResult->setValid( false );
             $authenticationResult->addError( MobileIdAuthenticationError::CERTIFICATE_EXPIRED );
             throw new NotMidClientException();
+        }
+        if ( !$this->verifyCertificateTrusted( $authentication->getCertificateX509() ) ) {
+            $authenticationResult->setValid( false );
+            $authenticationResult->addError( MobileIdAuthenticationError::CERTIFICATE_NOT_TRUSTED );
+            throw new CertificateNotTrustedException();
         }
 
         $identity = $authentication->constructAuthenticationIdentity();
@@ -85,4 +94,16 @@ class AuthenticationResponseValidator
         return $authenticationCertificate !== null && $authenticationCertificate->getValidTo() > time();
     }
 
+    private function verifyCertificateTrusted($certificate )
+    {
+        foreach (array_diff(scandir(__DIR__.$this->certificatePath), array('.', '..')) as $file) {
+            $caCertificate = file_get_contents(__DIR__.$this->certificatePath.$file);
+            $caCert = new SslCertificate($caCertificate);
+            $userCert = new SslCertificate($certificate['certificateAsString']);
+            if ($userCert->isSignedBy($caCert)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
