@@ -213,7 +213,6 @@ class MobileIdRestConnector implements MobileIdConnector
 
     private function getRequest(string $url) : array
     {
-
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -223,6 +222,10 @@ class MobileIdRestConnector implements MobileIdConnector
         $result = curl_exec($ch);
 
         $this->logger->debug('Result is '. $result);
+
+        if (is_null($result)) {
+            throw new MidInternalErrorException('GET request to MID returned invalid json: ' . json_last_error_msg());
+        }
 
         return json_decode($result, true);
     }
