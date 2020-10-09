@@ -223,11 +223,13 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $this->logger->debug('Result is '. $result);
 
-        if (is_null($result)) {
+        $responseAsArray = json_decode($result, true);
+
+        if (is_null($responseAsArray)) {
             throw new MidInternalErrorException('GET request to MID returned invalid json: ' . json_last_error_msg());
         }
 
-        return json_decode($result, true);
+        return $responseAsArray;
     }
 
     private function addCustomHeaders(array $headers){
