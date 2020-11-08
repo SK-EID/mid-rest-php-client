@@ -42,6 +42,12 @@ Here are examples of authentication with Mobile-ID PHP client
 ```PHP
 require_once __DIR__ . '/vendor/autoload.php';
 ```
+
+### Example of authentication
+
+
+```PHP
+
 use \Sk\Mid\Util\MidInputUtil;
 use \Sk\Mid\Exception\InvalidPhoneNumberException;
 use \Sk\Mid\Exception\InvalidNationalIdentityNumberException;
@@ -60,10 +66,6 @@ use \Sk\Mid\Exception\PhoneNotAvailableException;
 use \Sk\Mid\Exception\DeliveryException;
 use \Sk\Mid\Exception\InvalidUserConfigurationException;
 use \Sk\Mid\Exception\MidSessionNotFoundException;
-### Example of authentication
-
-
-```PHP
   // step #1 - validate user input
   
 // More demo numbers https://github.com/SK-EID/MID/wiki/Test-number-for-automated-testing-in-DEMO
