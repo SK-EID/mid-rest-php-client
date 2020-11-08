@@ -49,23 +49,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 ```PHP
 
 use \Sk\Mid\Util\MidInputUtil;
-use \Sk\Mid\Exception\InvalidPhoneNumberException;
-use \Sk\Mid\Exception\InvalidNationalIdentityNumberException;
 use \Sk\Mid\MobileIdClient;
 use \Sk\Mid\MobileIdAuthenticationHashToSign;
 use \Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use \Sk\Mid\DisplayTextFormat;
 use \Sk\Mid\Language\ENG;
-use \Sk\Mid\Exception\NotMidClientException;
-use \Sk\Mid\Exception\UnauthorizedException;
-use \Sk\Mid\Exception\MissingOrInvalidParameterException;
-use \Sk\Mid\Exception\MidInternalErrorException;
-use \Sk\Mid\Exception\UserCancellationException;
-use \Sk\Mid\Exception\MidSessionTimeoutException;
-use \Sk\Mid\Exception\PhoneNotAvailableException;
-use \Sk\Mid\Exception\DeliveryException;
-use \Sk\Mid\Exception\InvalidUserConfigurationException;
-use \Sk\Mid\Exception\MidSessionNotFoundException;
   // step #1 - validate user input
   
 // More demo numbers https://github.com/SK-EID/MID/wiki/Test-number-for-automated-testing-in-DEMO
@@ -80,16 +68,14 @@ $testConfig = [
   'hostUrl' => 'https://tsp.demo.sk.ee/mid-api',
 ];
 
+ 
   try {
       $phoneNumber = MidInputUtil::getValidatedPhoneNumber($testData['phoneNumber']);
       $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($testData['idCode']);
+  } catch (\Exception $e) {
+      die($e->getMessage());
   }
-  catch (InvalidPhoneNumberException $e) {
-      die('The phone number you entered is invalid');
-  }
-  catch (InvalidNationalIdentityNumberException $e) {
-      die('The national identity number you entered is invalid');
-  }
+
 
   // step #2 - create client with long-polling
 
@@ -100,7 +86,6 @@ $testConfig = [
           ->withLongPollingTimeoutSeconds(60)
           ->withPollingSleepTimeoutSeconds(2)
           ->build();
-
 
   // step #3 - generate hash & calculate verification code and display to user
 
@@ -122,30 +107,21 @@ $testConfig = [
           ->withDisplayTextFormat(DisplayTextFormat::GSM7)
           ->build();
 
-  // step #6 - send request to user's phone and catch possible errors
-
   try {
       $response = $client->getMobileIdConnector()->initAuthentication($request);
-  }
-  catch (NotMidClientException $e) {
-      die("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
-  }
-  catch (UnauthorizedException $e) {
-      die('Integration error with Mobile-ID. Invalid MID credentials');
+  } catch (\Exception $e) {
+    die($e->getMessage());
   }
 
-  catch (MissingOrInvalidParameterException $e) {
-      die('Problem with MID integration');
-  }
-  catch (MidInternalErrorException $e) {
-      die('MID internal error');
-  }
 
   // step #7 - keep polling for session status until we have a final status from phone
-
-  $finalSessionStatus = $client
-          ->getSessionStatusPoller()
-          ->fetchFinalSessionStatus($response->getSessionID());
+  try {
+    $finalSessionStatus = $client
+      ->getSessionStatusPoller()
+      ->fetchFinalSessionStatus($response->getSessionID());
+  } catch (\Exception $e) {
+    die($e->getMessage());
+  }
 
   // step #8 - parse authenticated person out of the response and get it validated
 
@@ -154,33 +130,9 @@ $testConfig = [
           ->createMobileIdAuthentication($finalSessionStatus, $authenticationHash)
           ->getValidatedAuthenticationResult()
           ->getAuthenticationIdentity();
+  } catch (\Exception $e) {
+    die($e->getMessage());
   }
-  catch (UserCancellationException $e) {
-      die("You cancelled operation from your phone.");
-  }
-  catch (MidSessionTimeoutException $e) {
-      die("You didn't type in PIN code into your phone or there was a communication error.");
-  }
-  catch (PhoneNotAvailableException $e) {
-      die("Unable to reach your phone. Please make sure your phone has mobile coverage.");
-  }
-  catch (DeliveryException $e) {
-      die("Communication error. Unable to reach your phone.");
-  }
-  catch (InvalidUserConfigurationException $e) {
-      die("Mobile-ID configuration on your SIM card differs from what is configured on service provider's side. Please contact your mobile operator.");
-  }
-  catch (MidSessionNotFoundException | MissingOrInvalidParameterException | UnauthorizedException $e) {
-      die("Client side error with mobile-ID integration. Error code:". $e->getCode());
-  }
-  catch (NotMidClientException $e) {
-      // if user is not MID client then this exception is thrown and caught already during first request (see above)
-      die("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
-  }
-  catch (MidInternalErrorException $internalError) {
-      die("Something went wrong with Mobile-ID service");
-  }
-
   # step #9 - read out authenticated person details
 
   echo 'Welcome, '.$authenticatedPerson->getGivenName().' '.$authenticatedPerson->getSurName().' ';
