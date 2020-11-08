@@ -42,16 +42,45 @@ Here are examples of authentication with Mobile-ID PHP client
 ```PHP
 require_once __DIR__ . '/vendor/autoload.php';
 ```
-
+use \Sk\Mid\Util\MidInputUtil;
+use \Sk\Mid\Exception\InvalidPhoneNumberException;
+use \Sk\Mid\Exception\InvalidNationalIdentityNumberException;
+use \Sk\Mid\MobileIdClient;
+use \Sk\Mid\MobileIdAuthenticationHashToSign;
+use \Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
+use \Sk\Mid\DisplayTextFormat;
+use \Sk\Mid\Language\ENG;
+use \Sk\Mid\Exception\NotMidClientException;
+use \Sk\Mid\Exception\UnauthorizedException;
+use \Sk\Mid\Exception\MissingOrInvalidParameterException;
+use \Sk\Mid\Exception\MidInternalErrorException;
+use \Sk\Mid\Exception\UserCancellationException;
+use \Sk\Mid\Exception\MidSessionTimeoutException;
+use \Sk\Mid\Exception\PhoneNotAvailableException;
+use \Sk\Mid\Exception\DeliveryException;
+use \Sk\Mid\Exception\InvalidUserConfigurationException;
+use \Sk\Mid\Exception\MidSessionNotFoundException;
 ### Example of authentication
 
 
 ```PHP
   // step #1 - validate user input
   
+// More demo numbers https://github.com/SK-EID/MID/wiki/Test-number-for-automated-testing-in-DEMO
+$testData = [
+  'phoneNumber' => '+37200000766',
+  'idCode' => '60001019906',
+];
+
+$testConfig = [
+  'RPUUID' => '00000000-0000-0000-0000-000000000000',
+  'serviceName' => 'DEMO',
+  'hostUrl' => 'https://tsp.demo.sk.ee/mid-api',
+];
+
   try {
-      $phoneNumber = MidInputUtil::getValidatedPhoneNumber($_GET['phoneNumber']);
-      $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($_GET['nationalIdentityNumber']);
+      $phoneNumber = MidInputUtil::getValidatedPhoneNumber($testData['phoneNumber']);
+      $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($testData['idCode']);
   }
   catch (InvalidPhoneNumberException $e) {
       die('The phone number you entered is invalid');
@@ -59,29 +88,29 @@ require_once __DIR__ . '/vendor/autoload.php';
   catch (InvalidNationalIdentityNumberException $e) {
       die('The national identity number you entered is invalid');
   }
-  
+
   // step #2 - create client with long-polling
-  
+
   $client = MobileIdClient::newBuilder()
-          ->withRelyingPartyUUID("00000000-0000-0000-0000-000000000000")
-          ->withRelyingPartyName("DEMO")
-          ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+          ->withRelyingPartyUUID($testConfig['RPUUID'])
+          ->withRelyingPartyName($testConfig['serviceName'])
+          ->withHostUrl($testConfig['hostUrl'])
           ->withLongPollingTimeoutSeconds(60)
           ->withPollingSleepTimeoutSeconds(2)
           ->build();
-  
-  
+
+
   // step #3 - generate hash & calculate verification code and display to user
-  
-  $authenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
+
+  $authenticationHash =  MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
   $verificationCode = $authenticationHash->calculateVerificationCode();
-  
+
   // step #4 - display $verificationCode (4 digit code) to user
-  
+
   echo 'Verification code: '.$verificationCode."\n";
-  
+
   // step #5 - create request to be sent to user's phone
-  
+
   $request = AuthenticationRequest::newBuilder()
           ->withPhoneNumber($phoneNumber)
           ->withNationalIdentityNumber($nationalIdentityNumber)
@@ -90,9 +119,9 @@ require_once __DIR__ . '/vendor/autoload.php';
           ->withDisplayText("Log into self-service?")
           ->withDisplayTextFormat(DisplayTextFormat::GSM7)
           ->build();
-  
+
   // step #6 - send request to user's phone and catch possible errors
-  
+
   try {
       $response = $client->getMobileIdConnector()->initAuthentication($request);
   }
@@ -102,21 +131,22 @@ require_once __DIR__ . '/vendor/autoload.php';
   catch (UnauthorizedException $e) {
       die('Integration error with Mobile-ID. Invalid MID credentials');
   }
+
   catch (MissingOrInvalidParameterException $e) {
       die('Problem with MID integration');
   }
   catch (MidInternalErrorException $e) {
       die('MID internal error');
   }
-  
+
   // step #7 - keep polling for session status until we have a final status from phone
-  
+
   $finalSessionStatus = $client
           ->getSessionStatusPoller()
           ->fetchFinalSessionStatus($response->getSessionID());
-  
+
   // step #8 - parse authenticated person out of the response and get it validated
-  
+
   try {
       $authenticatedPerson = $client
           ->createMobileIdAuthentication($finalSessionStatus, $authenticationHash)
@@ -148,12 +178,13 @@ require_once __DIR__ . '/vendor/autoload.php';
   catch (MidInternalErrorException $internalError) {
       die("Something went wrong with Mobile-ID service");
   }
-  
+
   # step #9 - read out authenticated person details
-  
+
   echo 'Welcome, '.$authenticatedPerson->getGivenName().' '.$authenticatedPerson->getSurName().' ';
   echo ' (ID code '.$authenticatedPerson->getIdentityCode().') ';
   echo 'from '. $authenticatedPerson->getCountry(). '!';
+
 ```
 
 In reality authentication cannot be handled by a single request to back-end
