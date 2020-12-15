@@ -75,6 +75,8 @@ class MobileIdRestConnector implements MobileIdConnector
     /** @var array $customHeaders */
     private $customHeaders = array();
 
+    private $sslPublicKeys;
+
     public function __construct(MobileIdRestConnectorBuilder $builder)
     {
         $this->logger = new Logger('MobileIdRestConnector');
@@ -83,6 +85,8 @@ class MobileIdRestConnector implements MobileIdConnector
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
         $this->customHeaders = $builder->getCustomHeaders();
+        $this->sslPublicKeys = $builder->getSslPublicKeys();
+
     }
 
     public function pullCertificate(CertificateRequest $request) : CertificateResponse
@@ -183,6 +187,7 @@ class MobileIdRestConnector implements MobileIdConnector
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($json)))
         );
+        curl_setopt($ch, CURLOPT_PINNEDPUBLICKEY, $this->sslPublicKeys);
 
         $result = curl_exec($ch);
 
@@ -220,6 +225,8 @@ class MobileIdRestConnector implements MobileIdConnector
         curl_setopt($ch, CURLOPT_HTTPHEADER,
             $this->addCustomHeaders(array('Content-Type: application/json'))
         );
+        curl_setopt($ch, CURLOPT_PINNEDPUBLICKEY, $this->sslPublicKeys);
+
         $result = curl_exec($ch);
 
         $this->logger->debug('Result is '. $result);

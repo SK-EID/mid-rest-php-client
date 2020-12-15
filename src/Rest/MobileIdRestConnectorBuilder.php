@@ -28,6 +28,9 @@ namespace Sk\Mid\Rest;
 
 class MobileIdRestConnectorBuilder
 {
+    const
+            PIN_SHA256_VALID_FROM_2019_03_21_TO_2021_03_25 = "sha256//fqp7yWK7iGGKj+3unYdm2DA3VCPDkwtyX+DrdZYSC6o=",
+            DEMO_PIN_SHA256_VALID_FROM_2019_01_02_TO_2020_01_07 = "sha256//XgrOHbcGDbQJaXjL9ISo+y7bsXAcVOLLEzeeNO6BXDM=";
 
     /** @var string $endpointUrl */
     private $endpointUrl;
@@ -43,6 +46,8 @@ class MobileIdRestConnectorBuilder
 
     /** @var array $customHeaders */
     private $customHeaders = array();
+
+    private $sslPublicKeys = self::PIN_SHA256_VALID_FROM_2019_03_21_TO_2021_03_25.";".self::DEMO_PIN_SHA256_VALID_FROM_2019_01_02_TO_2020_01_07;
 
     public function getEndpointUrl() : ?string
     {
@@ -72,6 +77,14 @@ class MobileIdRestConnectorBuilder
         return $this->customHeaders;
     }
 
+    /**
+     * @return string
+     */
+    public function getSslPublicKeys(): string
+    {
+        return $this->sslPublicKeys;
+    }
+
     public function withEndpointUrl(?string $endpointUrl) : MobileIdRestConnectorBuilder
     {
         $this->endpointUrl = $endpointUrl;
@@ -99,6 +112,24 @@ class MobileIdRestConnectorBuilder
     public function withCustomHeaders(?array $customHeaders) : MobileIdRestConnectorBuilder
     {
         $this->customHeaders = $customHeaders;
+        return $this;
+    }
+
+    public function withSslPublicKeys(string $publicKeys) : MobileIdRestConnectorBuilder
+    {
+        $this->sslPublicKeys = $publicKeys;
+        return $this;
+    }
+
+    public function withDemoEnvPublicKeys() : MobileIdRestConnectorBuilder
+    {
+        $this->sslPublicKeys = self::DEMO_PIN_SHA256_VALID_FROM_2019_01_02_TO_2020_01_07;
+        return $this;
+    }
+
+    public function withLiveEnvPublicKeys() : MobileIdRestConnectorBuilder
+    {
+        $this->sslPublicKeys = self::PIN_SHA256_VALID_FROM_2019_03_21_TO_2021_03_25;
         return $this;
     }
 

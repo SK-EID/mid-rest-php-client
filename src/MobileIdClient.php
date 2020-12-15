@@ -62,12 +62,15 @@ class MobileIdClient
     /** @var array $customHeaders */
     private $customHeaders;
 
+    private $sslPublicKeys;
+
     public function __construct(MobileIdClientBuilder $builder)
     {
         self::$logger = new Logger('MobileIdClient');
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->hostUrl = $builder->getHostUrl();
+        $this->sslPublicKeys = $builder->getSslPublicKeys();
         $this->networkConnectionConfig = $builder->getNetworkConnectionConfig();
         $this->connector = $builder->getConnector();
         $this->customHeaders = $builder->getCustomHeaders();
@@ -76,6 +79,7 @@ class MobileIdClient
                 ->withPollingSleepTimeoutSeconds($builder->getPollingSleepTimeoutSeconds())
                 ->withLongPollingTimeoutSeconds($builder->getLongPollingTimeoutSeconds())
                 ->build();
+
     }
 
     public function getMobileIdConnector(): MobileIdConnector
@@ -87,6 +91,7 @@ class MobileIdClient
                 ->withRelyingPartyUUID($this->relyingPartyUUID)
                 ->withRelyingPartyName($this->relyingPartyName)
                 ->withCustomHeaders($this->customHeaders)
+                ->withSslPublicKeys($this->sslPublicKeys)
                 ->build();
         }
         return $this->connector;

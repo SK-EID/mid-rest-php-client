@@ -205,6 +205,63 @@ The client also supports to ask for a user's mobile-id signing certificate.
 
  ```
 
+## Https pinning
+
+    The client automatically trusts sk demo and live env public keys
+    
+    Examples of configuring
+    
+    When not specified the client will trust SK live and demo env keys
+    
+```PHP
+
+  $client = MobileIdClient::newBuilder()
+                  ->withRelyingPartyUUID("YOUR UUID")
+                  ->withRelyingPartyName("YOUR RP NAME")
+                  ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+                  ->build();
+
+ ```
+
+    Trusting only live env public keys
+
+```PHP
+
+  $client = MobileIdClient::newBuilder()
+                  ->withRelyingPartyUUID("YOUR UUID")
+                  ->withRelyingPartyName("YOUR RP NAME")
+                  ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+                  ->withLiveEnvPublicKeys()
+                  ->build();
+
+ ```
+
+    Trusting only demo env public keys
+
+```PHP
+
+  $client = MobileIdClient::newBuilder()
+                  ->withRelyingPartyUUID("YOUR UUID")
+                  ->withRelyingPartyName("YOUR RP NAME")
+                  ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+                  ->withDemoEnvPublicKeys()
+                  ->build();
+
+ ```
+
+   Trusting custom public keys
+
+```PHP
+
+  $client = MobileIdClient::newBuilder()
+                  ->withRelyingPartyUUID("YOUR UUID")
+                  ->withRelyingPartyName("YOUR RP NAME")
+                  ->withHostUrl("https://tsp.demo.sk.ee/mid-api")
+                  ->withSslPublicKeys("sha256//fqp7yWK7iGGKj+3unYdm2DA3VCPDkwtyX+DrdZYSC6o=;sha256//XgrOHbcGDbQJaXjL9ISo+y7bsXAcVOLLEzeeNO6BXDM=")
+                  ->build();
+
+ ```
+
 ## Signing
 
 Signing is not supported with PHP library.
