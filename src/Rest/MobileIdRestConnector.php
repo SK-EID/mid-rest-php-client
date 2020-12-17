@@ -139,10 +139,14 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $this->logger->debug('Sending get request to ' . $url);
         $responseAsArray = $this->getRequest($url);
-        if (isset($responseAsArray['error'])) throw new MidSessionNotFoundException($request->getSessionId());
+        if (is_null($responseAsArray)) {
+            throw new MidInternalErrorException('GET request to MID returned invalid json: ' . json_last_error_msg());
+        }
+        else if (isset($responseAsArray['error'])) {
+            throw new MidSessionNotFoundException($request->getSessionId());
+        }
         return new SessionStatus($responseAsArray);
     }
-
 
     private function postCertificateRequest(string $uri, CertificateRequest $request) : CertificateResponse
     {
@@ -236,11 +240,11 @@ class MobileIdRestConnector implements MobileIdConnector
         return new MobileIdRestConnectorBuilder();
     }
 
-
     private function getRequest(string $url) : array
     {
 
         $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER,
@@ -249,6 +253,18 @@ class MobileIdRestConnector implements MobileIdConnector
         curl_setopt($ch, CURLOPT_PINNEDPUBLICKEY, $this->sslPinnedPublicKeys);
 
         $result = curl_exec($ch);
+        if($result === false)
+        {
+            $rawError = curl_error($ch);
+            $curl_error = "While trying to connect to '$url' got curl error: " . $rawError;
+            $this->logger->error($curl_error);
+            if (strpos($rawError, "public key does not match pinned public key") !== false) {
+                throw new MidSslException("SSL public key is untrusted for host: ".$url. ". See README.md for setting API host certificate as trusted.");
+            }
+            else {
+                throw new MidInternalErrorException($curl_error);
+            }
+        }
 
         $this->logger->debug('Result is '. $result);
 
