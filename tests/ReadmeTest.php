@@ -3,9 +3,7 @@ namespace Sk\Mid\Tests;
 use PHPUnit\Framework\TestCase;
 use Sk\Mid\Exception\MidServiceUnavailableException;
 use Sk\Mid\Exception\MidSslException;
-use Sk\Mid\MidIdentity;
 use Sk\Mid\AuthenticationResponseValidator;
-use Sk\Mid\CertificateParser;
 use Sk\Mid\Exception\MidDeliveryException;
 use Sk\Mid\Exception\MidInvalidNationalIdentityNumberException;
 use Sk\Mid\Exception\MidInvalidPhoneNumberException;
@@ -18,20 +16,13 @@ use Sk\Mid\Exception\MidUserCancellationException;
 use Sk\Mid\Language\ENG;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\MidNotMidClientException;
-use Sk\Mid\HashType\HashType;
-use Sk\Mid\Language\Language;
 use Sk\Mid\DisplayTextFormat;
 use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Exception\MidUnauthorizedException;
-use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
-use Sk\Mid\MobileIdAuthenticationResult;
-use Sk\Mid\Rest\Dao\Response\AuthenticationResponse;
-use Sk\Mid\Rest\Dao\SessionStatus;
-use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\Util\MidInputUtil;
 
 /**
@@ -44,38 +35,37 @@ class ReadmeTest extends TestCase
 {
     private $client;
 
-    private $authentication;
+    private $userData;
 
-    private $authenticationResult;
+    private $config;
 
     protected function setUp() : void
     {
-        $this->client = MobileIdClient::newBuilder()
-            ->withHostUrl(TestData::DEMO_HOST_URL)
-            ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
-            ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
-            ->build();
 
-        $this->authentication = MobileIdAuthentication::newBuilder()->build();
-        $this->authenticationResult = new MobileIdAuthenticationResult();
+        $this->userData = [
+            'phoneNumber' => '+37200000766',
+            'nationalIdentityNumber' => '60001019906',
+        ];
+        $this->config = [
+            'relyingPartyUUID' => '00000000-0000-0000-0000-000000000000',
+            'relyingPartyName' => 'DEMO',
+            'hostUrl' => 'https://tsp.demo.sk.ee/mid-api',
+        ];
 
-
-        $_GET['phoneNumber'] = TestData::VALID_PHONE;
-        $_GET['nationalIdentityNumber'] = TestData::VALID_NAT_IDENTITY;
     }
-
 
     /**
      * @test
      */
     public function documentAuthenticationProcess()
     {
+        // See (ReadmeTest.php)[blob/master/tests/ReadmeTest.php] for list of classes to 'use'
+
         // step #1 - validate user input
 
         try {
-            $phoneNumber = MidInputUtil::getValidatedPhoneNumber($_GET['phoneNumber']);
-            $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($_GET['nationalIdentityNumber']);
+            $phoneNumber = MidInputUtil::getValidatedPhoneNumber($this->userData['phoneNumber']);
+            $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($this->userData['nationalIdentityNumber']);
         }
         catch (MidInvalidPhoneNumberException $e) {
             die('The phone number you entered is invalid');
@@ -88,9 +78,9 @@ class ReadmeTest extends TestCase
         // withSslPinnedPublicKeys() is explained later in this document
 
         $client = MobileIdClient::newBuilder()
-                ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
-                ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::DEMO_HOST_URL)
+                ->withRelyingPartyUUID($this->config['relyingPartyUUID'])
+                ->withRelyingPartyName($this->config['relyingPartyName'])
+                ->withHostUrl($this->config['hostUrl'])
                 ->withLongPollingTimeoutSeconds(60)
                 ->withSslPinnedPublicKeys("sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
                 ->build();
@@ -203,9 +193,9 @@ class ReadmeTest extends TestCase
     public function documentRetrieveSigningCert()
     {
         $client = MobileIdClient::newBuilder()
-                ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
-                ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::DEMO_HOST_URL)
+                ->withRelyingPartyUUID($this->config['relyingPartyUUID'])
+                ->withRelyingPartyName($this->config['relyingPartyName'])
+                ->withHostUrl($this->config['hostUrl'])
                 ->withSslPinnedPublicKeys("sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
                 ->build();
 
@@ -296,7 +286,10 @@ class ReadmeTest extends TestCase
         $validator = AuthenticationResponseValidator::newBuilder()
             ->withTrustedCaCertificatesFolder(__DIR__ . "/test_numbers_ca_certificates/")
             ->build();
-        $authenticationResult = $validator->validate($this->authentication);
+
+        $authentication = MobileIdAuthentication::newBuilder()->build();
+
+        $authenticationResult = $validator->validate($authentication);
 
         $this->assertEquals(true, $authenticationResult->isValid());
         $this->assertEquals(true, count($authenticationResult->getErrors()) == 0);

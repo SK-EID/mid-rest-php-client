@@ -46,12 +46,15 @@ require_once __DIR__ . '/vendor/autoload.php';
 ### Example of authentication
 
 <!-- Do not change code samples here but instead copy from ReadmeTest.documentAuthenticationProcess() -->
+
+// See [ReadmeTest.php](blob/master/tests/ReadmeTest.php) for list of classes to 'use'
 ```PHP
+    
     // step #1 - validate user input
 
     try {
-        $phoneNumber = MidInputUtil::getValidatedPhoneNumber($_GET['phoneNumber']);
-        $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($_GET['nationalIdentityNumber']);
+        $phoneNumber = MidInputUtil::getValidatedPhoneNumber($this->userData['phoneNumber']);
+        $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($this->userData['nationalIdentityNumber']);
     }
     catch (MidInvalidPhoneNumberException $e) {
         die('The phone number you entered is invalid');
@@ -64,9 +67,9 @@ require_once __DIR__ . '/vendor/autoload.php';
     // withSslPinnedPublicKeys() is explained later in this document
 
     $client = MobileIdClient::newBuilder()
-            ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
-            ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withRelyingPartyUUID($this->config['relyingPartyUUID'])
+            ->withRelyingPartyName($this->config['relyingPartyName'])
+            ->withHostUrl($this->config['hostUrl'])
             ->withLongPollingTimeoutSeconds(60)
             ->withSslPinnedPublicKeys("sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
             ->build();
