@@ -26,10 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
-class UnauthorizedException extends MobileIdException {
+class MidDeliveryException extends MidException {
 
-    public function __construct($message = null)
+    public function __construct()
     {
-        parent::__construct("Unauthorized: ".$message);
+        parent::__construct("SMS sending error");
     }
 }

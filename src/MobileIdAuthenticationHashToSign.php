@@ -83,11 +83,9 @@ class MobileIdAuthenticationHashToSign
 
     public static function generateRandomHashOfDefaultType() : MobileIdAuthenticationHashToSign
     {
-
         return MobileIdAuthenticationHashToSign::newBuilder()
                 ->withHashType(self::DEFAULT_HASH_TYPE)
                 ->build();
-
     }
 
     public static function generateRandomHashOfType(string $hashTypeName) : MobileIdAuthenticationHashToSign
@@ -122,7 +120,6 @@ class MobileIdAuthenticationHashToSign
                 return new Sha512();
         }
         throw new MissingOrInvalidParameterException("Unknown hash type " . $hashTypeStr);
-
     }
 
 }

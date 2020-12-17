@@ -55,7 +55,6 @@ class MobileIdAuthenticationTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function constructAuthenticationIdentity_withEECertificate()
     {
@@ -77,7 +76,6 @@ class MobileIdAuthenticationTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function constructAuthenticationIdentity_withLVCertificate()
     {
@@ -99,7 +97,6 @@ class MobileIdAuthenticationTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function constructAuthenticationIdentity_withLTCertificate()
     {

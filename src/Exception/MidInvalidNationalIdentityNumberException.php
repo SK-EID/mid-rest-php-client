@@ -26,10 +26,9 @@
  */
 namespace Sk\Mid\Exception;
 
-class UserCancellationException extends MobileIdException {
 
-    public function __construct()
-    {
-        parent::__construct("User cancelled the operation.");
+class MidInvalidNationalIdentityNumberException extends MissingOrInvalidParameterException {
+    public function __construct($nationalIdentityNumberInput) {
+        parent::__construct('Invalid national identity number '.$nationalIdentityNumberInput);
     }
 }

@@ -2,10 +2,10 @@
 namespace Sk\Mid\Tests;
 
 use Sk\Mid\Language\EST;
-use Sk\Mid\Exception\DeliveryException;
-use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Exception\PhoneNotAvailableException;
-use Sk\Mid\Exception\UserCancellationException;
+use Sk\Mid\Exception\MidDeliveryException;
+use Sk\Mid\Exception\MidNotMidClientException;
+use Sk\Mid\Exception\MidPhoneNotAvailableException;
+use Sk\Mid\Exception\MidUserCancellationException;
 
 use Sk\Mid\Rest\MobileIdConnector;
 
@@ -60,7 +60,8 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys("sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
             ->build();
 
         $connector->initAuthentication($request);
@@ -83,7 +84,8 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
         $connector->initAuthentication($request);
     }
@@ -103,7 +105,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -126,7 +128,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -148,7 +150,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -171,7 +173,7 @@ class AuthenticationRequestBuilderTest extends TestCase
             ->build();
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -206,7 +208,7 @@ class AuthenticationRequestBuilderTest extends TestCase
      */
     public function authenticate_withNotMIDClient_shouldThrowException()
     {
-        $this->expectException(NotMidClientException::class);
+        $this->expectException(MidNotMidClientException::class);
 
         $this->connector->setSessionStatusToRespond(SessionStatusDummy::createNotMIDClientStatus());
         $this->makeAuthenticationRequest($this->connector);
@@ -228,7 +230,7 @@ class AuthenticationRequestBuilderTest extends TestCase
      */
     public function authenticate_withUserCancellation_shouldThrowException()
     {
-        $this->expectException(UserCancellationException::class);
+        $this->expectException(MidUserCancellationException::class);
 
         $this->connector->setSessionStatusToRespond(SessionStatusDummy::createUserCancellationStatus());
         $this->makeAuthenticationRequest($this->connector);
@@ -250,7 +252,7 @@ class AuthenticationRequestBuilderTest extends TestCase
      */
     public function authenticate_withSimNotAvailable_shouldThrowException()
     {
-        $this->expectException(PhoneNotAvailableException::class);
+        $this->expectException(MidPhoneNotAvailableException::class);
 
         $this->connector->setSessionStatusToRespond(SessionStatusDummy::createSimNotAvailableStatus());
         $this->makeAuthenticationRequest($this->connector);
@@ -261,7 +263,7 @@ class AuthenticationRequestBuilderTest extends TestCase
      */
     public function authenticate_withDeliveryError_shouldThrowException()
     {
-        $this->expectException(DeliveryException::class);
+        $this->expectException(MidDeliveryException::class);
 
         $this->connector->setSessionStatusToRespond(SessionStatusDummy::createDeliveryErrorStatus());
         $this->makeAuthenticationRequest($this->connector);
@@ -272,7 +274,7 @@ class AuthenticationRequestBuilderTest extends TestCase
      */
     public function authenticate_withInvalidCardResponse_shouldThrowException()
     {
-        $this->expectException(DeliveryException::class);
+        $this->expectException(MidDeliveryException::class);
 
         $this->connector->setSessionStatusToRespond(SessionStatusDummy::createInvalidCardResponseStatus());
         $this->makeAuthenticationRequest($this->connector);
@@ -343,7 +345,8 @@ class AuthenticationRequestBuilderTest extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::TEST_URL)
+            ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys("sha256//...")
             ->build();
 
         $client->createMobileIdAuthentication($sessionStatus, $authenticationHash);

@@ -26,10 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
-class NotMidClientException extends MobileIdException {
+class MidServiceUnavailableException extends MidInternalErrorException {
 
-    public function __construct()
+    public function __construct($message)
     {
-        parent::__construct('User has no active certificates, and thus is not Mobile-ID client');
+        parent::__construct($message);
     }
 }

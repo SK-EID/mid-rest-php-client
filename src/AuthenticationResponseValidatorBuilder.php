@@ -24,12 +24,41 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\Exception;
+namespace Sk\Mid;
+use HRobertson\X509Verify\SslCertificate;
 
-class DeliveryException extends MobileIdException {
+class AuthenticationResponseValidatorBuilder
+{
+    /** @var array $trustedCaCertificates */
+    private $trustedCaCertificates = array();
 
-    public function __construct()
+    /**
+     * @return mixed
+     */
+    public function getTrustedCaCertificates()
     {
-        parent::__construct("SMS sending error");
+        return $this->trustedCaCertificates;
     }
+
+    public function withTrustedCaCertificatesFolder(string $trustedCertsPath) : AuthenticationResponseValidatorBuilder
+    {
+        foreach (array_diff(scandir($trustedCertsPath), array('.', '..')) as $file) {
+            $caCertificate = file_get_contents($trustedCertsPath.$file);
+            $caCert = new SslCertificate($caCertificate);
+            $this->trustedCaCertificates[] = $caCert;
+        }
+        return $this;
+    }
+
+    public function withTrustedCaCertificate(string $trustedCaCertificate) : AuthenticationResponseValidatorBuilder
+    {
+        $this->trustedCaCertificates[] = new SslCertificate($trustedCaCertificate);
+        return $this;
+    }
+
+    public function build() : AuthenticationResponseValidator
+    {
+        return new AuthenticationResponseValidator($this);
+    }
+
 }

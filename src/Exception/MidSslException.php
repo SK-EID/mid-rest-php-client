@@ -26,11 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
+class MidSslException extends MidInternalErrorException {
 
-class InvalidPhoneNumberException extends MissingOrInvalidParameterException {
-
-    public function __construct($phoneNumberInput) {
-        parent::__construct('Invalid phone number '. $phoneNumberInput);
+    public function __construct($message)
+    {
+        parent::__construct($message);
     }
-
 }

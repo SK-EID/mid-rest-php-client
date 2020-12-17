@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid\Exception;
 
-class MidSessionNotFoundException extends MobileIdException {
+class MidSessionNotFoundException extends MidException {
 
     public function __construct($sessionId)
     {

@@ -3,6 +3,7 @@
 namespace Sk\SmartId\Tests;
 
 use PHPUnit\Framework\TestCase;
+use InvalidArgumentException;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\MobileIdRestConnector;
@@ -28,9 +29,9 @@ class SslTest extends TestCase
         $client = MobileIdClient::newBuilder()
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::TEST_URL)
+                ->withHostUrl(TestData::DEMO_HOST_URL)
                 ->withNetworkConnectionConfig("")
-                ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+                ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
                 ->build();
 
         $this->connector = $client->getMobileIdConnector();
@@ -50,10 +51,9 @@ class SslTest extends TestCase
         $client = MobileIdClient::newBuilder()
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::TEST_URL)
+                ->withHostUrl(TestData::DEMO_HOST_URL)
                 ->withNetworkConnectionConfig("")
-                ->withDemoEnvPublicKeys()
-                ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+                ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH )
                 ->build();
 
         $this->connector = $client->getMobileIdConnector();
@@ -76,10 +76,9 @@ class SslTest extends TestCase
         $client = MobileIdClient::newBuilder()
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::TEST_URL)
+                ->withHostUrl(TestData::DEMO_HOST_URL)
                 ->withNetworkConnectionConfig("")
-                ->withLiveEnvPublicKeys()
-                ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+                ->withSslPinnedPublicKeys( TestData::SOME_OTHER_HOST_PUBLIC_KEY_HASH )
                 ->build();
 
         $this->connector = $client->getMobileIdConnector();
@@ -97,10 +96,9 @@ class SslTest extends TestCase
         $client = MobileIdClient::newBuilder()
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::TEST_URL)
+                ->withHostUrl(TestData::DEMO_HOST_URL)
                 ->withNetworkConnectionConfig("")
-                ->withSslPublicKeys("sha256//XgrOHbcGDbQJaXjL9ISo+y7bsXAcVOLLEzeeNO6BXDM=")
-                ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+                ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
                 ->build();
 
         $this->connector = $client->getMobileIdConnector();
@@ -117,14 +115,15 @@ class SslTest extends TestCase
      */
     public function authenticate_demoEnvwithEmptyPublicKey_noResponse()
     {
-        $this->expectException(MidInternalErrorException::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("You need to set hash value(s) of trusted API HOST SSL public keys by calling withSslPinnedPublicKeys()");
+
         $client = MobileIdClient::newBuilder()
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::TEST_URL)
+                ->withHostUrl(TestData::DEMO_HOST_URL)
                 ->withNetworkConnectionConfig("")
-                ->withSslPublicKeys("")
-                ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+                ->withSslPinnedPublicKeys("")
                 ->build();
 
         $this->connector = $client->getMobileIdConnector();
@@ -145,8 +144,7 @@ class SslTest extends TestCase
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
                 ->withHostUrl("https://www.google.com")
                 ->withNetworkConnectionConfig("")
-                ->withDemoEnvPublicKeys()
-                ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+                ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH )
                 ->build();
 
         $this->connector = $client->getMobileIdConnector();

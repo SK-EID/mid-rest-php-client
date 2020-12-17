@@ -118,9 +118,8 @@ class MobileIdAuthentication
 
     public function getValidatedAuthenticationResult() : MobileIdAuthenticationResult
     {
-        $authenticationResponseValidator = new AuthenticationResponseValidator();
+        $authenticationResponseValidator = new AuthenticationResponseValidator("");
         return $authenticationResponseValidator->validate($this);
-
     }
 
 }
@@ -220,6 +219,5 @@ class MobileIdAuthenticationBuilder
     {
         return new MobileIdAuthentication($this);
     }
-
 
 }

@@ -26,11 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
-abstract class MobileIdException extends \RuntimeException {
+class MidNotMidClientException extends MidException {
 
-    public function __construct($message)
+    public function __construct()
     {
-        parent::__construct($message);
+        parent::__construct('User is not Mobile-ID client');
     }
-
 }

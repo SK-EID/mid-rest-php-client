@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid;
 use Sk\Mid\Exception\MidInternalErrorException;
-use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Exception\MidNotMidClientException;
 use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Rest\Dao\Response\CertificateResponse;
 use Sk\Mid\Rest\Dao\SessionStatus;
@@ -70,7 +70,7 @@ class MobileIdClient
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->hostUrl = $builder->getHostUrl();
-        $this->sslPublicKeys = $builder->getSslPublicKeys();
+        $this->sslPublicKeys = $builder->getSslPinnedPublicKeys();
         $this->networkConnectionConfig = $builder->getNetworkConnectionConfig();
         $this->connector = $builder->getConnector();
         $this->customHeaders = $builder->getCustomHeaders();
@@ -91,7 +91,7 @@ class MobileIdClient
                 ->withRelyingPartyUUID($this->relyingPartyUUID)
                 ->withRelyingPartyName($this->relyingPartyName)
                 ->withCustomHeaders($this->customHeaders)
-                ->withSslPublicKeys($this->sslPublicKeys)
+                ->withSslPinnedPublicKeys($this->sslPublicKeys)
                 ->build();
         }
         return $this->connector;
@@ -149,10 +149,7 @@ class MobileIdClient
     {
         if (strcasecmp('NOT_FOUND', $result) == 0) {
             self::$logger->error('No certificate for the user was found');
-            throw new NotMidClientException();
-        } else if (strcasecmp('NOT_ACTIVE', $result) == 0) {
-            self::$logger->error('Inactive certificate found');
-            throw new NotMidClientException();
+            throw new MidNotMidClientException();
         } else if (!strcasecmp('OK', $result) == 0) {
             self::$logger->error("Session status end result is '" . $result . "'");
             throw new MidInternalErrorException("Session status end result is '" . $result . "'");

@@ -26,9 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
+class MidInvalidUserConfigurationException extends MidException {
 
-class InvalidNationalIdentityNumberException extends MissingOrInvalidParameterException {
-    public function __construct($nationalIdentityNumberInput) {
-        parent::__construct('Invalid national identity number '.$nationalIdentityNumberInput);
+    public function __construct()
+    {
+        parent::__construct("Mobile-ID configuration on user's SIM card differs from what is configured on service provider side. User needs to contact his/her mobile operator.");
     }
 }

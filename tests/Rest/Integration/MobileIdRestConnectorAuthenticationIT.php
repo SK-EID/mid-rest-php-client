@@ -4,7 +4,7 @@ use Sk\Mid\Language\EST;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\MobileIdRestConnector;
-use Sk\Mid\Exception\UnauthorizedException;
+use Sk\Mid\Exception\MidUnauthorizedException;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceRequestDummy;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceResponseDummy;
 use Sk\Mid\Tests\Mock\TestData;
@@ -31,15 +31,9 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
     protected function setUp() : void
     {
         $this->connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
-            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->build();
     }
-
-
-
-
-
 
     /**
      * @test
@@ -81,7 +75,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
      */
     public function authenticate_withWrongRelyingPartyUUID_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::WRONG_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
@@ -107,7 +101,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
      */
     public function authenticate_withUnknownRelyingPartyUUID_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::DEMO_RELYING_PARTY_UUID, TestData::UNKNOWN_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
@@ -120,7 +114,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
      */
     public function authenticate_withUnknownRelyingPartyName_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::UNKNOWN_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY

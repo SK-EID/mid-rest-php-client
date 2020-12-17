@@ -4,7 +4,7 @@ namespace Sk\Mid\Tests\Util;
 
 
 use PHPUnit\Framework\TestCase;
-use Sk\Mid\Exception\InvalidPhoneNumberException;
+use Sk\Mid\Exception\MidInvalidPhoneNumberException;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\Util\MidInputUtil;
 
@@ -13,7 +13,6 @@ class MidInputUtilTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function validateUserInput_validPhone_shouldRemoveSpaces()
     {
@@ -27,7 +26,7 @@ class MidInputUtilTest extends TestCase
      */
     public function validateUserInput_invalidPhone_shouldThrowException()
     {
-        $this->expectException(InvalidPhoneNumberException::class);
+        $this->expectException(MidInvalidPhoneNumberException::class);
 
         MidInputUtil::getValidatedPhoneNumber('123');
     }

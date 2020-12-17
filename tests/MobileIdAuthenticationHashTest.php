@@ -17,7 +17,6 @@ class MobileIdAuthenticationHashTest extends TestCase
 {
     /**
      * @test
-     * @throws \Exception
      */
     public function shouldGenerateRandomHashOfDefaultType_hasSHA256HashType()
     {
@@ -29,7 +28,6 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function shouldGenerateDefaultHashOfType_SHA256_hashHasCorrectTypeAndLength()
     {
@@ -40,7 +38,6 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function shouldGenerateRandomHashOfType_SHA256_hashHasCorrectTypeAndLength()
     {
@@ -51,7 +48,6 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function shouldGenerateRandomHashOfType_SHA384_hashHasCorrectTypeAndLength()
     {
@@ -62,7 +58,6 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function shouldGenerateRandomHashOfType_SHA512_hashHasCorrectTypeAndLength()
     {
@@ -74,7 +69,6 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function calculateVerificationCode_notNull()
     {
@@ -87,7 +81,6 @@ class MobileIdAuthenticationHashTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function calculateVerificationCode_ensureVerificationCodesAreNotAlwaysEqual() {
         $distinctCodes = array();

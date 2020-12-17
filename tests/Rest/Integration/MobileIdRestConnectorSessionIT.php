@@ -29,8 +29,7 @@ class MobileIdRestConnectorSessionIT extends TestCase
     protected function setUp() : void
     {
         $this->connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
-            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->build();
     }
 
@@ -66,13 +65,10 @@ class MobileIdRestConnectorSessionIT extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function getCorrectSessionStatusResponseSocketTimeoutMs() {
         $request = new SessionStatusRequest(TestData::SESSION_ID, 2);
         self::assertEquals(2000, $request->getSessionStatusResponseSocketTimeoutMs());
     }
-
-
 
 }

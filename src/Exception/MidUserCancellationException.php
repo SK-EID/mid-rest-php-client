@@ -26,10 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
-class MidInternalErrorException extends MidException {
+class MidUserCancellationException extends MidException {
 
-    public function __construct($message)
+    public function __construct()
     {
-        parent::__construct($message);
+        parent::__construct("User cancelled the operation.");
     }
 }

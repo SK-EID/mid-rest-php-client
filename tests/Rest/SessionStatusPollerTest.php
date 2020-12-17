@@ -2,13 +2,13 @@
 namespace Sk\Mid\Tests\Rest;
 use PHPUnit\Framework\TestCase;
 
-use Sk\Mid\Exception\DeliveryException;
-use Sk\Mid\Exception\InvalidUserConfigurationException;
+use Sk\Mid\Exception\MidDeliveryException;
+use Sk\Mid\Exception\MidInvalidUserConfigurationException;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\MidSessionTimeoutException;
-use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Exception\PhoneNotAvailableException;
-use Sk\Mid\Exception\UserCancellationException;
+use Sk\Mid\Exception\MidNotMidClientException;
+use Sk\Mid\Exception\MidPhoneNotAvailableException;
+use Sk\Mid\Exception\MidUserCancellationException;
 use Sk\Mid\Tests\Mock\SessionStatusDummy;
 use Sk\Mid\Tests\Mock\MobileIdConnectorStub;
 use Sk\Mid\Tests\Mock\TestData;
@@ -91,9 +91,7 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getNotMIDClientResponse_shouldThrowException()
     {
-        $this->expectException(NotMidClientException::class);
-
-        $this->expectException(NotMidClientException::class);
+        $this->expectException(MidNotMidClientException::class);
 
         $this->connector->addResponse(SessionStatusDummy::createNotMIDClientStatus());
         $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
@@ -115,7 +113,7 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getUserCancellationResponse_shouldThrowException()
     {
-        $this->expectException(UserCancellationException::class);
+        $this->expectException(MidUserCancellationException::class);
 
         $this->connector->addResponse(SessionStatusDummy::createUserCancellationStatus());
         $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
@@ -139,7 +137,7 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getSimNotAvailableResponse_shouldThrowException()
     {
-        $this->expectException(PhoneNotAvailableException::class);
+        $this->expectException(MidPhoneNotAvailableException::class);
 
         $this->connector->addResponse(SessionStatusDummy::createSimNotAvailableStatus());
         $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
@@ -150,7 +148,7 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getDeliveryErrorResponse_shouldThrowException()
     {
-        $this->expectException(DeliveryException::class);
+        $this->expectException(MidDeliveryException::class);
 
         $this->connector->addResponse(SessionStatusDummy::createDeliveryErrorStatus());
         $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
@@ -161,7 +159,7 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getInvalidCardResponse_shouldThrowException()
     {
-        $this->expectException(DeliveryException::class);
+        $this->expectException(MidDeliveryException::class);
 
         $this->connector->addResponse(SessionStatusDummy::createInvalidCardResponseStatus());
         $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);
@@ -172,7 +170,7 @@ class SessionStatusPollerTest extends TestCase
      */
     public function getSignatureHashMismatchResponse_shouldThrowException()
     {
-        $this->expectException(InvalidUserConfigurationException::class);
+        $this->expectException(MidInvalidUserConfigurationException::class);
 
         $this->connector->addResponse(SessionStatusDummy::createSignatureHashMismatchStatus());
         $this->poller->fetchFinalSessionStatus(TestData::SESSION_ID);

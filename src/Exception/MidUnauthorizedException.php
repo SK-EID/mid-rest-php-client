@@ -26,10 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
-class CertificateNotTrustedException extends MobileIdException {
+class MidUnauthorizedException extends MidException {
 
-    public function __construct()
+    public function __construct($message = null)
     {
-        parent::__construct('The certificate is not issued by a Mobile ID certificate authority');
+        parent::__construct("Unauthorized: ".$message);
     }
 }

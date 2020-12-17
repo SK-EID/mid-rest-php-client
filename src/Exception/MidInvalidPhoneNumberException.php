@@ -26,10 +26,11 @@
  */
 namespace Sk\Mid\Exception;
 
-class InvalidUserConfigurationException extends MobileIdException {
 
-    public function __construct()
-    {
-        parent::__construct("Mobile-ID configuration on user's SIM card differs from what is configured on service provider side. User needs to contact his/her mobile operator.");
+class MidInvalidPhoneNumberException extends MissingOrInvalidParameterException {
+
+    public function __construct($phoneNumberInput) {
+        parent::__construct('Invalid phone number '. $phoneNumberInput);
     }
+
 }

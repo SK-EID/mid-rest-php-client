@@ -26,10 +26,10 @@
  */
 namespace Sk\Mid\Exception;
 
-class MidInternalErrorException extends MidException {
+class MidPhoneNotAvailableException extends MidException {
 
-    public function __construct($message)
+    public function __construct()
     {
-        parent::__construct($message);
+        parent::__construct("Unable to reach phone or SIM card");
     }
 }

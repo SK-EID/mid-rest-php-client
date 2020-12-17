@@ -110,7 +110,7 @@ class CertificateRequestBuilder
     {
         if (empty($this->phoneNumber) || empty($this->nationalIdentityNumber)) {
             self::$logger->error('Phone number and national identity must be set');
-            throw new MissingOrInvalidParameterException('Phone number and national identity must be set');
+            throw new MissingOrInvalidParameterException('Phone number and national identity number must be set');
         }
     }
 

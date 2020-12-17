@@ -1,27 +1,29 @@
 <?php
 namespace Sk\Mid\Tests;
 use PHPUnit\Framework\TestCase;
+use Sk\Mid\Exception\MidServiceUnavailableException;
+use Sk\Mid\Exception\MidSslException;
 use Sk\Mid\MidIdentity;
 use Sk\Mid\AuthenticationResponseValidator;
 use Sk\Mid\CertificateParser;
-use Sk\Mid\Exception\DeliveryException;
-use Sk\Mid\Exception\InvalidNationalIdentityNumberException;
-use Sk\Mid\Exception\InvalidPhoneNumberException;
-use Sk\Mid\Exception\InvalidUserConfigurationException;
+use Sk\Mid\Exception\MidDeliveryException;
+use Sk\Mid\Exception\MidInvalidNationalIdentityNumberException;
+use Sk\Mid\Exception\MidInvalidPhoneNumberException;
+use Sk\Mid\Exception\MidInvalidUserConfigurationException;
 use Sk\Mid\Exception\MidSessionNotFoundException;
 use Sk\Mid\Exception\MidSessionTimeoutException;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
-use Sk\Mid\Exception\PhoneNotAvailableException;
-use Sk\Mid\Exception\UserCancellationException;
+use Sk\Mid\Exception\MidPhoneNotAvailableException;
+use Sk\Mid\Exception\MidUserCancellationException;
 use Sk\Mid\Language\ENG;
 use Sk\Mid\Exception\MidInternalErrorException;
-use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Exception\MidNotMidClientException;
 use Sk\Mid\HashType\HashType;
 use Sk\Mid\Language\Language;
 use Sk\Mid\DisplayTextFormat;
 use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\MobileIdClient;
-use Sk\Mid\Exception\UnauthorizedException;
+use Sk\Mid\Exception\MidUnauthorizedException;
 use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
@@ -49,14 +51,10 @@ class ReadmeTest extends TestCase
     protected function setUp() : void
     {
         $this->client = MobileIdClient::newBuilder()
-            ->withHostUrl(TestData::TEST_URL)
+            ->withHostUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->build();
-
-        $sessionStatus = new SessionStatus();
-        $authenticationHash = MobileIdAuthenticationHashToSign::newBuilder()
-            ->withHashType(HashType::SHA512)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $this->authentication = MobileIdAuthentication::newBuilder()->build();
@@ -67,22 +65,9 @@ class ReadmeTest extends TestCase
         $_GET['nationalIdentityNumber'] = TestData::VALID_NAT_IDENTITY;
     }
 
-    private function getClient() : MobileIdClient {
-        return $this->client;
-    }
-
-    private function getAuthenticationResult() : MobileIdAuthenticationResult {
-        return $this->authenticationResult;
-    }
-
-    private function getAuthentication() : AuthenticationResponse {
-        return $this->authentication;
-    }
-
 
     /**
      * @test
-     * @throws \Exception
      */
     public function documentAuthenticationProcess()
     {
@@ -92,21 +77,22 @@ class ReadmeTest extends TestCase
             $phoneNumber = MidInputUtil::getValidatedPhoneNumber($_GET['phoneNumber']);
             $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($_GET['nationalIdentityNumber']);
         }
-        catch (InvalidPhoneNumberException $e) {
+        catch (MidInvalidPhoneNumberException $e) {
             die('The phone number you entered is invalid');
         }
-        catch (InvalidNationalIdentityNumberException $e) {
+        catch (MidInvalidNationalIdentityNumberException $e) {
             die('The national identity number you entered is invalid');
         }
 
-        // step #2 - create client with long-polling
+        // step #2 - create client with long-polling.
+        // withSslPinnedPublicKeys() is explained later in this document
 
         $client = MobileIdClient::newBuilder()
                 ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::TEST_URL)
+                ->withHostUrl(TestData::DEMO_HOST_URL)
                 ->withLongPollingTimeoutSeconds(60)
-                ->withPollingSleepTimeoutSeconds(2)
+                ->withSslPinnedPublicKeys("sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
                 ->build();
 
 
@@ -135,10 +121,10 @@ class ReadmeTest extends TestCase
         try {
             $response = $client->getMobileIdConnector()->initAuthentication($request);
         }
-        catch (NotMidClientException $e) {
-            die("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
+        catch (MidNotMidClientException $e) {
+            die("User is not a MID client or user's certificates are revoked.");
         }
-        catch (UnauthorizedException $e) {
+        catch (MidUnauthorizedException $e) {
             die('Integration error with Mobile-ID. Invalid MID credentials');
         }
         catch (MissingOrInvalidParameterException $e) {
@@ -154,41 +140,52 @@ class ReadmeTest extends TestCase
                 ->getSessionStatusPoller()
                 ->fetchFinalSessionStatus($response->getSessionID());
 
-        // step #8 - parse authenticated person out of the response and get it validated
+        // step #8 - get authenticationResult
 
         try {
-            $authenticatedPerson = $client
-                ->createMobileIdAuthentication($finalSessionStatus, $authenticationHash)
-                ->getValidatedAuthenticationResult()
-                ->getAuthenticationIdentity();
+            $authenticationResult = $client
+                ->createMobileIdAuthentication($finalSessionStatus, $authenticationHash);
+
         }
-        catch (UserCancellationException $e) {
-            die("You cancelled operation from your phone.");
+        catch (MidUserCancellationException $e) {
+            die("User cancelled operation from his/her phone.");
+        }
+        catch (MidNotMidClientException $e) {
+            die("User is not a MID client or user's certificates are revoked.");
         }
         catch (MidSessionTimeoutException $e) {
-            die("You didn't type in PIN code into your phone or there was a communication error.");
+            die("User did not type in PIN code or communication error.");
         }
-        catch (PhoneNotAvailableException $e) {
-            die("Unable to reach your phone. Please make sure your phone has mobile coverage.");
+        catch (MidPhoneNotAvailableException $e) {
+            die("Unable to reach phone/SIM card. User needs to check if phone has coverage.");
         }
-        catch (DeliveryException $e) {
-            die("Communication error. Unable to reach your phone.");
+        catch (MidDeliveryException $e) {
+            die("Error communicating with the phone/SIM card.");
         }
-        catch (InvalidUserConfigurationException $e) {
-            die("Mobile-ID configuration on your SIM card differs from what is configured on service provider's side. Please contact your mobile operator.");
+        catch (MidInvalidUserConfigurationException $e) {
+            die("Mobile-ID configuration on user's SIM card differs from what is configured on service provider's side. User needs to contact his/her mobile operator.");
         }
-        catch (MidSessionNotFoundException | MissingOrInvalidParameterException | UnauthorizedException $e) {
-            die("Client side error with mobile-ID integration. Error code:". $e->getCode());
+        catch (MidSessionNotFoundException | MissingOrInvalidParameterException | MidUnauthorizedException | MidSslException $e) {
+            die("Integrator-side error with MID integration or configuration. Error code:". $e->getCode());
         }
-        catch (NotMidClientException $e) {
-            // if user is not MID client then this exception is thrown and caught already during first request (see above)
-            die("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
+        catch (MidServiceUnavailableException $e) {
+            die("MID service is currently unavailable. User shold try again later.");
         }
         catch (MidInternalErrorException $internalError) {
             die("Something went wrong with Mobile-ID service");
         }
 
-        # step #9 - read out authenticated person details
+        # step #9 - validate returned result (to protect yourself from man-in-the-middle attack)
+        $validator = AuthenticationResponseValidator::newBuilder()
+            ->withTrustedCaCertificatesFolder(__DIR__ . "/test_numbers_ca_certificates/")
+            ->build();
+
+        $validator->validate($authenticationResult);
+
+
+        # step #10 - read out authenticated person details
+
+        $authenticatedPerson = $authenticationResult->constructAuthenticationIdentity();
 
         echo 'Welcome, '.$authenticatedPerson->getGivenName().' '.$authenticatedPerson->getSurName().' ';
         echo ' (ID code '.$authenticatedPerson->getIdentityCode().') ';
@@ -208,7 +205,8 @@ class ReadmeTest extends TestCase
         $client = MobileIdClient::newBuilder()
                 ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-                ->withHostUrl(TestData::TEST_URL)
+                ->withHostUrl(TestData::DEMO_HOST_URL)
+                ->withSslPinnedPublicKeys("sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
                 ->build();
 
         $request = CertificateRequest::newBuilder()
@@ -225,80 +223,85 @@ class ReadmeTest extends TestCase
             echo ' (ID code '.$person->getIdentityCode().') ';
             echo 'from '. $person->getCountry(). '!';
         }
-        catch (NotMidClientException $e) {
+        catch (MidNotMidClientException $e) {
             // if user is not MID client then this exception is thrown and caught already during first request (see above)
             die("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
         }
-        catch (MissingOrInvalidParameterException | UnauthorizedException $e) {
+        catch (MissingOrInvalidParameterException | MidUnauthorizedException $e) {
             die("Client side error with mobile-ID integration. Error code:". $e->getCode());
         }
         catch (MidInternalErrorException $internalError) {
             die("Something went wrong with Mobile-ID service");
         }
 
+        $this->addToAssertionCount(1);
+    }
 
+
+    /**
+     * @test
+     */
+    public function documentLongPolling()
+    {
+        $this->client = MobileIdClient::newBuilder()
+            ->withHostUrl("https://...")
+            ->withRelyingPartyUUID("...")
+            ->withRelyingPartyName("...")
+            ->withSslPinnedPublicKeys("sha256//...")
+            ->withLongPollingTimeoutSeconds(60)
+            ->build();
+
+        $this->addToAssertionCount(1);
+    }
+
+    /**
+     * @test
+     */
+    public function documentWithoutLongPolling()
+    {
+        $this->client = MobileIdClient::newBuilder()
+            ->withHostUrl("https://...")
+            ->withRelyingPartyUUID("...")
+            ->withRelyingPartyName("...")
+            ->withSslPinnedPublicKeys("sha256//...")
+            ->withPollingSleepTimeoutSeconds(2)
+            ->build();
+
+        $this->addToAssertionCount(1);
+    }
+
+    /**
+     * @test
+     */
+    public function documentPinning()
+    {
+        $this->client = MobileIdClient::newBuilder()
+            ->withHostUrl("https://...")
+            ->withRelyingPartyUUID("...")
+            ->withRelyingPartyName("...")
+            ->withSslPinnedPublicKeys("sha256//hash-of-current-mid-api-ssl-host-public-key;sha256//hash-of-future-mid-api-ssl-host-public-key")
+            ->build();
 
 
         $this->addToAssertionCount(1);
-
-    }
-
-
-    /**
-     * @test
-     */
-    public function documentGetAuthenticationResponse()
-    {
-        $authenticationHash = MobileIdAuthenticationHashToSign::generateRandomHashOfDefaultType();
-
-        $verificationCode = $authenticationHash->calculateVerificationCode();
-
-        $request = AuthenticationRequest::newBuilder()
-            ->withPhoneNumber("+37200000766")
-            ->withNationalIdentityNumber("60001019906")
-            ->withHashToSign($authenticationHash)
-            ->withLanguage(ENG::asType())
-            ->withDisplayText("Log into self-service?")
-            ->withDisplayTextFormat(DisplayTextFormat::GSM7)
-            ->build();
-
-        $response = $this->getClient()->getMobileIdConnector()->initAuthentication($request);
-
-        $sessionStatus = $this->getClient()->getSessionStatusPoller()->fetchFinalSessionStatus($response->getSessionID());
-
-        $authentication = $this->getClient()->createMobileIdAuthentication($sessionStatus, $authenticationHash);
-        $this->assertEquals(true, !is_null($authentication));
     }
 
     /**
      * @test
-     * @throws \Exception
      */
-    public function documentHowToVerifyAuthenticationResult()
+    public function documentValidation()
     {
         $this->expectException(MidInternalErrorException::class);
 
-        $validator = new AuthenticationResponseValidator();
+        $validator = AuthenticationResponseValidator::newBuilder()
+            ->withTrustedCaCertificatesFolder(__DIR__ . "/test_numbers_ca_certificates/")
+            ->build();
         $authenticationResult = $validator->validate($this->authentication);
 
         $this->assertEquals(true, $authenticationResult->isValid());
         $this->assertEquals(true, count($authenticationResult->getErrors()) == 0);
     }
 
-    /**
-     * @test
-     */
-    public function documentAuthenticationIdentityUsage()
-    {
-        $this->expectException(UnauthorizedException::class);
-
-        $authenticationIdentity = $this->getAuthenticationResult()->getAuthenticationIdentity();
-        if ($authenticationIdentity == null) throw new UnauthorizedException();
-        $givenName = $authenticationIdentity->getGivenName();
-        $surName = $authenticationIdentity->getSurName();
-        $identityCode = $authenticationIdentity->getIdentityCode();
-        $country = $authenticationIdentity->getCountry();
-    }
 
 
 }

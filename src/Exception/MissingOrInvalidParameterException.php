@@ -27,7 +27,7 @@
 namespace Sk\Mid\Exception;
 
 
-class MissingOrInvalidParameterException extends MobileIdException {
+class MissingOrInvalidParameterException extends MidException {
 
     public function __construct($message) {
         parent::__construct('Missing or invalid parameter: '.$message);

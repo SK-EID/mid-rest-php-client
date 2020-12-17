@@ -26,10 +26,11 @@
  */
 namespace Sk\Mid\Exception;
 
-class PhoneNotAvailableException extends MobileIdException {
+abstract class MidException extends \RuntimeException {
 
-    public function __construct()
+    public function __construct($message)
     {
-        parent::__construct("Unable to reach phone or SIM card");
+        parent::__construct($message);
     }
+
 }

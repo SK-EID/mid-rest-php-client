@@ -5,22 +5,20 @@ use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceRequestDummy;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\MobileIdClient;
-use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Exception\MidNotMidClientException;
 
 class MobileIdCertificateIT extends TestCase
 {
 
     /**
      * @test
-     * @throws \Exception
      */
     public function getCertificateTest()
     {
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::TEST_URL)
-            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+            ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
 
@@ -41,13 +39,12 @@ class MobileIdCertificateIT extends TestCase
      */
     public function getCertificate_notMidClient_shouldThrowNotMIDClientException()
     {
-        $this->expectException(NotMidClientException::class);
+        $this->expectException(MidNotMidClientException::class);
 
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::TEST_URL)
-            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+            ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
         $certRequest = CertificateRequest::newBuilder()
@@ -63,13 +60,12 @@ class MobileIdCertificateIT extends TestCase
      */
     public function getCertificate_certificateNotActive_shouldThrowNotMIDClientException()
     {
-        $this->expectException(NotMidClientException::class);
+        $this->expectException(MidNotMidClientException::class);
 
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withHostUrl(TestData::TEST_URL)
-            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+            ->withHostUrl(TestData::DEMO_HOST_URL)
             ->build();
 
         $certRequest = CertificateRequest::newBuilder()

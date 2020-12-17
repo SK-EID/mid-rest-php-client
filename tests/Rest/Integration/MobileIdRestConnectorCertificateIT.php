@@ -1,9 +1,9 @@
 <?php
 namespace Sk\Mid\Tests\Rest\Integration;
-use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Exception\MidNotMidClientException;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceRequestDummy;
-use Sk\Mid\Exception\UnauthorizedException;
+use Sk\Mid\Exception\MidUnauthorizedException;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\Rest\MobileIdRestConnector;
 
@@ -29,16 +29,14 @@ class MobileIdRestConnectorCertificateIT extends TestCase
     protected function setUp() : void
     {
         $this->connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
-            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
             ->build();
     }
 
     /**
      * @test
-     * @throws \Exception
      */
     public function getCertificate()
     {
@@ -62,7 +60,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
      */
     public function getCertificate_withWrongPhoneNumber_shouldThrowException()
     {
-        $this->expectException(NotMidClientException::class);
+        $this->expectException(MidNotMidClientException::class);
 
         $request = CertificateRequest::newBuilder()
             ->withPhoneNumber(TestData::WRONG_PHONE)
@@ -77,7 +75,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
      */
     public function getCertificate_withWrongNationalIdentityNumber_shouldThrowException()
     {
-        $this->expectException(NotMidClientException::class);
+        $this->expectException(MidNotMidClientException::class);
 
         $request = CertificateRequest::newBuilder()
                 ->withPhoneNumber(TestData::VALID_PHONE)
@@ -93,10 +91,10 @@ class MobileIdRestConnectorCertificateIT extends TestCase
      */
     public function getCertificate_withWrongRelyingPartyUUID_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::WRONG_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
@@ -112,10 +110,10 @@ class MobileIdRestConnectorCertificateIT extends TestCase
      */
     public function getCertificate_withWrongRelyingPartyName_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName("wrong name")
             ->build();
@@ -131,10 +129,10 @@ class MobileIdRestConnectorCertificateIT extends TestCase
      */
     public function getCertificate_withUnknownRelyingPartyUUID_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::UNKNOWN_RELYING_PARTY_NAME)
             ->build();
@@ -150,10 +148,10 @@ class MobileIdRestConnectorCertificateIT extends TestCase
      */
     public function getCertificate_withUnknownRelyingPartyName_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::UNKNOWN_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->build();
