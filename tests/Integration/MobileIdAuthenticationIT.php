@@ -29,6 +29,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $authenticationRequest = AuthenticationRequest::newBuilder()
@@ -330,7 +331,6 @@ class MobileIdAuthenticationIT extends TestCase
             ->withRelyingPartyUUID("")
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
-            ->withNetworkConnectionConfig("")
             ->withMobileIdConnector(MobileIdRestConnector::newBuilder()->build())
             ->build();
 

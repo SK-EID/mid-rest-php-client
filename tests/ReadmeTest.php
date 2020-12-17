@@ -279,6 +279,23 @@ class ReadmeTest extends TestCase
     /**
      * @test
      */
+    public function documentNetworkInterfaceSelection()
+    {
+        $this->client = MobileIdClient::newBuilder()
+            ->withHostUrl("https://...")
+            ->withRelyingPartyUUID("...")
+            ->withRelyingPartyName("...")
+            ->withSslPinnedPublicKeys("sha256//hash-of-current-mid-api-ssl-host-public-key;sha256//hash-of-future-mid-api-ssl-host-public-key")
+            ->withNetworkInterface("10.11.12.13")
+            ->build();
+
+        // end of example
+        $this->addToAssertionCount(1);
+    }
+
+    /**
+     * @test
+     */
     public function documentValidation()
     {
         $this->expectException(MidInternalErrorException::class);

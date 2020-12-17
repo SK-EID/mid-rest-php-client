@@ -50,8 +50,8 @@ class MobileIdClient
     /** @var string $hostUrl */
     private $hostUrl;
 
-    /** @var string $networkConnectionConfig */
-    private $networkConnectionConfig;
+    /** @var string $networkInterface */
+    private $networkInterface;
 
     /** @var MobileIdRestConnector $connector */
     private $connector;
@@ -71,7 +71,7 @@ class MobileIdClient
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->hostUrl = $builder->getHostUrl();
         $this->sslPublicKeys = $builder->getSslPinnedPublicKeys();
-        $this->networkConnectionConfig = $builder->getNetworkConnectionConfig();
+        $this->networkInterface = $builder->getNetworkInterface();
         $this->connector = $builder->getConnector();
         $this->customHeaders = $builder->getCustomHeaders();
         $this->sessionStatusPoller = SessionStatusPoller::newBuilder()
@@ -87,7 +87,7 @@ class MobileIdClient
         if (is_null($this->connector)) {
             $this->connector = MobileIdRestConnector::newBuilder()
                 ->withEndpointUrl($this->hostUrl)
-                ->withClientConfig($this->networkConnectionConfig)
+                ->withNetworkInterface($this->networkInterface)
                 ->withRelyingPartyUUID($this->relyingPartyUUID)
                 ->withRelyingPartyName($this->relyingPartyName)
                 ->withCustomHeaders($this->customHeaders)

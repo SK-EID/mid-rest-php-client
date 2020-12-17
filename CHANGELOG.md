@@ -27,9 +27,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - MidServiceUnavailableException for handling 503 (Service Unavailable) exceptions
 - MidSslException to show problems with pinning
+- MidClient can now specify withNetworkInterface("static.ip.or.eth.interface") 
 
 ### Removed
 - Removed handling "NOT_ACTIVE" certificate status as it is never return by MID API (API always returns NOT_MID_CLIENT instead)
+- MidClient method withNetworkConnectionConfig (as it didn't do anything)
 
 - CertificateNotTrustedException (replaced with MidInternalErrorException)
 

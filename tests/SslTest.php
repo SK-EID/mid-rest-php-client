@@ -30,7 +30,6 @@ class SslTest extends TestCase
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
                 ->withHostUrl(TestData::DEMO_HOST_URL)
-                ->withNetworkConnectionConfig("")
                 ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
                 ->build();
 
@@ -52,7 +51,6 @@ class SslTest extends TestCase
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
                 ->withHostUrl(TestData::DEMO_HOST_URL)
-                ->withNetworkConnectionConfig("")
                 ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH )
                 ->build();
 
@@ -77,7 +75,6 @@ class SslTest extends TestCase
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
                 ->withHostUrl(TestData::DEMO_HOST_URL)
-                ->withNetworkConnectionConfig("")
                 ->withSslPinnedPublicKeys( TestData::SOME_OTHER_HOST_PUBLIC_KEY_HASH )
                 ->build();
 
@@ -97,7 +94,6 @@ class SslTest extends TestCase
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
                 ->withHostUrl(TestData::DEMO_HOST_URL)
-                ->withNetworkConnectionConfig("")
                 ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
                 ->build();
 
@@ -122,7 +118,6 @@ class SslTest extends TestCase
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
                 ->withHostUrl(TestData::DEMO_HOST_URL)
-                ->withNetworkConnectionConfig("")
                 ->withSslPinnedPublicKeys("")
                 ->build();
 
@@ -143,7 +138,6 @@ class SslTest extends TestCase
                 ->withRelyingPartyUUID("")
                 ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
                 ->withHostUrl("https://www.google.com")
-                ->withNetworkConnectionConfig("")
                 ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH )
                 ->build();
 

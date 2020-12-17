@@ -263,13 +263,29 @@ openssl x509 -in tsp.demo.sk.ee.pem -pubkey -noout > tsp.demo.sk.ee.pubkey.pem
 openssl asn1parse -noout -inform pem -in tsp.demo.sk.ee.pubkey.pem -out tsp.demo.sk.ee.pubkey.der
 openssl dgst -sha256 -binary tsp.demo.sk.ee.pubkey.der | openssl base64
 
+# Setting public IP or interface
+
+Sometimes the server has multiple network interfaces or IP addresses and the client
+needs to specify which one to use for MID requests. This can be done using withNetworkInterface() paramter.
+
+```PHP
+    $this->client = MobileIdClient::newBuilder()
+        ->withHostUrl("https://...")
+        ->withRelyingPartyUUID("...")
+        ->withRelyingPartyName("...")
+        ->withSslPinnedPublicKeys("sha256//...")
+        ->withNetworkInterface("10.11.12.13")
+        ->build();
+```
+
+Internally this sets [CURLOPT_INTERFACE flag](https://curl.se/libcurl/c/CURLOPT_INTERFACE.html)
+
 
 # Pulling user's signing certificate
 
 This client also supports downloading user's mobile-id signing certificate.
 
  ```PHP
-
    $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
@@ -301,7 +317,6 @@ This client also supports downloading user's mobile-id signing certificate.
     catch (MidInternalErrorException $internalError) {
         die("Something went wrong with Mobile-ID service");
     }
-
  ```
 
 # Signing

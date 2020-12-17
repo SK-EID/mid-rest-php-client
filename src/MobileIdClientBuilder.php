@@ -25,13 +25,10 @@
  * #L%
  */
 namespace Sk\Mid;
-use HRobertson\X509Verify\SslCertificate;
 use Sk\Mid\Rest\MobileIdRestConnector;
 
 class MobileIdClientBuilder
 {
-
-
 
     /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
@@ -42,8 +39,8 @@ class MobileIdClientBuilder
     /** @var string $hostUrl */
     private $hostUrl;
 
-    /** @var string $networkConnectionConfig */
-    private $networkConnectionConfig;
+    /** @var string $networkInterface */
+    private $networkInterface = "";
 
     /** @var int $pollingSleepTimeoutSeconds */
     private $pollingSleepTimeoutSeconds = 0;
@@ -79,9 +76,9 @@ class MobileIdClientBuilder
         return $this->hostUrl;
     }
 
-    public function getNetworkConnectionConfig() : ?string
+    public function getNetworkInterface() : ?string
     {
-        return $this->networkConnectionConfig;
+        return $this->networkInterface;
     }
 
     public function getPollingSleepTimeoutSeconds() : int
@@ -136,9 +133,15 @@ class MobileIdClientBuilder
         return $this;
     }
 
-    public function withNetworkConnectionConfig(string $networkConnectionConfig) : MobileIdClientBuilder
+    /**
+     * @see https://curl.se/libcurl/c/CURLOPT_INTERFACE.html
+     *
+     * @param string $networkInterface
+     * @return $this
+     */
+    public function withNetworkInterface(string $networkInterface) : MobileIdClientBuilder
     {
-        $this->networkConnectionConfig = $networkConnectionConfig;
+        $this->networkInterface = $networkInterface;
         return $this;
     }
 
@@ -160,6 +163,12 @@ class MobileIdClientBuilder
         return $this;
     }
 
+    /**
+     * @see https://curl.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.html
+     *
+     * @param string $sslPinnedPublicKeys
+     * @return $this
+     */
     public function withSslPinnedPublicKeys(string $sslPinnedPublicKeys) : MobileIdClientBuilder
     {
         $this->sslPinnedPublicKeys = $sslPinnedPublicKeys;

@@ -65,8 +65,8 @@ class MobileIdRestConnector implements MobileIdConnector
     /** @var string $endpointUrl */
     private $endpointUrl;
 
-    /** @var string $clientConfig */
-    private $clientConfig;
+    /** @var string $networkInterface */
+    private $networkInterface;
 
     /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
@@ -87,7 +87,7 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $this->logger = new Logger('MobileIdRestConnector');
         $this->endpointUrl = $builder->getEndpointUrl();
-        $this->clientConfig = $builder->getClientConfig();
+        $this->networkInterface = $builder->getNetworkInterface();
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
         $this->customHeaders = $builder->getCustomHeaders();
@@ -193,6 +193,11 @@ class MobileIdRestConnector implements MobileIdConnector
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ( !empty( $this->networkInterface ) )
+        {
+            curl_setopt( $ch, CURLOPT_INTERFACE, $this->networkInterface );
+        }
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->addCustomHeaders(array(
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($json)))
@@ -247,6 +252,13 @@ class MobileIdRestConnector implements MobileIdConnector
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ( !empty( $this->networkInterface ) )
+        {
+            curl_setopt( $ch, CURLOPT_INTERFACE, $this->networkInterface );
+
+            $this->logger->debug("CURLOPT_INTERFACE set to:" + $this->networkInterface);
+        }
+
         curl_setopt($ch, CURLOPT_HTTPHEADER,
             $this->addCustomHeaders(array('Content-Type: application/json'))
         );

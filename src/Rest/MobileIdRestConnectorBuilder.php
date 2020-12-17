@@ -31,8 +31,8 @@ class MobileIdRestConnectorBuilder
     /** @var string $endpointUrl */
     private $endpointUrl;
 
-    /** @var string $clientConfig */
-    private $clientConfig;
+    /** @var string $networkInterface */
+    private $networkInterface;
 
     /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
@@ -50,9 +50,9 @@ class MobileIdRestConnectorBuilder
         return $this->endpointUrl;
     }
 
-    public function getClientConfig() : ?string
+    public function getNetworkInterface() : ?string
     {
-        return $this->clientConfig;
+        return $this->networkInterface;
     }
 
     public function getRelyingPartyUUID() : ?string
@@ -92,9 +92,9 @@ class MobileIdRestConnectorBuilder
         return $this;
     }
 
-    public function withClientConfig(?string $clientConfig) : MobileIdRestConnectorBuilder
+    public function withNetworkInterface(?string $networkInterface) : MobileIdRestConnectorBuilder
     {
-        $this->clientConfig = $clientConfig;
+        $this->networkInterface = $networkInterface;
         return $this;
     }
 
