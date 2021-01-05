@@ -24,41 +24,63 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid;
-use HRobertson\X509Verify\SslCertificate;
+namespace Sk\Mid\Rest;
 
-class AuthenticationResponseValidatorBuilder
+class SessionStatusPollerBuilder
 {
-    /** @var array $trustedCaCertificates */
-    private $trustedCaCertificates = array();
+
+    private $connector;
+    /** @var int $pollingSleepTimeoutSeconds */
+    private $pollingSleepTimeoutSeconds = 0;
+    /** @var int $longPollingTimeoutSeconds */
+    private $longPollingTimeoutSeconds = 0;
 
     /**
      * @return mixed
      */
-    public function getTrustedCaCertificates()
+    public function getConnector()
     {
-        return $this->trustedCaCertificates;
+        return $this->connector;
     }
 
-    public function withTrustedCaCertificatesFolder(string $trustedCertsPath) : AuthenticationResponseValidatorBuilder
+    /**
+     * @return int
+     */
+    public function getPollingSleepTimeoutSeconds(): int
     {
-        foreach (array_diff(scandir($trustedCertsPath), array('.', '..')) as $file) {
-            $caCertificate = file_get_contents($trustedCertsPath.$file);
-            $caCert = new SslCertificate($caCertificate);
-            $this->trustedCaCertificates[] = $caCert;
-        }
+        return $this->pollingSleepTimeoutSeconds;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLongPollingTimeoutSeconds(): int
+    {
+        return $this->longPollingTimeoutSeconds;
+    }
+
+
+    public function withConnector(MobileIdConnector $connector) : SessionStatusPollerBuilder
+    {
+        $this->connector = $connector;
         return $this;
     }
 
-    public function withTrustedCaCertificate(string $trustedCaCertificate) : AuthenticationResponseValidatorBuilder
+    public function withPollingSleepTimeoutSeconds(int $pollingSleepTimeoutSeconds) : SessionStatusPollerBuilder
     {
-        $this->trustedCaCertificates[] = new SslCertificate($trustedCaCertificate);
+        $this->pollingSleepTimeoutSeconds = $pollingSleepTimeoutSeconds;
         return $this;
     }
 
-    public function build() : AuthenticationResponseValidator
+    public function withLongPollingTimeoutSeconds(int $longPollingTimeoutSeconds) : SessionStatusPollerBuilder
     {
-        return new AuthenticationResponseValidator($this);
+        $this->longPollingTimeoutSeconds = $longPollingTimeoutSeconds;
+        return $this;
+    }
+
+    public function build() : SessionStatusPoller
+    {
+        return new SessionStatusPoller($this);
     }
 
 }

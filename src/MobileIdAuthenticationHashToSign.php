@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -124,64 +124,3 @@ class MobileIdAuthenticationHashToSign
 
 }
 
-class MobileIdAuthenticationHashToSignBuilder
-{
-
-    /** @var HashType $hashType */
-    private $hashType;
-
-    /** @var string $hash */
-    private $hash;
-
-    private $hashInBase64;
-
-    public function getHashType() : ?HashType
-    {
-        return $this->hashType;
-    }
-
-    public function getHash() : ?string
-    {
-        return $this->hash;
-    }
-
-    public function getHashInBase64() : ?string
-    {
-        return $this->hashInBase64;
-    }
-
-    public function withHashType(string $hashType) : MobileIdAuthenticationHashToSignBuilder
-    {
-        $this->hashType = MobileIdAuthenticationHashToSign::strToHashType($hashType);
-
-        return $this;
-    }
-
-    public function withHash(string $hash) : MobileIdAuthenticationHashToSignBuilder
-    {
-        $this->hash = $hash;
-        return $this;
-    }
-
-    public function withHashInBase64(string $hash) : MobileIdAuthenticationHashToSignBuilder
-    {
-        $this->hashInBase64 = $hash;
-        return $this;
-    }
-
-
-    function validateFields() : void
-    {
-        if (is_null($this->getHashType()))
-        {
-            throw new MissingOrInvalidParameterException("Missing hash type");
-        }
-
-    }
-
-    public function build() : MobileIdAuthenticationHashToSign
-    {
-        $this->validateFields();
-        return new MobileIdAuthenticationHashToSign($this);
-    }
-}

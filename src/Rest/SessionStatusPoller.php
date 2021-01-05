@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -172,63 +172,4 @@ class SessionStatusPoller
     }
 
 }
-class SessionStatusPollerBuilder
-{
 
-    private $connector;
-    /** @var int $pollingSleepTimeoutSeconds */
-    private $pollingSleepTimeoutSeconds = 0;
-    /** @var int $longPollingTimeoutSeconds */
-    private $longPollingTimeoutSeconds = 0;
-
-    /**
-     * @return mixed
-     */
-    public function getConnector()
-    {
-        return $this->connector;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPollingSleepTimeoutSeconds(): int
-    {
-        return $this->pollingSleepTimeoutSeconds;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLongPollingTimeoutSeconds(): int
-    {
-        return $this->longPollingTimeoutSeconds;
-    }
-
-
-    public function withConnector(MobileIdConnector $connector) : SessionStatusPollerBuilder
-    {
-        $this->connector = $connector;
-        return $this;
-    }
-
-    public function withPollingSleepTimeoutSeconds(int $pollingSleepTimeoutSeconds) : SessionStatusPollerBuilder
-    {
-        $this->pollingSleepTimeoutSeconds = $pollingSleepTimeoutSeconds;
-        return $this;
-    }
-
-    public function withLongPollingTimeoutSeconds(int $longPollingTimeoutSeconds) : SessionStatusPollerBuilder
-    {
-        $this->longPollingTimeoutSeconds = $longPollingTimeoutSeconds;
-        return $this;
-    }
-
-    public function build() : SessionStatusPoller
-    {
-        return new SessionStatusPoller($this);
-    }
-
-
-
-}

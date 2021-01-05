@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,6 @@
  * #L%
  */
 namespace Sk\Mid;
-
-use Sk\Mid\Exception\MissingOrInvalidParameterException;
 
 class MobileIdSignature
 {
@@ -64,48 +62,4 @@ class MobileIdSignature
 
 }
 
-class MobileIdSignatureBuilder
-{
-    /** @var string $valueInBase64 */
-    private $valueInBase64;
 
-    /** @var string $algorithmName */
-    private $algorithmName;
-
-    public function __construct()
-    {
-    }
-
-    public function getValueInBase64() : string
-    {
-        return $this->valueInBase64;
-    }
-
-    public function getAlgorithmName() : string
-    {
-        return $this->algorithmName;
-    }
-
-    public function withValueInBase64(string $valueInBase64) : MobileIdSignatureBuilder
-    {
-        if (FALSE === base64_decode($valueInBase64))
-        {
-            throw new MissingOrInvalidParameterException("Failed to parse signature value. Input is not valid Base64 string: '" . $valueInBase64 . "'");
-        }
-
-        $this->valueInBase64 = $valueInBase64;
-        return $this;
-    }
-
-    public function withAlgorithmName(string $algorithmName) : MobileIdSignatureBuilder
-    {
-        $this->algorithmName = $algorithmName;
-        return $this;
-    }
-
-    public function build() : MobileIdSignature
-    {
-        return new MobileIdSignature($this);
-    }
-
-}
