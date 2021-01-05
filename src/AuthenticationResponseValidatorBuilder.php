@@ -25,7 +25,8 @@
  * #L%
  */
 namespace Sk\Mid;
-use HRobertson\X509Verify\SslCertificate;
+use Sop\CryptoEncoding\PEM;
+use Sop\X509\Certificate\Certificate;
 
 class AuthenticationResponseValidatorBuilder
 {
@@ -44,7 +45,7 @@ class AuthenticationResponseValidatorBuilder
     {
         foreach (array_diff(scandir($trustedCertsPath), array('.', '..')) as $file) {
             $caCertificate = file_get_contents($trustedCertsPath.$file);
-            $caCert = new SslCertificate($caCertificate);
+            $caCert = Certificate::fromPEM(PEM::fromString($caCertificate));
             $this->trustedCaCertificates[] = $caCert;
         }
         return $this;
@@ -52,7 +53,7 @@ class AuthenticationResponseValidatorBuilder
 
     public function withTrustedCaCertificate(string $trustedCaCertificate) : AuthenticationResponseValidatorBuilder
     {
-        $this->trustedCaCertificates[] = new SslCertificate($trustedCaCertificate);
+        $this->trustedCaCertificates[] = Certificate::fromPEM(PEM::fromString($trustedCaCertificate));
         return $this;
     }
 

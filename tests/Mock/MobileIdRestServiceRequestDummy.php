@@ -31,10 +31,7 @@ use Sk\Mid\Language\EST;
 use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
-use Sk\Mid\Language;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
-use Sk\Mid\HashType\Sha512;
-use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\MobileIdAuthentication;
 
 use PHPUnit\Framework\TestCase;

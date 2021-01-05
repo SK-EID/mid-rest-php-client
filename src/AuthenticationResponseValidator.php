@@ -25,12 +25,15 @@
  * #L%
  */
 namespace Sk\Mid;
-use HRobertson\X509Verify\SslCertificate;
 use InvalidArgumentException;
 use Sk\Mid\Exception\MidInternalErrorException;
 use Sk\Mid\Exception\MidNotMidClientException;
 use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Util\Logger;
+use Sop\CryptoEncoding\PEM;
+use Sop\X509\Certificate\Certificate;
+use Sop\X509\CertificationPath\Exception\PathBuildingException;
+use Sop\X509\CertificationPath\Exception\PathValidationException;
 
 class AuthenticationResponseValidator
 {
@@ -96,8 +99,9 @@ class AuthenticationResponseValidator
     private function verifyCertificateTrusted($certificate)
     {
         foreach ($this->trustedCaCertificates as $trustedCaCertificate) {
-            $userCert = new SslCertificate($certificate['certificateAsString']);
-            if ($userCert->isSignedBy($trustedCaCertificate)) {
+            $cert = Certificate::fromPEM(PEM::fromString($certificate['certificateAsString']));
+            $ca = Certificate::fromPEM(PEM::fromString($trustedCaCertificate));
+            if ($cert->verify($ca->tbsCertificate()->subjectPublicKeyInfo())) {
                 return true;
             }
         }

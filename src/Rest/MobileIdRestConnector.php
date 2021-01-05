@@ -214,13 +214,25 @@ class MobileIdRestConnector implements MobileIdConnector
                 throw new MidSslException("SSL public key is untrusted for host: ".$url. ". See README.md for setting API host certificate as trusted.");
             }
             else {
-                throw new MidInternalErrorException($curl_error);
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                switch ($httpcode) {
+                    case 400:
+                        throw new MissingOrInvalidParameterException("MID API returned HTTP status code 400");
+                    case 401:
+                        throw new MidUnauthorizedException("MID API returned HTTP status code 401");
+                    case 405:
+                        throw new MissingOrInvalidParameterException("MID API returned HTTP status code 405");
+                    case 503:
+                        throw new MidServiceUnavailableException("MID API is temporarily unavailable");
+                    default:
+                        $this->logger->debug('Response was "'.$result.'", status code was '.$httpcode);
+                        throw new MidInternalErrorException('POST request to MID returned unknown status code '.$httpcode);
+                }
             }
         }
 
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-
         $responseAsArray = json_decode($result, true);
 
         switch ($httpcode) {

@@ -25,8 +25,6 @@
  * #L%
  */
 namespace Sk\Mid\Tests;
-use Exception;
-use HRobertson\X509Verify\SslCertificate;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
@@ -174,7 +172,6 @@ class AuthenticationResponseValidatorTest extends TestCase
             $validatorBuilder->withTrustedCaCertificate($caCertificate);
         }
         $validator = $validatorBuilder->build();
-
 
         $authentication = $this->createValidMobileIdAuthentication();
         $authenticationResult = $this->validator->validate($authentication);

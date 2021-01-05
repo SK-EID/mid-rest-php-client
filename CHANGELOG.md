@@ -33,7 +33,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - MidClient method withNetworkConnectionConfig (as it didn't do anything)
 - CertificateNotTrustedException (replaced with MidInternalErrorException)
 
-
+### Changes in libraries
+- hrobertson/x509-verify internally replaced with sop/x509
 
 ## [1.0] - initial version
 

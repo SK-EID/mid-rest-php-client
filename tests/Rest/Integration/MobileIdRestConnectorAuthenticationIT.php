@@ -52,6 +52,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
     {
         $this->connector = MobileIdRestConnector::newBuilder()
             ->withEndpointUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
     }
 

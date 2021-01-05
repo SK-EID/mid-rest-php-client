@@ -24,7 +24,6 @@
  * THE SOFTWARE.
  * #L%
  */
-
 namespace Sk\Mid\Tests\integration;
 use PHPUnit\Framework\TestCase;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
@@ -45,6 +44,7 @@ class MobileIdCertificateIT extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
 
@@ -71,6 +71,7 @@ class MobileIdCertificateIT extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $certRequest = CertificateRequest::newBuilder()
@@ -92,6 +93,7 @@ class MobileIdCertificateIT extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $certRequest = CertificateRequest::newBuilder()
@@ -101,6 +103,5 @@ class MobileIdCertificateIT extends TestCase
 
         $client->getMobileIdConnector()->pullCertificate($certRequest);
     }
-
 
 }

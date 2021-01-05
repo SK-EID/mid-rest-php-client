@@ -51,6 +51,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
             ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
     }
 
@@ -116,6 +117,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
             ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::WRONG_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $request = new CertificateRequest();
@@ -135,6 +137,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
             ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName("wrong name")
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $request = new CertificateRequest();
@@ -154,6 +157,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
             ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::UNKNOWN_RELYING_PARTY_NAME)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $request = new CertificateRequest();
@@ -173,6 +177,7 @@ class MobileIdRestConnectorCertificateIT extends TestCase
             ->withEndpointUrl(TestData::DEMO_HOST_URL)
             ->withRelyingPartyUUID(TestData::UNKNOWN_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $request = new CertificateRequest();

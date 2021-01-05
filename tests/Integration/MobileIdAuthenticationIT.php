@@ -260,6 +260,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $authenticationResponse = self::generateSessionId($client);
@@ -283,6 +284,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         $resp = self::generateSessionId($client);
@@ -308,6 +310,7 @@ class MobileIdAuthenticationIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         self::generateSessionId($client);
@@ -324,6 +327,7 @@ class MobileIdAuthenticationIT extends TestCase
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
             ->withRelyingPartyName("")
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         self::generateSessionId($client);
@@ -339,6 +343,7 @@ class MobileIdAuthenticationIT extends TestCase
         $client = MobileIdClient::newBuilder()
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
 
         self::generateSessionId($client);
@@ -356,7 +361,9 @@ class MobileIdAuthenticationIT extends TestCase
             ->withRelyingPartyUUID("")
             ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withHostUrl(TestData::DEMO_HOST_URL)
-            ->withMobileIdConnector(MobileIdRestConnector::newBuilder()->build())
+            ->withMobileIdConnector(MobileIdRestConnector::newBuilder()
+                ->withSslPinnedPublicKeys( TestData::DEMO_HOST_PUBLIC_KEY_HASH)
+                ->build())
             ->build();
 
         self::generateSessionId($client);
