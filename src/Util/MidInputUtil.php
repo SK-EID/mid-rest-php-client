@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@
  */
 namespace Sk\Mid\Util;
 
-use Sk\Mid\Exception\InvalidNationalIdentityNumberException;
-use Sk\Mid\Exception\InvalidPhoneNumberException;
+use Sk\Mid\Exception\MidInvalidNationalIdentityNumberException;
+use Sk\Mid\Exception\MidInvalidPhoneNumberException;
 
 class MidInputUtil
 {
@@ -39,22 +39,21 @@ class MidInputUtil
 
     public static function isNationalIdentityNumberValid(?string $nationalIdentityNumber) : bool
     {
-        // TODO validate checksum
-        return preg_match("/^\d{11}$/", $nationalIdentityNumber);
+        $validator = new MidNationalIdentificationCodeValidator();
+        return $validator->isValid($nationalIdentityNumber);
     }
-
 
     public static function validatePhoneNumber(?string $phoneNumber) : void
     {
         if (!self::isPhoneNumberValid($phoneNumber)) {
-            throw new InvalidPhoneNumberException($phoneNumber);
+            throw new MidInvalidPhoneNumberException($phoneNumber);
         }
     }
 
     public static function validateNationalIdentityNumber(?string $nationalIdentityNumber) : void
     {
         if (!self::isNationalIdentityNumberValid($nationalIdentityNumber)) {
-            throw new InvalidNationalIdentityNumberException($nationalIdentityNumber);
+            throw new MidInvalidNationalIdentityNumberException($nationalIdentityNumber);
         }
     }
     public static function validateUserInput(?string $phoneNumber, ?string $nationalIdentityNumber) : void
@@ -81,8 +80,6 @@ class MidInputUtil
         return $cleanedNationalIdentityNumber;
     }
 
-
-
     public static function getValidatedUserInput(?string $phoneNumber, ?string $nationalIdentityNumber) : array
     {
         $cleanedPhoneNumber = self::getValidatedPhoneNumber($phoneNumber);
@@ -94,7 +91,5 @@ class MidInputUtil
     {
         return self::isPhoneNumberValid($phoneNumber) && self::isNationalIdentityNumberValid($nationalIdentityNumber);
     }
-
-
 
 }

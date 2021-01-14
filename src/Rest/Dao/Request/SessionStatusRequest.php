@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,40 +51,5 @@ class SessionStatusRequest
     {
         return $this->sessionStatusResponseSocketTimeoutMs;
     }
-
-//    public function setSessionStatusResponseSocketTimeoutMs(int $sessionStatusResponseSocketTimeoutMs ) : SessionStatusRequest
-//    {
-//        $this->sessionStatusResponseSocketTimeoutMs = $sessionStatusResponseSocketTimeoutMs;
-//        return $this;
-//    }
-
-//    public function isSessionStatusResponseSocketTimeoutSet() : bool
-//    {
-//        return isset( $this->sessionStatusResponseSocketTimeoutMs ) && $this->sessionStatusResponseSocketTimeoutMs > 0;
-//    }
-//
-//    public function setNetworkInterface(string $networkInterface ) : SessionStatusRequest
-//    {
-//        $this->networkInterface = $networkInterface;
-//        return $this;
-//    }
-//
-//    public function toArray() : array
-//    {
-//        $requiredArray = array();
-//        $requiredArray['sessionId'] = $this->sessionId;
-//
-//        if ( $this->isSessionStatusResponseSocketTimeoutSet() )
-//        {
-//            $requiredArray[ 'timeoutMs' ] = $this->sessionStatusResponseSocketTimeoutMs;
-//        }
-//
-//        if ( isset( $this->networkInterface ) )
-//        {
-//            $requiredArray[ 'networkInterface' ] = $this->networkInterface;
-//        }
-//
-//        return $requiredArray;
-//    }
 
 }

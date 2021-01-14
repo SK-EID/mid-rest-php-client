@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
  */
 namespace Sk\Mid;
 use Sk\Mid\Exception\MidInternalErrorException;
-use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Exception\MidNotMidClientException;
 use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Rest\Dao\Response\CertificateResponse;
 use Sk\Mid\Rest\Dao\SessionStatus;
@@ -50,8 +50,8 @@ class MobileIdClient
     /** @var string $hostUrl */
     private $hostUrl;
 
-    /** @var string $networkConnectionConfig */
-    private $networkConnectionConfig;
+    /** @var string $networkInterface */
+    private $networkInterface;
 
     /** @var MobileIdRestConnector $connector */
     private $connector;
@@ -62,13 +62,16 @@ class MobileIdClient
     /** @var array $customHeaders */
     private $customHeaders;
 
+    private $sslPublicKeys;
+
     public function __construct(MobileIdClientBuilder $builder)
     {
         self::$logger = new Logger('MobileIdClient');
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->hostUrl = $builder->getHostUrl();
-        $this->networkConnectionConfig = $builder->getNetworkConnectionConfig();
+        $this->sslPublicKeys = $builder->getSslPinnedPublicKeys();
+        $this->networkInterface = $builder->getNetworkInterface();
         $this->connector = $builder->getConnector();
         $this->customHeaders = $builder->getCustomHeaders();
         $this->sessionStatusPoller = SessionStatusPoller::newBuilder()
@@ -76,6 +79,7 @@ class MobileIdClient
                 ->withPollingSleepTimeoutSeconds($builder->getPollingSleepTimeoutSeconds())
                 ->withLongPollingTimeoutSeconds($builder->getLongPollingTimeoutSeconds())
                 ->build();
+
     }
 
     public function getMobileIdConnector(): MobileIdConnector
@@ -83,10 +87,11 @@ class MobileIdClient
         if (is_null($this->connector)) {
             $this->connector = MobileIdRestConnector::newBuilder()
                 ->withEndpointUrl($this->hostUrl)
-                ->withClientConfig($this->networkConnectionConfig)
+                ->withNetworkInterface($this->networkInterface)
                 ->withRelyingPartyUUID($this->relyingPartyUUID)
                 ->withRelyingPartyName($this->relyingPartyName)
                 ->withCustomHeaders($this->customHeaders)
+                ->withSslPinnedPublicKeys($this->sslPublicKeys)
                 ->build();
         }
         return $this->connector;
@@ -144,10 +149,7 @@ class MobileIdClient
     {
         if (strcasecmp('NOT_FOUND', $result) == 0) {
             self::$logger->error('No certificate for the user was found');
-            throw new NotMidClientException();
-        } else if (strcasecmp('NOT_ACTIVE', $result) == 0) {
-            self::$logger->error('Inactive certificate found');
-            throw new NotMidClientException();
+            throw new MidNotMidClientException();
         } else if (!strcasecmp('OK', $result) == 0) {
             self::$logger->error("Session status end result is '" . $result . "'");
             throw new MidInternalErrorException("Session status end result is '" . $result . "'");

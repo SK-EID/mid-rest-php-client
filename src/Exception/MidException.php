@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,11 @@
  */
 namespace Sk\Mid\Exception;
 
-class CertificateNotTrustedException extends MobileIdException {
+abstract class MidException extends \RuntimeException {
 
-    public function __construct()
+    public function __construct($message)
     {
-        parent::__construct('The certificate is not issued by a Mobile ID certificate authority');
+        parent::__construct($message);
     }
+
 }

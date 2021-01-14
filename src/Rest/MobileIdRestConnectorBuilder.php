@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,12 +28,11 @@ namespace Sk\Mid\Rest;
 
 class MobileIdRestConnectorBuilder
 {
-
     /** @var string $endpointUrl */
     private $endpointUrl;
 
-    /** @var string $clientConfig */
-    private $clientConfig;
+    /** @var string $networkInterface */
+    private $networkInterface;
 
     /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
@@ -44,14 +43,16 @@ class MobileIdRestConnectorBuilder
     /** @var array $customHeaders */
     private $customHeaders = array();
 
+    private $sslPinnedPublicKeys;
+
     public function getEndpointUrl() : ?string
     {
         return $this->endpointUrl;
     }
 
-    public function getClientConfig() : ?string
+    public function getNetworkInterface() : ?string
     {
-        return $this->clientConfig;
+        return $this->networkInterface;
     }
 
     public function getRelyingPartyUUID() : ?string
@@ -72,15 +73,28 @@ class MobileIdRestConnectorBuilder
         return $this->customHeaders;
     }
 
+    /**
+     * @return string
+     */
+    public function getSslPinnedPublicKeys(): string
+    {
+        return $this->sslPinnedPublicKeys;
+    }
+
+    public function isSslPinnedPublicKeysSet(): bool
+    {
+        return $this->sslPinnedPublicKeys != null;
+    }
+
     public function withEndpointUrl(?string $endpointUrl) : MobileIdRestConnectorBuilder
     {
         $this->endpointUrl = $endpointUrl;
         return $this;
     }
 
-    public function withClientConfig(?string $clientConfig) : MobileIdRestConnectorBuilder
+    public function withNetworkInterface(?string $networkInterface) : MobileIdRestConnectorBuilder
     {
-        $this->clientConfig = $clientConfig;
+        $this->networkInterface = $networkInterface;
         return $this;
     }
 
@@ -99,6 +113,12 @@ class MobileIdRestConnectorBuilder
     public function withCustomHeaders(?array $customHeaders) : MobileIdRestConnectorBuilder
     {
         $this->customHeaders = $customHeaders;
+        return $this;
+    }
+
+    public function withSslPinnedPublicKeys(string $publicKeys) : MobileIdRestConnectorBuilder
+    {
+        $this->sslPinnedPublicKeys = $publicKeys;
         return $this;
     }
 

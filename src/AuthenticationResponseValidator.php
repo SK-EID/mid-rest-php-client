@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,23 +25,33 @@
  * #L%
  */
 namespace Sk\Mid;
-use HRobertson\X509Verify\SslCertificate;
+use InvalidArgumentException;
 use Sk\Mid\Exception\MidInternalErrorException;
-use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Exception\CertificateNotTrustedException;
+use Sk\Mid\Exception\MidNotMidClientException;
 use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Util\Logger;
+use Sop\CryptoEncoding\PEM;
+use Sop\X509\Certificate\Certificate;
+use Sop\X509\CertificationPath\Exception\PathBuildingException;
+use Sop\X509\CertificationPath\Exception\PathValidationException;
 
 class AuthenticationResponseValidator
 {
     /** @var Logger $logger */
     private $logger;
 
-    private $certificatePath = "/resources/trusted_certificates/";
+    /** @var array $certificatePath */
+    private $trustedCaCertificates;
 
-    public function __construct()
+    public function __construct(AuthenticationResponseValidatorBuilder $builder)
     {
         $this->logger = new Logger('AuthenticationResponseValidator');
+
+        if (empty($builder->getTrustedCaCertificates())) {
+            throw new InvalidArgumentException("You need to set at least one trusted CA certificate to builder");
+        }
+
+        $this->trustedCaCertificates = $builder->getTrustedCaCertificates();
     }
 
     public function validate(Mobileidauthentication $authentication) : MobileIdAuthenticationResult
@@ -50,19 +60,13 @@ class AuthenticationResponseValidator
         $authenticationResult = new MobileIdAuthenticationResult();
 
         if (!$this->isResultOk($authentication)) {
-            $authenticationResult->setValid(false);
-            $authenticationResult->addError(MobileIdAuthenticationError::INVALID_RESULT);
             throw new MidInternalErrorException($authenticationResult->getErrorsAsString());
         }
         if ( !$this->verifyCertificateExpiry( $authentication->getCertificate() ) ) {
-            $authenticationResult->setValid( false );
-            $authenticationResult->addError( MobileIdAuthenticationError::CERTIFICATE_EXPIRED );
-            throw new NotMidClientException();
+            throw new MidNotMidClientException();
         }
         if ( !$this->verifyCertificateTrusted( $authentication->getCertificateX509() ) ) {
-            $authenticationResult->setValid( false );
-            $authenticationResult->addError( MobileIdAuthenticationError::CERTIFICATE_NOT_TRUSTED );
-            throw new CertificateNotTrustedException();
+            throw new MidInternalErrorException(MobileIdAuthenticationError::CERTIFICATE_NOT_TRUSTED );
         }
 
         $identity = $authentication->constructAuthenticationIdentity();
@@ -82,8 +86,6 @@ class AuthenticationResponseValidator
         }
     }
 
-
-
     private function isResultOk(MobileIdAuthentication $authentication) : bool
     {
         return strcasecmp('OK', $authentication->getResult()) == 0;
@@ -94,16 +96,21 @@ class AuthenticationResponseValidator
         return $authenticationCertificate !== null && $authenticationCertificate->getValidTo() > time();
     }
 
-    private function verifyCertificateTrusted($certificate )
+    private function verifyCertificateTrusted($certificate)
     {
-        foreach (array_diff(scandir(__DIR__.$this->certificatePath), array('.', '..')) as $file) {
-            $caCertificate = file_get_contents(__DIR__.$this->certificatePath.$file);
-            $caCert = new SslCertificate($caCertificate);
-            $userCert = new SslCertificate($certificate['certificateAsString']);
-            if ($userCert->isSignedBy($caCert)) {
+        foreach ($this->trustedCaCertificates as $trustedCaCertificate) {
+            $cert = Certificate::fromPEM(PEM::fromString($certificate['certificateAsString']));
+            $ca = Certificate::fromPEM(PEM::fromString($trustedCaCertificate));
+            if ($cert->verify($ca->tbsCertificate()->subjectPublicKeyInfo())) {
                 return true;
             }
         }
         return false;
     }
+
+    public static function newBuilder(): AuthenticationResponseValidatorBuilder
+    {
+        return new AuthenticationResponseValidatorBuilder();
+    }
+
 }

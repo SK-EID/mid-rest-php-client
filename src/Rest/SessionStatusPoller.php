@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,18 +29,16 @@ use Sk\Mid\Util\Logger;
 use Sk\Mid\Rest\Dao\SessionStatus;
 use Sk\Mid\Rest\Dao\Request\SessionStatusRequest;
 use Sk\Mid\Exception\MidInternalErrorException;
-use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Exception\UserCancellationException;
-use Sk\Mid\Exception\PhoneNotAvailableException;
-use Sk\Mid\Exception\DeliveryException;
-use Sk\Mid\Exception\InvalidUserConfigurationException;
+use Sk\Mid\Exception\MidNotMidClientException;
+use Sk\Mid\Exception\MidUserCancellationException;
+use Sk\Mid\Exception\MidPhoneNotAvailableException;
+use Sk\Mid\Exception\MidDeliveryException;
+use Sk\Mid\Exception\MidInvalidUserConfigurationException;
 use Sk\Mid\Exception\MidSessionTimeoutException;
 
 class SessionStatusPoller
 {
 
-    const SIGNATURE_SESSION_PATH = '/signature/session';
-    const AUTHENTICATION_SESSION_PATH = '/authentication/session';
     const DEFAULT_POLLING_SLEEP_TIMEOUT_SECONDS = 3;
 
     /** @var MobileIdRestConnector $connector */
@@ -127,13 +125,13 @@ class SessionStatusPoller
 
     /**
      * @param string $result
-     * @throws DeliveryException
-     * @throws InvalidUserConfigurationException
+     * @throws MidDeliveryException
+     * @throws MidInvalidUserConfigurationException
      * @throws MidInternalErrorException
      * @throws MidSessionTimeoutException
-     * @throws NotMidClientException
-     * @throws PhoneNotAvailableException
-     * @throws UserCancellationException
+     * @throws MidNotMidClientException
+     * @throws MidPhoneNotAvailableException
+     * @throws MidUserCancellationException
      */
     private function validateResultOfString(string $result) : void
     {
@@ -147,21 +145,21 @@ class SessionStatusPoller
                 $this->logger->error('Session timeout');
                 throw new MidSessionTimeoutException();
             case 'NOT_MID_CLIENT':
-                $this->logger->error('Given user has no active certificates and is not M-ID client');
-                throw new NotMidClientException();
+                $this->logger->error('User is not Mobile-ID client');
+                throw new MidNotMidClientException();
             case 'USER_CANCELLED':
                 $this->logger->error('User cancelled the operation');
-                throw new UserCancellationException();
+                throw new MidUserCancellationException();
             case 'PHONE_ABSENT':
                 $this->logger->error('Sim not available');
-                throw new PhoneNotAvailableException();
+                throw new MidPhoneNotAvailableException();
             case 'SIGNATURE_HASH_MISMATCH':
                 $this->logger->error('Hash does not match with certificate type');
-                throw new InvalidUserConfigurationException();
+                throw new MidInvalidUserConfigurationException();
             case 'SIM_ERROR':
             case 'DELIVERY_ERROR':
                 $this->logger->error('SMS sending or SIM error');
-                throw new DeliveryException();
+                throw new MidDeliveryException();
             default:
                 throw new MidInternalErrorException("MID returned error code '" . $result . "'");
 
@@ -174,63 +172,4 @@ class SessionStatusPoller
     }
 
 }
-class SessionStatusPollerBuilder
-{
 
-    private $connector;
-    /** @var int $pollingSleepTimeoutSeconds */
-    private $pollingSleepTimeoutSeconds = 0;
-    /** @var int $longPollingTimeoutSeconds */
-    private $longPollingTimeoutSeconds = 0;
-
-    /**
-     * @return mixed
-     */
-    public function getConnector()
-    {
-        return $this->connector;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPollingSleepTimeoutSeconds(): int
-    {
-        return $this->pollingSleepTimeoutSeconds;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLongPollingTimeoutSeconds(): int
-    {
-        return $this->longPollingTimeoutSeconds;
-    }
-
-
-    public function withConnector(MobileIdConnector $connector) : SessionStatusPollerBuilder
-    {
-        $this->connector = $connector;
-        return $this;
-    }
-
-    public function withPollingSleepTimeoutSeconds(int $pollingSleepTimeoutSeconds) : SessionStatusPollerBuilder
-    {
-        $this->pollingSleepTimeoutSeconds = $pollingSleepTimeoutSeconds;
-        return $this;
-    }
-
-    public function withLongPollingTimeoutSeconds(int $longPollingTimeoutSeconds) : SessionStatusPollerBuilder
-    {
-        $this->longPollingTimeoutSeconds = $longPollingTimeoutSeconds;
-        return $this;
-    }
-
-    public function build() : SessionStatusPoller
-    {
-        return new SessionStatusPoller($this);
-    }
-
-
-
-}

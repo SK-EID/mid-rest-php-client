@@ -1,22 +1,42 @@
 <?php
+/*-
+ * #%L
+ * Mobile ID sample PHP client
+ * %%
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
 namespace Sk\Mid\Tests\Rest\Integration;
 use Sk\Mid\Language\EST;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\MobileIdRestConnector;
-use Sk\Mid\Exception\UnauthorizedException;
+use Sk\Mid\Exception\MidUnauthorizedException;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceRequestDummy;
 use Sk\Mid\Tests\Mock\MobileIdRestServiceResponseDummy;
 use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\Tests\Mock\SessionStatusPollerDummy;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Created by PhpStorm.
- * User: mikks
- * Date: 2/21/2019
- * Time: 1:19 PM
- */
+
 class MobileIdRestConnectorAuthenticationIT extends TestCase
 {
     const AUTHENTICATION_SESSION_PATH = "/authentication/session/{sessionId}";
@@ -31,15 +51,10 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
     protected function setUp() : void
     {
         $this->connector = MobileIdRestConnector::newBuilder()
-            ->withEndpointUrl(TestData::TEST_URL)
-            ->withCustomHeaders(array("X-Forwarded-For: 192.10.11.12"))
+            ->withEndpointUrl(TestData::DEMO_HOST_URL)
+            ->withSslPinnedPublicKeys(TestData::DEMO_HOST_PUBLIC_KEY_HASH)
             ->build();
     }
-
-
-
-
-
 
     /**
      * @test
@@ -81,7 +96,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
      */
     public function authenticate_withWrongRelyingPartyUUID_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::WRONG_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
@@ -107,7 +122,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
      */
     public function authenticate_withUnknownRelyingPartyUUID_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::DEMO_RELYING_PARTY_UUID, TestData::UNKNOWN_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY
@@ -120,7 +135,7 @@ class MobileIdRestConnectorAuthenticationIT extends TestCase
      */
     public function authenticate_withUnknownRelyingPartyName_shouldThrowException()
     {
-        $this->expectException(UnauthorizedException::class);
+        $this->expectException(MidUnauthorizedException::class);
 
         $request = MobileIdRestServiceRequestDummy::createAuthenticationRequest(
             TestData::UNKNOWN_RELYING_PARTY_UUID, TestData::DEMO_RELYING_PARTY_NAME, TestData::VALID_PHONE, TestData::VALID_NAT_IDENTITY

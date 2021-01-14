@@ -1,7 +1,7 @@
 {
   "name": "sk-id-solutions/mobile-id-php-client",
   "type": "library",
-  "description": "Mobile-ID Relying Party PHP Api vclient",
+  "description": "Mobile-ID Relying Party PHP Api client",
   "license": "MIT",
 
   "require": {
@@ -9,7 +9,7 @@
     "ext-openssl": "*",
     "ext-curl": "*",
     "ext-json": "*",
-    "hrobertson/x509-verify": "^1.0"
+    "sop/x509": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "7.0"

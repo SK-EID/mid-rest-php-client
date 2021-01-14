@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
  * #L%
  */
 namespace Sk\Mid;
-use Sk\Mid\MobileIdClient;
 use Sk\Mid\Rest\MobileIdRestConnector;
 
 class MobileIdClientBuilder
@@ -40,8 +39,8 @@ class MobileIdClientBuilder
     /** @var string $hostUrl */
     private $hostUrl;
 
-    /** @var string $networkConnectionConfig */
-    private $networkConnectionConfig;
+    /** @var string $networkInterface */
+    private $networkInterface = "";
 
     /** @var int $pollingSleepTimeoutSeconds */
     private $pollingSleepTimeoutSeconds = 0;
@@ -51,6 +50,9 @@ class MobileIdClientBuilder
 
     /** @var MobileIdRestConnector $connector */
     private $connector;
+
+    /** @var string $sslPinnedPublicKeys */
+    private $sslPinnedPublicKeys = "";
 
     /** @var array $customHeaders */
     private $customHeaders = array();
@@ -74,9 +76,9 @@ class MobileIdClientBuilder
         return $this->hostUrl;
     }
 
-    public function getNetworkConnectionConfig() : ?string
+    public function getNetworkInterface() : ?string
     {
-        return $this->networkConnectionConfig;
+        return $this->networkInterface;
     }
 
     public function getPollingSleepTimeoutSeconds() : int
@@ -97,6 +99,14 @@ class MobileIdClientBuilder
     public function getConnector() : ?MobileIdRestConnector
     {
         return $this->connector;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSslPinnedPublicKeys(): string
+    {
+        return $this->sslPinnedPublicKeys;
     }
 
     public function withRelyingPartyUUID(?string $relyingPartyUUID) : MobileIdClientBuilder
@@ -123,9 +133,15 @@ class MobileIdClientBuilder
         return $this;
     }
 
-    public function withNetworkConnectionConfig(string $networkConnectionConfig) : MobileIdClientBuilder
+    /**
+     * @see https://curl.se/libcurl/c/CURLOPT_INTERFACE.html
+     *
+     * @param string $networkInterface
+     * @return $this
+     */
+    public function withNetworkInterface(string $networkInterface) : MobileIdClientBuilder
     {
-        $this->networkConnectionConfig = $networkConnectionConfig;
+        $this->networkInterface = $networkInterface;
         return $this;
     }
 
@@ -144,6 +160,18 @@ class MobileIdClientBuilder
     public function withMobileIdConnector(MobileIdRestConnector $mobileIdConnector) : MobileIdClientBuilder
     {
         $this->connector = $mobileIdConnector;
+        return $this;
+    }
+
+    /**
+     * @see https://curl.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.html
+     *
+     * @param string $sslPinnedPublicKeys
+     * @return $this
+     */
+    public function withSslPinnedPublicKeys(string $sslPinnedPublicKeys) : MobileIdClientBuilder
+    {
+        $this->sslPinnedPublicKeys = $sslPinnedPublicKeys;
         return $this;
     }
 

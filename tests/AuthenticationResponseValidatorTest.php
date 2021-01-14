@@ -1,22 +1,41 @@
 <?php
+/*-
+ * #%L
+ * Mobile ID sample PHP client
+ * %%
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
 namespace Sk\Mid\Tests;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Sk\Mid\AuthenticationResponseValidator;
 use Sk\Mid\CertificateParser;
-use Sk\Mid\Exception\CertificateNotTrustedException;
 use Sk\Mid\Exception\MidInternalErrorException;
-use Sk\Mid\Exception\NotMidClientException;
+use Sk\Mid\Exception\MidNotMidClientException;
 use Sk\Mid\HashType\Sha512;
 use Sk\Mid\MobileIdAuthentication;
 use Sk\Mid\Tests\Mock\TestData;
 
-/**
- * Created by PhpStorm.
- * User: mikks
- * Date: 2/21/2019
- * Time: 3:46 PM
- */
 class AuthenticationResponseValidatorTest extends TestCase
 {
 
@@ -25,14 +44,27 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     protected function setUp() : void
     {
-        $this->validator = new AuthenticationResponseValidator();
+        $this->validator = AuthenticationResponseValidator::newBuilder()
+            ->withTrustedCaCertificatesFolder(__DIR__ . "/test_numbers_ca_certificates/")
+            ->build();
+    }
+
+    /**
+     * @test
+     */
+    public function validate_builderWithoutTrustedCertificates_shouldThrowException() {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("You need to set at least one trusted CA certificate to builder");
+
+        AuthenticationResponseValidator::newBuilder()
+            ->build();
     }
 
     /**
      * @test
      */
     public function validate_certificateIsNull_shouldThrowException() {
-        $this->expectException(NotMidClientException::class);
+        $this->expectException(MidNotMidClientException::class);
 
         $authentication = $this->createMobileIdAuthenticationWithNullCertificate("OK", TestData::VALID_SIGNATURE_IN_BASE64);
         $this->validator->validate($authentication);
@@ -42,7 +74,8 @@ class AuthenticationResponseValidatorTest extends TestCase
      * @test
      */
     public function validate_NoTrustedRootCertificate_shouldThrowException() {
-        $this->expectException(CertificateNotTrustedException::class);
+        $this->expectException(MidInternalErrorException::class);
+        $this->expectExceptionMessage("Signer's certificate not trusted");
 
         $authentication = MobileIdAuthentication::newBuilder()
             ->withResult("OK")
@@ -57,7 +90,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function validate_whenRSA_shouldReturnValidAuthenticationResult()
     {
@@ -70,7 +102,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function validate_whenECC_shouldReturnValidAuthenticationResult()
     {
@@ -83,7 +114,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function validate_whenResultLowerCase_shouldReturnValidAuthenticationResult()
     {
@@ -102,7 +132,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function validate_whenResultNotOk_shouldReturnInvalidAuthenticationResult()
     {
@@ -117,7 +146,6 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
      */
     public function validate_shouldReturnValidIdentity()
     {
@@ -133,7 +161,30 @@ class AuthenticationResponseValidatorTest extends TestCase
 
     /**
      * @test
-     * @throws \Exception
+     */
+    public function validate_withTrustedCaCertificate_shouldReturnValidIdentity()
+    {
+        $certsPath = __DIR__ . "/test_numbers_ca_certificates/";
+        $validatorBuilder = AuthenticationResponseValidator::newBuilder();
+        foreach (array_diff(scandir($certsPath), array('.', '..')) as $file) {
+            $caCertificate = file_get_contents($certsPath .$file);
+
+            $validatorBuilder->withTrustedCaCertificate($caCertificate);
+        }
+        $validator = $validatorBuilder->build();
+
+        $authentication = $this->createValidMobileIdAuthentication();
+        $authenticationResult = $this->validator->validate($authentication);
+
+        $this->assertTrue($authenticationResult->isValid());
+        $this->assertEquals("MARY ÄNN", $authenticationResult->getAuthenticationIdentity()->getGivenName());
+        $this->assertEquals("O’CONNEŽ-ŠUSLIK TESTNUMBER", $authenticationResult->getAuthenticationIdentity()->getSurName());
+        $this->assertEquals("60001019906", $authenticationResult->getAuthenticationIdentity()->getIdentityCode());
+        $this->assertEquals("EE", $authenticationResult->getAuthenticationIdentity()->getCountry());
+    }
+
+    /**
+     * @test
      */
     public function validate_certWithBeginAndEndCert_shouldReturnValidIdentity()
     {
@@ -160,7 +211,7 @@ class AuthenticationResponseValidatorTest extends TestCase
      */
     public function validate_whenCertificateIsNull_shouldThrowException()
     {
-        $this->expectException(NotMidClientException::class);
+        $this->expectException(MidNotMidClientException::class);
 
         $authentication = MobileIdAuthentication::newBuilder()
             ->withResult("OK")

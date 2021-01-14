@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2019 SK ID Solutions AS
+ * Copyright (C) 2018 - 2021 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,14 @@
  * #L%
  */
 namespace Sk\Mid\Rest;
+use InvalidArgumentException;
 use Sk\Mid\Exception\MidInternalErrorException;
+use Sk\Mid\Exception\MidServiceUnavailableException;
 use Sk\Mid\Exception\MidSessionNotFoundException;
+use Sk\Mid\Exception\MidSslException;
 use Sk\Mid\Exception\MissingOrInvalidParameterException;
-use Sk\Mid\Exception\NotMidClientException;
-use Sk\Mid\Exception\UnauthorizedException;
+use Sk\Mid\Exception\MidNotMidClientException;
+use Sk\Mid\Exception\MidUnauthorizedException;
 use Sk\Mid\Rest\Dao\Request\AbstractRequest;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
@@ -45,8 +48,7 @@ class MobileIdRestConnector implements MobileIdConnector
     /** @var Logger $logger */
     private $logger;
 
-    const CERTIFICATE_PATH = '/certificate';
-    const SIGNATURE_PATH = '/signature';
+
     const AUTHENTICATION_PATH = '/authentication';
 
     const RESPONSE_ERROR_CODES = array(
@@ -63,8 +65,8 @@ class MobileIdRestConnector implements MobileIdConnector
     /** @var string $endpointUrl */
     private $endpointUrl;
 
-    /** @var string $clientConfig */
-    private $clientConfig;
+    /** @var string $networkInterface */
+    private $networkInterface;
 
     /** @var string $relyingPartyUUID */
     private $relyingPartyUUID;
@@ -75,14 +77,21 @@ class MobileIdRestConnector implements MobileIdConnector
     /** @var array $customHeaders */
     private $customHeaders = array();
 
+    private $sslPinnedPublicKeys;
+
     public function __construct(MobileIdRestConnectorBuilder $builder)
     {
+        if (!$builder->isSslPinnedPublicKeysSet()) {
+            throw new InvalidArgumentException("You need to set hash value(s) of trusted API HOST SSL public keys by calling withSslPinnedPublicKeys()");
+        }
+
         $this->logger = new Logger('MobileIdRestConnector');
         $this->endpointUrl = $builder->getEndpointUrl();
-        $this->clientConfig = $builder->getClientConfig();
+        $this->networkInterface = $builder->getNetworkInterface();
         $this->relyingPartyName = $builder->getRelyingPartyName();
         $this->relyingPartyUUID = $builder->getRelyingPartyUUID();
         $this->customHeaders = $builder->getCustomHeaders();
+        $this->sslPinnedPublicKeys = $builder->getSslPinnedPublicKeys();
     }
 
     public function pullCertificate(CertificateRequest $request) : CertificateResponse
@@ -130,16 +139,20 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $this->logger->debug('Sending get request to ' . $url);
         $responseAsArray = $this->getRequest($url);
-        if (isset($responseAsArray['error'])) throw new MidSessionNotFoundException($request->getSessionId());
+        if (is_null($responseAsArray)) {
+            throw new MidInternalErrorException('GET request to MID returned invalid json: ' . json_last_error_msg());
+        }
+        else if (isset($responseAsArray['error'])) {
+            throw new MidSessionNotFoundException($request->getSessionId());
+        }
         return new SessionStatus($responseAsArray);
     }
-
 
     private function postCertificateRequest(string $uri, CertificateRequest $request) : CertificateResponse
     {
         $responseJson = $this->postRequest($uri, $request);
         if (isset($responseJson['error'])) {
-            throw new UnauthorizedException();
+            throw new MidUnauthorizedException();
         } else {
             $this->validateCertificateResult($responseJson['result']);
         }
@@ -154,9 +167,8 @@ class MobileIdRestConnector implements MobileIdConnector
             case 'OK':
                 return;
             case 'NOT_FOUND':
-            case 'NOT_ACTIVE':
                 $this->logger->error("No certificate for the user were found");
-                throw new NotMidClientException();
+                throw new MidNotMidClientException();
             default:
                 $this->logger->error("MID returned error code '" . $result . "'");
                 throw new MidInternalErrorException("MID returned error code '" . $result . "'");
@@ -176,19 +188,51 @@ class MobileIdRestConnector implements MobileIdConnector
         $this->logger->debug('POST '.$url.' contents: ' . $json);
 
         $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ( !empty( $this->networkInterface ) )
+        {
+            curl_setopt( $ch, CURLOPT_INTERFACE, $this->networkInterface );
+        }
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->addCustomHeaders(array(
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($json)))
         );
+        curl_setopt($ch, CURLOPT_PINNEDPUBLICKEY, $this->sslPinnedPublicKeys);
 
         $result = curl_exec($ch);
+        if($result === false)
+        {
+            $rawError = curl_error($ch);
+            $curl_error = "While trying to connect to '$url' got curl error: " . $rawError;
+            $this->logger->error($curl_error);
+            if (strpos($rawError, "public key does not match pinned public key") !== false) {
+                throw new MidSslException("SSL public key is untrusted for host: ".$url. ". See README.md for setting API host certificate as trusted.");
+            }
+            else {
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                switch ($httpcode) {
+                    case 400:
+                        throw new MissingOrInvalidParameterException("MID API returned HTTP status code 400");
+                    case 401:
+                        throw new MidUnauthorizedException("MID API returned HTTP status code 401");
+                    case 405:
+                        throw new MissingOrInvalidParameterException("MID API returned HTTP status code 405");
+                    case 503:
+                        throw new MidServiceUnavailableException("MID API is temporarily unavailable");
+                    default:
+                        $this->logger->debug('Response was "'.$result.'", status code was '.$httpcode);
+                        throw new MidInternalErrorException('POST request to MID returned unknown status code '.$httpcode);
+                }
+            }
+        }
 
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        $this->logger->debug('Response was '.$result.', status code was '.$httpcode);
         $responseAsArray = json_decode($result, true);
 
         switch ($httpcode) {
@@ -198,8 +242,11 @@ class MobileIdRestConnector implements MobileIdConnector
             case 405:
                 throw new MissingOrInvalidParameterException($responseAsArray['error']);
             case 401:
-                throw new UnauthorizedException($responseAsArray['error']);
+                throw new MidUnauthorizedException($responseAsArray['error']);
+            case 503:
+                throw new MidServiceUnavailableException("MID API is temporarily unavailable");
             default:
+                $this->logger->debug('Response was "'.$result.'", status code was '.$httpcode);
                 throw new MidInternalErrorException('POST request to MID returned unknown status code '.$httpcode);
         }
 
@@ -210,17 +257,38 @@ class MobileIdRestConnector implements MobileIdConnector
         return new MobileIdRestConnectorBuilder();
     }
 
-
     private function getRequest(string $url) : array
     {
 
         $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ( !empty( $this->networkInterface ) )
+        {
+            curl_setopt( $ch, CURLOPT_INTERFACE, $this->networkInterface );
+
+            $this->logger->debug("CURLOPT_INTERFACE set to:" + $this->networkInterface);
+        }
+
         curl_setopt($ch, CURLOPT_HTTPHEADER,
             $this->addCustomHeaders(array('Content-Type: application/json'))
         );
+        curl_setopt($ch, CURLOPT_PINNEDPUBLICKEY, $this->sslPinnedPublicKeys);
+
         $result = curl_exec($ch);
+        if($result === false)
+        {
+            $rawError = curl_error($ch);
+            $curl_error = "While trying to connect to '$url' got curl error: " . $rawError;
+            $this->logger->error($curl_error);
+            if (strpos($rawError, "public key does not match pinned public key") !== false) {
+                throw new MidSslException("SSL public key is untrusted for host: ".$url. ". See README.md for setting API host certificate as trusted.");
+            }
+            else {
+                throw new MidInternalErrorException($curl_error);
+            }
+        }
 
         $this->logger->debug('Result is '. $result);
 

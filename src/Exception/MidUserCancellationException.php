@@ -24,7 +24,12 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\Tests\Categories;
-interface IntegrationTest
-{
+namespace Sk\Mid\Exception;
+
+class MidUserCancellationException extends MidException {
+
+    public function __construct()
+    {
+        parent::__construct("User cancelled the operation.");
+    }
 }

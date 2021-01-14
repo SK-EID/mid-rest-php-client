@@ -24,48 +24,42 @@
  * THE SOFTWARE.
  * #L%
  */
-namespace Sk\Mid\HashType;
-use Sk\Mid\Util\DigestCalculator;
-abstract class HashType
+namespace Sk\Mid;
+use Sop\CryptoEncoding\PEM;
+use Sop\X509\Certificate\Certificate;
+
+class AuthenticationResponseValidatorBuilder
 {
+    /** @var array $trustedCaCertificates */
+    private $trustedCaCertificates = array();
 
-    const SHA256 = 'sha256';
-    const SHA384 = 'sha384';
-    const SHA512 = 'sha512';
-
-    /** @var string $algorithmName */
-    private $algorithmName;
-
-    /** @var string $hashTypeName */
-    private $hashTypeName;
-
-    /** @var int $lengthInBits */
-    private $lengthInBits;
-
-    /** @var array $digestInfoPrefix */
-    private $digestInfoPrefix;
-
-    public function __construct(string $algorithmName, string $hashTypeName, int $lengthInBits, array $digestInfoPrefix)
+    /**
+     * @return mixed
+     */
+    public function getTrustedCaCertificates()
     {
-        $this->algorithmName = $algorithmName;
-        $this->hashTypeName = $hashTypeName;
-        $this->lengthInBits = $lengthInBits;
-        $this->digestInfoPrefix = $digestInfoPrefix;
+        return $this->trustedCaCertificates;
     }
 
-    public function getAlgorithmName(): string
+    public function withTrustedCaCertificatesFolder(string $trustedCertsPath) : AuthenticationResponseValidatorBuilder
     {
-        return $this->algorithmName;
+        foreach (array_diff(scandir($trustedCertsPath), array('.', '..')) as $file) {
+            $caCertificate = file_get_contents($trustedCertsPath.$file);
+            $caCert = Certificate::fromPEM(PEM::fromString($caCertificate));
+            $this->trustedCaCertificates[] = $caCert;
+        }
+        return $this;
     }
 
-    public function getHashTypeName(): string
+    public function withTrustedCaCertificate(string $trustedCaCertificate) : AuthenticationResponseValidatorBuilder
     {
-        return $this->hashTypeName;
+        $this->trustedCaCertificates[] = Certificate::fromPEM(PEM::fromString($trustedCaCertificate));
+        return $this;
     }
 
-    public function getLengthInBytes() : int {
-        return $this->lengthInBits / 8;
+    public function build() : AuthenticationResponseValidator
+    {
+        return new AuthenticationResponseValidator($this);
     }
 
 }
-
