@@ -247,8 +247,8 @@ so the outcome would be: "sha256//fqp7yWK7iGGKj+3unYdm2DA3VCPDkwtyX+DrdZYSC6o="
 
 ## Adding future production certificate
 
-About once every 3 years the server's SSL certificate gets switched.
-All RP-s get a notification from SK when this is going to happen.
+About once a year the server's SSL certificate gets switched.
+All RP-s get a notification by e-mail from SK when this is going to happen.
 Download new certificate and calculate its sha-256 digest (using instructions above) and add the digest to the list
 by separating it with a semicolon. So the value is going to be something like this:
 
