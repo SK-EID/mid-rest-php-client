@@ -238,10 +238,11 @@ Internally the library uses https://curl.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.ht
 Open https://www.skidsolutions.eu/en/repository/certs/ 
 And download mid.sk.ee certificate in PEM format and save it as "mid_sk_ee.PEM.cer".
 
+```bash
 openssl x509 -in mid_sk_ee.PEM.cer -pubkey -noout > mid.sk.ee.pubkey.pem
 openssl asn1parse -noout -inform pem -in mid.sk.ee.pubkey.pem -out mid.sk.ee.pubkey.der
 openssl dgst -sha256 -binary mid.sk.ee.pubkey.der | openssl base64
-
+```
 Copy the output (something like "fqp7yWK7iGGKj+3unYdm2DA3VCPDkwtyX+DrdZYSC6o=" and add "sha256//" in front of it)
 so the outcome would be: "sha256//fqp7yWK7iGGKj+3unYdm2DA3VCPDkwtyX+DrdZYSC6o="
 
@@ -258,10 +259,12 @@ by separating it with a semicolon. So the value is going to be something like th
 
 You need to download the certificate directly from demo server.
 
+```bash
 openssl s_client -servername tsp.demo.sk.ee -connect tsp.demo.sk.ee:443 < /dev/null | sed -n "/-----BEGIN/,/-----END/p" > tsp.demo.sk.ee.pem
 openssl x509 -in tsp.demo.sk.ee.pem -pubkey -noout > tsp.demo.sk.ee.pubkey.pem
 openssl asn1parse -noout -inform pem -in tsp.demo.sk.ee.pubkey.pem -out tsp.demo.sk.ee.pubkey.der
 openssl dgst -sha256 -binary tsp.demo.sk.ee.pubkey.der | openssl base64
+```
 
 # Setting public IP or interface
 
