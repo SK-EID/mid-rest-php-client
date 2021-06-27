@@ -173,7 +173,7 @@ class MobileIdRestConnector implements MobileIdConnector
                 $this->logger->error("MID returned error code '" . $result . "'");
                 throw new MidInternalErrorException("MID returned error code '" . $result . "'");
         }
-        
+
     }
 
     private function postAuthenticationRequest(string $uri, AuthenticationRequest $request) : AuthenticationResponse
@@ -268,7 +268,7 @@ class MobileIdRestConnector implements MobileIdConnector
         {
             curl_setopt( $ch, CURLOPT_INTERFACE, $this->networkInterface );
 
-            $this->logger->debug("CURLOPT_INTERFACE set to:" + $this->networkInterface);
+            $this->logger->debug("CURLOPT_INTERFACE set to:" . $this->networkInterface);
         }
 
         curl_setopt($ch, CURLOPT_HTTPHEADER,
