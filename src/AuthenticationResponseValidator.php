@@ -25,13 +25,14 @@
  * #L%
  */
 namespace Sk\Mid;
-use InvalidArgumentException;
-use Sk\Mid\Exception\MidInternalErrorException;
-use Sk\Mid\Exception\MidNotMidClientException;
-use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Util\Logger;
 use Sop\CryptoEncoding\PEM;
+use InvalidArgumentException;
+use UnexpectedValueException;
+use Sk\Mid\Rest\Dao\MidCertificate;
 use Sop\X509\Certificate\Certificate;
+use Sk\Mid\Exception\MidNotMidClientException;
+use Sk\Mid\Exception\MidInternalErrorException;
 use Sop\X509\CertificationPath\Exception\PathBuildingException;
 use Sop\X509\CertificationPath\Exception\PathValidationException;
 
@@ -101,8 +102,13 @@ class AuthenticationResponseValidator
         foreach ($this->trustedCaCertificates as $trustedCaCertificate) {
             $cert = Certificate::fromPEM(PEM::fromString($certificate['certificateAsString']));
             $ca = Certificate::fromPEM(PEM::fromString($trustedCaCertificate));
-            if ($cert->verify($ca->tbsCertificate()->subjectPublicKeyInfo())) {
-                return true;
+
+            try {
+                if ($cert->verify($ca->tbsCertificate()->subjectPublicKeyInfo())) {
+                    return true;
+                }
+            } catch (UnexpectedValueException $e) {
+                continue 1;
             }
         }
         return false;
