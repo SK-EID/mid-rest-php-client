@@ -23,7 +23,8 @@ there no library like [DigiDoc4J](https://github.com/open-eid/digidoc4j) exists 
 
 ## Requirements
  
-* PHP 7.2 or later
+* PHP 7.4 or later
+* [PHP must be compiled with GMP support by using the --with-gmp option](https://www.php.net/manual/en/gmp.installation.php)
  
 ## Installation
  
@@ -57,10 +58,10 @@ require_once __DIR__ . '/vendor/autoload.php';
         $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($this->userData['nationalIdentityNumber']);
     }
     catch (MidInvalidPhoneNumberException $e) {
-        die('The phone number you entered is invalid');
+        echo 'The phone number you entered is invalid';
     }
     catch (MidInvalidNationalIdentityNumberException $e) {
-        die('The national identity number you entered is invalid');
+        echo 'The national identity number you entered is invalid';
     }
 
     // step #2 - create client with long-polling.
@@ -101,16 +102,16 @@ require_once __DIR__ . '/vendor/autoload.php';
         $response = $client->getMobileIdConnector()->initAuthentication($request);
     }
     catch (MidNotMidClientException $e) {
-        die("User is not a MID client or user's certificates are revoked.");
+        echo "User is not a MID client or user's certificates are revoked.";
     }
     catch (MidUnauthorizedException $e) {
-        die('Integration error with Mobile-ID. Invalid MID credentials');
+        echo 'Integration error with Mobile-ID. Invalid MID credentials';
     }
     catch (MissingOrInvalidParameterException $e) {
-        die('Problem with MID integration');
+        echo 'Problem with MID integration';
     }
     catch (MidInternalErrorException $e) {
-        die('MID internal error');
+        echo 'MID internal error';
     }
 
     // step #7 - keep polling for session status until we have a final status from phone
@@ -127,31 +128,31 @@ require_once __DIR__ . '/vendor/autoload.php';
 
     }
     catch (MidUserCancellationException $e) {
-        die("User cancelled operation from his/her phone.");
+        echo "User cancelled operation from his/her phone.";
     }
     catch (MidNotMidClientException $e) {
-        die("User is not a MID client or user's certificates are revoked.");
+        echo "User is not a MID client or user's certificates are revoked.";
     }
     catch (MidSessionTimeoutException $e) {
-        die("User did not type in PIN code or communication error.");
+        echo "User did not type in PIN code or communication error.";
     }
     catch (MidPhoneNotAvailableException $e) {
-        die("Unable to reach phone/SIM card. User needs to check if phone has coverage.");
+        echo "Unable to reach phone/SIM card. User needs to check if phone has coverage.";
     }
     catch (MidDeliveryException $e) {
-        die("Error communicating with the phone/SIM card.");
+        echo "Error communicating with the phone/SIM card.";
     }
     catch (MidInvalidUserConfigurationException $e) {
-        die("Mobile-ID configuration on user's SIM card differs from what is configured on service provider's side. User needs to contact his/her mobile operator.");
+        echo "Mobile-ID configuration on user's SIM card differs from what is configured on service provider's side. User needs to contact his/her mobile operator.";
     }
     catch (MidSessionNotFoundException | MissingOrInvalidParameterException | MidUnauthorizedException | MidSslException $e) {
-        die("Integrator-side error with MID integration or configuration. Error code:". $e->getCode());
+        throw new RuntimeException("Integrator-side error with MID integration or configuration. Error code:". $e->getCode());
     }
     catch (MidServiceUnavailableException $e) {
-        die("MID service is currently unavailable. User shold try again later.");
+        echo "MID service is currently unavailable. User shold try again later.";
     }
     catch (MidInternalErrorException $internalError) {
-        die("Something went wrong with Mobile-ID service");
+        echo "Something went wrong with Mobile-ID service";
     }
 
     # step #9 - validate returned result (to protect yourself from man-in-the-middle attack)
@@ -178,7 +179,7 @@ See [mid-rest-php-demo](https://github.com/SK-EID/mid-rest-php-demo) for a more 
 You have two options for asking status of authentication session.
 You can configure long polling which means that the server doesn't respond
 immediately to session status request but waits until there is input from user (User has entered PIN1 or pressed cancel)
-or if there is a timeout. However this blocks the thread on caller's side and may be unwanted.
+or if there is a timeout. However, this blocks the thread on caller's side and may be unwanted.
 For this there is also option to withPollingSleepTimeoutSeconds(2) which means that the client
 keeps making requests towards the server every 2 seconds.
 
@@ -230,7 +231,7 @@ This hash must exactly match with one of the hashes provided to this library:
  ```
 
 
-Otherwise the connection to MID API is aborted before sending or receiving any data.
+Otherwise, the connection to MID API is aborted before sending or receiving any data.
 
 Internally the library uses https://curl.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.html for this.
 
@@ -246,6 +247,8 @@ openssl dgst -sha256 -binary mid.sk.ee.pubkey.der | openssl base64
 Copy the output (something like "fqp7yWK7iGGKj+3unYdm2DA3VCPDkwtyX+DrdZYSC6o=" and add "sha256//" in front of it)
 so the outcome would be: "sha256//fqp7yWK7iGGKj+3unYdm2DA3VCPDkwtyX+DrdZYSC6o="
 
+
+
 ## Adding future production certificate
 
 About once a year the server's SSL certificate gets switched.
@@ -257,7 +260,8 @@ by separating it with a semicolon. So the value is going to be something like th
 
 ## Obtaining digest of demo API endpoint certificate
 
-You need to download the certificate directly from demo server.
+Demo server (tsp.demo.sk.ee) certificate is be available here: https://www.skidsolutions.eu/en/Repository/certs/certificates-for-testing
+or you can download it directly from server.
 
 ```bash
 openssl s_client -servername tsp.demo.sk.ee -connect tsp.demo.sk.ee:443 < /dev/null | sed -n "/-----BEGIN/,/-----END/p" > tsp.demo.sk.ee.pem
@@ -312,13 +316,13 @@ This client also supports downloading user's mobile-id signing certificate.
     }
     catch (MidNotMidClientException $e) {
         // if user is not MID client then this exception is thrown and caught already during first request (see above)
-        die("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
+        echo "You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.";
     }
     catch (MissingOrInvalidParameterException | MidUnauthorizedException $e) {
-        die("Client side error with mobile-ID integration. Error code:". $e->getCode());
+        throw new RuntimeException("Client side error with mobile-ID integration. Error code:". $e->getCode());
     }
     catch (MidInternalErrorException $internalError) {
-        die("Something went wrong with Mobile-ID service");
+        echo "Something went wrong with Mobile-ID service";
     }
  ```
 

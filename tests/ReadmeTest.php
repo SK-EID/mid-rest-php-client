@@ -26,6 +26,8 @@
  */
 
 namespace Sk\Mid\Tests;
+
+use http\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
 use Sk\Mid\Exception\MidServiceUnavailableException;
 use Sk\Mid\Exception\MidSslException;
@@ -88,10 +90,10 @@ class ReadmeTest extends TestCase
             $nationalIdentityNumber = MidInputUtil::getValidatedNationalIdentityNumber($this->userData['nationalIdentityNumber']);
         }
         catch (MidInvalidPhoneNumberException $e) {
-            die('The phone number you entered is invalid');
+            echo 'The phone number you entered is invalid';
         }
         catch (MidInvalidNationalIdentityNumberException $e) {
-            die('The national identity number you entered is invalid');
+            echo 'The national identity number you entered is invalid';
         }
 
         // step #2 - create client with long-polling.
@@ -102,7 +104,7 @@ class ReadmeTest extends TestCase
                 ->withRelyingPartyName($this->config['relyingPartyName'])
                 ->withHostUrl($this->config['hostUrl'])
                 ->withLongPollingTimeoutSeconds(60)
-                ->withSslPinnedPublicKeys("sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
+                ->withSslPinnedPublicKeys("sha256//qpzS4QyealcFvTcHcng+7yDM5G3nys1v/DuEY+JrYZ8=;sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
                 ->build();
 
 
@@ -132,16 +134,20 @@ class ReadmeTest extends TestCase
             $response = $client->getMobileIdConnector()->initAuthentication($request);
         }
         catch (MidNotMidClientException $e) {
-            die("User is not a MID client or user's certificates are revoked.");
+            // add exception handling logic here
+            echo "User is not a MID client or user's certificates are revoked.";
         }
         catch (MidUnauthorizedException $e) {
-            die('Integration error with Mobile-ID. Invalid MID credentials');
+            // add exception handling logic here
+            echo 'Integration error with Mobile-ID. Invalid MID credentials';
         }
         catch (MissingOrInvalidParameterException $e) {
-            die('Problem with MID integration');
+            // add exception handling logic here
+            echo 'Problem with MID integration';
         }
         catch (MidInternalErrorException $e) {
-            die('MID internal error');
+            // add exception handling logic here
+            echo 'MID internal error:' . $e;
         }
 
         // step #7 - keep polling for session status until we have a final status from phone
@@ -158,31 +164,40 @@ class ReadmeTest extends TestCase
 
         }
         catch (MidUserCancellationException $e) {
-            die("User cancelled operation from his/her phone.");
+            // add exception handling logic here
+            echo "User cancelled operation from his/her phone.";
         }
         catch (MidNotMidClientException $e) {
-            die("User is not a MID client or user's certificates are revoked.");
+            // add exception handling logic here
+            echo "User is not a MID client or user's certificates are revoked.";
         }
         catch (MidSessionTimeoutException $e) {
-            die("User did not type in PIN code or communication error.");
+            // add exception handling logic here
+            echo "User did not type in PIN code or communication error.";
         }
         catch (MidPhoneNotAvailableException $e) {
-            die("Unable to reach phone/SIM card. User needs to check if phone has coverage.");
+            // add exception handling logic here
+            echo "Unable to reach phone/SIM card. User needs to check if phone has coverage.";
         }
         catch (MidDeliveryException $e) {
-            die("Error communicating with the phone/SIM card.");
+            // add exception handling logic here
+            echo "Error communicating with the phone/SIM card.";
         }
         catch (MidInvalidUserConfigurationException $e) {
-            die("Mobile-ID configuration on user's SIM card differs from what is configured on service provider's side. User needs to contact his/her mobile operator.");
+            // add exception handling logic here
+            echo "Mobile-ID configuration on user's SIM card differs from what is configured on service provider's side. User needs to contact his/her mobile operator.";
         }
         catch (MidSessionNotFoundException | MissingOrInvalidParameterException | MidUnauthorizedException | MidSslException $e) {
-            die("Integrator-side error with MID integration or configuration. Error code:". $e->getCode());
+            // add exception handling logic here
+            echo "Integrator-side error with MID integration or configuration. Error code:". $e->getCode();
         }
         catch (MidServiceUnavailableException $e) {
-            die("MID service is currently unavailable. User shold try again later.");
+            // add exception handling logic here
+            echo "MID service is currently unavailable. User shold try again later.";
         }
         catch (MidInternalErrorException $internalError) {
-            die("Something went wrong with Mobile-ID service");
+            // add exception handling logic here
+            echo "Something went wrong with Mobile-ID service";
         }
 
         # step #9 - validate returned result (to protect yourself from man-in-the-middle attack)
@@ -216,7 +231,7 @@ class ReadmeTest extends TestCase
                 ->withRelyingPartyUUID($this->config['relyingPartyUUID'])
                 ->withRelyingPartyName($this->config['relyingPartyName'])
                 ->withHostUrl($this->config['hostUrl'])
-                ->withSslPinnedPublicKeys("sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
+                ->withSslPinnedPublicKeys("sha256//qpzS4QyealcFvTcHcng+7yDM5G3nys1v/DuEY+JrYZ8=;sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
                 ->build();
 
         $request = CertificateRequest::newBuilder()
@@ -235,13 +250,13 @@ class ReadmeTest extends TestCase
         }
         catch (MidNotMidClientException $e) {
             // if user is not MID client then this exception is thrown and caught already during first request (see above)
-            die("You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.");
+            echo "You are not a Mobile-ID client or your Mobile-ID certificates are revoked. Please contact your mobile operator.";
         }
         catch (MissingOrInvalidParameterException | MidUnauthorizedException $e) {
-            die("Client side error with mobile-ID integration. Error code:". $e->getCode());
+            throw new RuntimeException("Client side error with mobile-ID integration. Error code:". $e->getCode());
         }
         catch (MidInternalErrorException $internalError) {
-            die("Something went wrong with Mobile-ID service");
+            echo "Something went wrong with Mobile-ID service";
         }
 
         $this->addToAssertionCount(1);
