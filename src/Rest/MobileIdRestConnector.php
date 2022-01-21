@@ -46,7 +46,7 @@ class MobileIdRestConnector implements MobileIdConnector
 {
 
     /** @var Logger $logger */
-    private $logger;
+    private Logger $logger;
 
 
     const AUTHENTICATION_PATH = '/authentication';
@@ -62,22 +62,22 @@ class MobileIdRestConnector implements MobileIdConnector
         471 => 'No suitable account of requested type found, but user has some other accounts.',
     );
 
-    /** @var string $endpointUrl */
-    private $endpointUrl;
+    /** @var ?string $endpointUrl */
+    private ?string $endpointUrl;
 
-    /** @var string $networkInterface */
-    private $networkInterface;
+    /** @var ?string $networkInterface */
+    private ?string $networkInterface;
 
-    /** @var string $relyingPartyUUID */
-    private $relyingPartyUUID;
+    /** @var ?string $relyingPartyUUID */
+    private ?string $relyingPartyUUID;
 
-    /** @var string $relyingPartyName */
-    private $relyingPartyName;
+    /** @var ?string $relyingPartyName */
+    private ?string $relyingPartyName;
 
     /** @var array $customHeaders */
-    private $customHeaders = array();
+    private array $customHeaders = array();
 
-    private $sslPinnedPublicKeys;
+    private ?string $sslPinnedPublicKeys;
 
     public function __construct(MobileIdRestConnectorBuilder $builder)
     {
@@ -102,8 +102,7 @@ class MobileIdRestConnector implements MobileIdConnector
         $uri = $this->endpointUrl . '/certificate';
         $this->logger->debug('From uri: ' . $uri);
 
-        $certificateResponse = $this->postCertificateRequest($uri, $request);
-        return $certificateResponse;
+        return $this->postCertificateRequest($uri, $request);
     }
 
     public function initAuthentication(AuthenticationRequest $request) : AuthenticationResponse
@@ -139,7 +138,7 @@ class MobileIdRestConnector implements MobileIdConnector
 
         $this->logger->debug('Sending get request to ' . $url);
         $responseAsArray = $this->getRequest($url);
-        if (is_null($responseAsArray)) {
+        if (empty($responseAsArray)) {
             throw new MidInternalErrorException('GET request to MID returned invalid json: ' . json_last_error_msg());
         }
         else if (isset($responseAsArray['error'])) {
@@ -214,9 +213,9 @@ class MobileIdRestConnector implements MobileIdConnector
                 throw new MidSslException("SSL public key is untrusted for host: ".$url. ". See README.md for setting API host certificate as trusted.");
             }
             else {
-                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-                switch ($httpcode) {
+                switch ($httpStatusCode) {
                     case 400:
                         throw new MissingOrInvalidParameterException("MID API returned HTTP status code 400");
                     case 401:
@@ -226,16 +225,16 @@ class MobileIdRestConnector implements MobileIdConnector
                     case 503:
                         throw new MidServiceUnavailableException("MID API is temporarily unavailable");
                     default:
-                        $this->logger->debug('Response was "'.$result.'", status code was '.$httpcode);
-                        throw new MidInternalErrorException('POST request to MID returned unknown status code '.$httpcode);
+                        $this->logger->debug('Response was "'.$result.'", status code was '.$httpStatusCode);
+                        throw new MidInternalErrorException('POST request to MID returned unknown status code '.$httpStatusCode);
                 }
             }
         }
 
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $responseAsArray = json_decode($result, true);
 
-        switch ($httpcode) {
+        switch ($httpStatusCode) {
             case 200:
                 return $responseAsArray;
             case 400:
@@ -246,8 +245,8 @@ class MobileIdRestConnector implements MobileIdConnector
             case 503:
                 throw new MidServiceUnavailableException("MID API is temporarily unavailable");
             default:
-                $this->logger->debug('Response was "'.$result.'", status code was '.$httpcode);
-                throw new MidInternalErrorException('POST request to MID returned unknown status code '.$httpcode);
+                $this->logger->debug('Response was "'.$result.'", status code was '.$httpStatusCode);
+                throw new MidInternalErrorException('POST request to MID returned unknown status code '.$httpStatusCode);
         }
 
     }
@@ -268,7 +267,7 @@ class MobileIdRestConnector implements MobileIdConnector
         {
             curl_setopt( $ch, CURLOPT_INTERFACE, $this->networkInterface );
 
-            $this->logger->debug("CURLOPT_INTERFACE set to:" + $this->networkInterface);
+            $this->logger->debug("CURLOPT_INTERFACE set to:" . $this->networkInterface);
         }
 
         curl_setopt($ch, CURLOPT_HTTPHEADER,
@@ -295,7 +294,8 @@ class MobileIdRestConnector implements MobileIdConnector
         return json_decode($result, true);
     }
 
-    private function addCustomHeaders(array $headers){
+    private function addCustomHeaders(array $headers): array
+    {
         return array_merge($this->customHeaders, $headers);
     }
 

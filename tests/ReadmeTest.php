@@ -55,11 +55,10 @@ use Sk\Mid\Util\MidInputUtil;
 
 class ReadmeTest extends TestCase
 {
-    private $client;
 
-    private $userData;
+    private array $userData;
 
-    private $config;
+    private array $config;
 
     protected function setUp() : void
     {
@@ -268,7 +267,7 @@ class ReadmeTest extends TestCase
      */
     public function documentLongPolling()
     {
-        $this->client = MobileIdClient::newBuilder()
+        $client = MobileIdClient::newBuilder()
             ->withHostUrl("https://...")
             ->withRelyingPartyUUID("...")
             ->withRelyingPartyName("...")
@@ -284,7 +283,7 @@ class ReadmeTest extends TestCase
      */
     public function documentWithoutLongPolling()
     {
-        $this->client = MobileIdClient::newBuilder()
+        $client = MobileIdClient::newBuilder()
             ->withHostUrl("https://...")
             ->withRelyingPartyUUID("...")
             ->withRelyingPartyName("...")
@@ -300,7 +299,7 @@ class ReadmeTest extends TestCase
      */
     public function documentPinning()
     {
-        $this->client = MobileIdClient::newBuilder()
+        $client = MobileIdClient::newBuilder()
             ->withHostUrl("https://...")
             ->withRelyingPartyUUID("...")
             ->withRelyingPartyName("...")
@@ -316,7 +315,7 @@ class ReadmeTest extends TestCase
      */
     public function documentNetworkInterfaceSelection()
     {
-        $this->client = MobileIdClient::newBuilder()
+        $client = MobileIdClient::newBuilder()
             ->withHostUrl("https://...")
             ->withRelyingPartyUUID("...")
             ->withRelyingPartyName("...")

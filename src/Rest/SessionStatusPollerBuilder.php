@@ -31,9 +31,9 @@ class SessionStatusPollerBuilder
 
     private $connector;
     /** @var int $pollingSleepTimeoutSeconds */
-    private $pollingSleepTimeoutSeconds = 0;
+    private int $pollingSleepTimeoutSeconds = 0;
     /** @var int $longPollingTimeoutSeconds */
-    private $longPollingTimeoutSeconds = 0;
+    private int $longPollingTimeoutSeconds = 0;
 
     /**
      * @return mixed

@@ -28,22 +28,22 @@ namespace Sk\Mid\Rest;
 
 class MobileIdRestConnectorBuilder
 {
-    /** @var string $endpointUrl */
-    private $endpointUrl;
+    /** @var ?string $endpointUrl */
+    private ?string $endpointUrl = null;
 
-    /** @var string $networkInterface */
-    private $networkInterface;
+    /** @var ?string $networkInterface */
+    private ?string $networkInterface = null;
 
-    /** @var string $relyingPartyUUID */
-    private $relyingPartyUUID;
+    /** @var ?string $relyingPartyUUID */
+    private ?string $relyingPartyUUID = null;
 
-    /** @var string $relyingPartyName */
-    private $relyingPartyName;
+    /** @var ?string $relyingPartyName */
+    private ?string $relyingPartyName = null;
 
     /** @var array $customHeaders */
-    private $customHeaders = array();
+    private array $customHeaders = array();
 
-    private $sslPinnedPublicKeys;
+    private ?string $sslPinnedPublicKeys;
 
     public function getEndpointUrl() : ?string
     {
@@ -68,7 +68,7 @@ class MobileIdRestConnectorBuilder
     /**
      * @return array
      */
-    public function getCustomHeaders(): ?array
+    public function getCustomHeaders(): array
     {
         return $this->customHeaders;
     }
@@ -76,7 +76,7 @@ class MobileIdRestConnectorBuilder
     /**
      * @return string
      */
-    public function getSslPinnedPublicKeys(): string
+    public function getSslPinnedPublicKeys(): ?string
     {
         return $this->sslPinnedPublicKeys;
     }
@@ -110,13 +110,13 @@ class MobileIdRestConnectorBuilder
         return $this;
     }
 
-    public function withCustomHeaders(?array $customHeaders) : MobileIdRestConnectorBuilder
+    public function withCustomHeaders(array $customHeaders) : MobileIdRestConnectorBuilder
     {
         $this->customHeaders = $customHeaders;
         return $this;
     }
 
-    public function withSslPinnedPublicKeys(string $publicKeys) : MobileIdRestConnectorBuilder
+    public function withSslPinnedPublicKeys(?string $publicKeys) : MobileIdRestConnectorBuilder
     {
         $this->sslPinnedPublicKeys = $publicKeys;
         return $this;
