@@ -89,6 +89,7 @@ class CertificateRequestBuilderTest extends TestCase
         $request = CertificateRequest::newBuilder()
             ->withPhoneNumber(TestData::VALID_PHONE)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
+            ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
             ->build();
 

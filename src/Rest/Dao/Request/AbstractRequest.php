@@ -27,11 +27,11 @@
 namespace Sk\Mid\Rest\Dao\Request;
 abstract class AbstractRequest
 {
-    /** @var string $relyingPartyUUID */
-    private $relyingPartyUUID;
+    /** @var ?string $relyingPartyUUID */
+    private ?string $relyingPartyUUID;
 
-    /** @var string $relyingPartyName */
-    private $relyingPartyName;
+    /** @var ?string $relyingPartyName */
+    private ?string $relyingPartyName;
 
     public function __construct()
     {
