@@ -39,6 +39,7 @@ use Sk\Mid\Exception\MissingOrInvalidParameterException;
 use Sk\Mid\Exception\MidInternalErrorException;
 
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class CertificateRequestBuilderTest extends TestCase
 {
@@ -89,6 +90,7 @@ class CertificateRequestBuilderTest extends TestCase
         $request = CertificateRequest::newBuilder()
             ->withPhoneNumber(TestData::VALID_PHONE)
             ->withRelyingPartyUUID(TestData::DEMO_RELYING_PARTY_UUID)
+            ->withRelyingPartyName(TestData::DEMO_RELYING_PARTY_NAME)
             ->withNationalIdentityNumber(TestData::VALID_NAT_IDENTITY)
             ->build();
 
@@ -181,7 +183,7 @@ class CertificateRequestBuilderTest extends TestCase
      */
     public function getCertificate_withResultMissingInResponse_shouldThrowException()
     {
-        $this->expectException(MidInternalErrorException::class);
+        $this->expectException(TypeError::class);
 
         $this->getConnector()->getCertificateChoiceResponseToRespond()->setResult(null);
         $this->makeCertificateRequest($this->getConnector());
@@ -203,7 +205,7 @@ class CertificateRequestBuilderTest extends TestCase
      */
     public function getCertificate_withCertificateMissingInResponse_shouldThrowException()
     {
-        $this->expectException(MidInternalErrorException::class);
+        $this->expectException(TypeError::class);
 
         $this->getConnector()->getCertificateChoiceResponseToRespond()->setCert(null);
         $this->makeCertificateRequest($this->getConnector());

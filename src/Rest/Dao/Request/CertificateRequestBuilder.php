@@ -31,19 +31,19 @@ use Sk\Mid\Exception\MissingOrInvalidParameterException;
 class CertificateRequestBuilder
 {
     /** @var Logger $logger */
-    public static $logger;
+    public static Logger $logger;
 
-    /** @var string $relyingPartyName */
-    private $relyingPartyName;
+    /** @var ?string $relyingPartyName */
+    private ?string $relyingPartyName = null;
 
-    /** @var string $relyingPartyUUID */
-    private $relyingPartyUUID;
+    /** @var ?string $relyingPartyUUID */
+    private ?string $relyingPartyUUID = null;
 
-    /** @var string $phoneNumber */
-    private $phoneNumber;
+    /** @var ?string $phoneNumber */
+    private ?string $phoneNumber = null;
 
-    /** @var string $nationalIdentityNumber */
-    private $nationalIdentityNumber;
+    /** @var ?string $nationalIdentityNumber */
+    private ?string $nationalIdentityNumber = null;
 
     public function __construct()
     {
@@ -62,13 +62,13 @@ class CertificateRequestBuilder
         return $this;
     }
 
-    public function withPhoneNumber(string $phoneNumber) : CertificateRequestBuilder
+    public function withPhoneNumber(?string $phoneNumber) : CertificateRequestBuilder
     {
         $this->phoneNumber = $phoneNumber;
         return $this;
     }
 
-    public function withNationalIdentityNumber(string $nationalIdentityNumber) : CertificateRequestBuilder
+    public function withNationalIdentityNumber(?string $nationalIdentityNumber) : CertificateRequestBuilder
     {
         $this->nationalIdentityNumber = $nationalIdentityNumber;
         return $this;
@@ -77,6 +77,7 @@ class CertificateRequestBuilder
     public function build() : CertificateRequest
     {
         $this->validateParameters();
+
         $request = new CertificateRequest();
         $request->setRelyingPartyUUID($this->getRelyingPartyUUID());
         $request->setRelyingPartyName($this->getRelyingPartyName());
@@ -95,12 +96,12 @@ class CertificateRequestBuilder
         return $this->relyingPartyUUID;
     }
 
-    public function getPhoneNumber(): string
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
-    public function getNationalIdentityNumber(): string
+    public function getNationalIdentityNumber(): ?string
     {
         return $this->nationalIdentityNumber;
     }

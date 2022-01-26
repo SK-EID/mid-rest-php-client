@@ -33,29 +33,29 @@ use Sk\Mid\Util\MidInputUtil;
 
 class AuthenticationRequestBuilder
 {
-    /** @var string $relyingPartyName */
-    private $relyingPartyName;
+    /** @var ?string $relyingPartyName */
+    private ?string $relyingPartyName = null;
 
-    /** @var string $relyingPartyUUID */
-    private $relyingPartyUUID;
+    /** @var ?string $relyingPartyUUID */
+    private ?string $relyingPartyUUID = null;
 
-    /** @var string $phoneNumber */
-    private $phoneNumber;
+    /** @var ?string $phoneNumber */
+    private string $phoneNumber;
 
-    /** @var string $nationalIdentityNumber */
-    private $nationalIdentityNumber;
+    /** @var ?string $nationalIdentityNumber */
+    private string $nationalIdentityNumber;
 
-    /** @var MobileIdAuthenticationHashToSign $hashToSign */
-    private $hashToSign;
+    /** @var ?MobileIdAuthenticationHashToSign $hashToSign */
+    private ?MobileIdAuthenticationHashToSign $hashToSign = null;
 
-    /** @var Language $language */
-    private $language;
+    /** @var ?Language $language */
+    private ?Language $language = null;
 
-    /** @var string $displayText */
-    private $displayText;
+    /** @var ?string $displayText */
+    private ?string $displayText = null;
 
-    /** @var string $displayTextFormat */
-    private $displayTextFormat;
+    /** @var ?string $displayTextFormat */
+    private ?string $displayTextFormat = null;
 
 
     public function withRelyingPartyUUID(?string $relyingPartyUUID) : AuthenticationRequestBuilder
@@ -111,6 +111,7 @@ class AuthenticationRequestBuilder
         $this->validateParameters();
 
         $request = new AuthenticationRequest();
+
         $request->setRelyingPartyUUID($this->getRelyingPartyUUID());
         $request->setRelyingPartyName($this->getRelyingPartyName());
         $request->setPhoneNumber($this->getPhoneNumber());
@@ -127,6 +128,15 @@ class AuthenticationRequestBuilder
 
     private function validateParameters()
     {
+        if (!isset( $this->phoneNumber)) {
+            throw new MissingOrInvalidParameterException("phoneNumber must be set");
+        }
+
+        if (!isset( $this->nationalIdentityNumber)) {
+            throw new MissingOrInvalidParameterException("nationalIdentityNumber must be set");
+        }
+
+
         MidInputUtil::validateUserInput($this->phoneNumber, $this->nationalIdentityNumber);
 
         if (is_null($this->hashToSign)) {

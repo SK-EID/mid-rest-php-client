@@ -45,10 +45,12 @@ class SessionStatusPoller
     private $connector;
 
     /** @var int $pollingSleepTimeoutSeconds */
-    private $pollingSleepTimeoutSeconds;
+    private int $pollingSleepTimeoutSeconds;
 
     /** @var int $longPollingTimeoutSeconds */
-    private $longPollingTimeoutSeconds;
+    private int $longPollingTimeoutSeconds;
+
+    private Logger $logger;
 
 
     public function __construct(SessionStatusPollerBuilder $builder)

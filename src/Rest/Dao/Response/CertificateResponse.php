@@ -26,6 +26,8 @@
  */
 namespace Sk\Mid\Rest\Dao\Response;
 
+use Sk\Mid\Exception\MidInternalErrorException;
+
 class CertificateResponse
 {
     /** @var string $result  */
@@ -36,26 +38,33 @@ class CertificateResponse
 
     public function __construct(array $responseJson)
     {
+        if (!isset($responseJson['result'])) {
+            throw new MidInternalErrorException("response did not contain 'result'");
+        }
         $this->result = $responseJson['result'];
+
+        if (!isset($responseJson['cert'])) {
+            throw new MidInternalErrorException("response did not contain 'cert'");
+        }
         $this->cert = $responseJson['cert'];
     }
 
-    public function getResult() : ?string
+    public function getResult() : string
     {
         return $this->result;
     }
 
-    public function setResult(?string $result) : void
+    public function setResult(string $result) : void
     {
         $this->result = $result;
     }
 
-    public function getCert() : ?string
+    public function getCert() : string
     {
         return $this->cert;
     }
 
-    public function setCert(?string $cert) : void
+    public function setCert(string $cert) : void
     {
         $this->cert = $cert;
     }

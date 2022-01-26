@@ -45,13 +45,17 @@ class CertificateParser
     {
         $certificateString = self::getPemCertificate(  $certificateValue );
         $result = openssl_x509_parse( $certificateString );
-        $result['certificateAsString']=$certificateString;
-        if (count($result) <= 1) {
+        if ($result === false || count($result) <= 1) {
             throw new MidInternalErrorException('Failed to parse certificate');
         }
+        $result['certificateAsString'] = $certificateString;
         return $result;
     }
 
+  /**
+   * @param string $certificateValue
+   * @return string
+   */
     public static function getPemCertificate( string $certificateValue ) : string
     {
         if ( substr( $certificateValue, 0, strlen( self::BEGIN_CERT ) ) === self::BEGIN_CERT )
