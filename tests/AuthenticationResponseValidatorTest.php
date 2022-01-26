@@ -63,16 +63,6 @@ class AuthenticationResponseValidatorTest extends TestCase
     /**
      * @test
      */
-    public function validate_certificateIsNull_shouldThrowException() {
-        $this->expectException(MidNotMidClientException::class);
-
-        $authentication = $this->createMobileIdAuthenticationWithNullCertificate("OK", TestData::VALID_SIGNATURE_IN_BASE64);
-        $this->validator->validate($authentication);
-    }
-
-    /**
-     * @test
-     */
     public function validate_NoTrustedRootCertificate_shouldThrowException() {
         $this->expectException(MidInternalErrorException::class);
         $this->expectExceptionMessage("Signer's certificate not trusted");
@@ -206,23 +196,6 @@ class AuthenticationResponseValidatorTest extends TestCase
         $this->assertEquals("EE", $authenticationResult->getAuthenticationIdentity()->getCountry());
     }
 
-    /**
-     * @test
-     */
-    public function validate_whenCertificateIsNull_shouldThrowException()
-    {
-        $this->expectException(MidNotMidClientException::class);
-
-        $authentication = MobileIdAuthentication::newBuilder()
-            ->withResult("OK")
-            ->withSignatureValueInBase64(TestData::VALID_SIGNATURE_IN_BASE64)
-            ->withCertificate(null)
-            ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
-            ->withHashType(new Sha512())
-            ->build();
-
-        $this->validator->validate($authentication);
-    }
 
     /**
      * @test
@@ -263,20 +236,6 @@ class AuthenticationResponseValidatorTest extends TestCase
             ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
             ->withHashType(new Sha512())
             ->build();
-    }
-
-    private function createMobileIdAuthenticationWithNullCertificate($result, $signatureInBase64) {
-        try {
-            return MobileIdAuthentication::newBuilder()
-                ->withResult($result)
-                ->withSignatureValueInBase64($signatureInBase64)
-                ->withCertificate(null)
-                ->withSignedHashInBase64(TestData::SIGNED_HASH_IN_BASE64)
-                ->withHashType(new Sha512())
-                ->build();
-        } catch (ReflectionException $e) {
-            return $e;
-        }
     }
 
     private function createMobileIdAuthenticationWithECC()

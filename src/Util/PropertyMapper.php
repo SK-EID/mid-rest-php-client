@@ -27,17 +27,14 @@
 namespace Sk\Mid\Util;
 use ReflectionMethod;
 use ReflectionProperty;
-use Sk\Mid\Rest\Dao\AuthenticationCertificateSubject;
-use Sk\Mid\Rest\Dao\AuthenticationCertificateIssuer;
-use Sk\Mid\Rest\Dao\AuthenticationCertificateExtensions;
-use PHPUnit\Runner\Exception;
+use Exception;
 use ReflectionException;
 abstract class PropertyMapper
 {
   /**
    * @param array $data
    */
-  public function __construct( $data = array() )
+  public function __construct(array $data = array() )
   {
     if ( !empty( $data ) )
     {
@@ -48,10 +45,10 @@ abstract class PropertyMapper
     /**
      * @param string $key
      * @param array $arguments
-     * @throws ReflectionException
      * @return mixed
+     * @throws Exception
      */
-  public function __call( $key, array $arguments )
+  public function __call(string $key, array $arguments )
   {
     if ( method_exists( $this, $key ) )
     {
@@ -99,7 +96,7 @@ abstract class PropertyMapper
      * @return $this
      * @throws ReflectionException
      */
-  public function __set( $key, $value )
+  public function __set(string $key, $value )
   {
     $alternativeKey = ucwords( $key, '_' );
     $alternativeKey = str_replace( '_', '', $alternativeKey );
@@ -108,12 +105,12 @@ abstract class PropertyMapper
     if ( property_exists( $this, $key ) || property_exists( $this, $alternativeKey ) )
     {
       $resultingKey = property_exists( $this, $key ) ? $key : $alternativeKey;
-      $camelizedName = 'set' . $this->camelize( $resultingKey );
+      $camelCasedName = 'set' . $this->toCamelCase( $resultingKey );
 
-      if ( method_exists( $this, $camelizedName ) )
+      if ( method_exists( $this, $camelCasedName ) )
       {
-        $result = $this->prepareValue( $camelizedName, $value );
-        $this->{$camelizedName}( $result );
+        $result = $this->prepareValue( $camelCasedName, $value );
+        $this->{$camelCasedName}( $result );
       }
       else
       {
@@ -125,22 +122,26 @@ abstract class PropertyMapper
   }
 
     /**
-     * @param string $method
+     * @param string $methodParam
      * @param array|mixed $value
      * @return mixed
      * @throws ReflectionException
      */
-  private function prepareValue( $method, $value )
+  private function prepareValue(string $methodParam, $value )
   {
     if ( is_array( $value ) )
     {
-      $Method = new ReflectionMethod( $this, $method );
-      if ( $Method->getParameters()[0]->getClass() === null )
+
+      $reflectionMethod = new ReflectionMethod( $this, $methodParam );
+
+      $type = $reflectionMethod->getParameters()[0]->getType();
+      if ( $type === null || $type->isBuiltin() )
       {
         return $value;
       }
-      $class = $Method->getParameters()[0]->getClass()->getName();
+      $class = $type->getName();
       $result = new $class( $value );
+
     }
     else
     {
@@ -152,12 +153,13 @@ abstract class PropertyMapper
   /**
    * @param string $key
    * @return mixed
+   * @throws Exception
    */
-  public function __get( $key )
+  public function __get( string $key )
   {
     if ( property_exists( $this, $key ) )
     {
-      $camelizedName = 'get' . $this->camelize( $key );
+      $camelizedName = 'get' . $this->toCamelCase( $key );
 
       if ( method_exists( $this, $camelizedName ) )
       {
@@ -178,7 +180,7 @@ abstract class PropertyMapper
      * @return array
      * @throws ReflectionException
      */
-  public function toArray()
+  public function toArray(): array
   {
     $values = get_object_vars( $this );
 
@@ -199,7 +201,7 @@ abstract class PropertyMapper
    * @param array $array
    * @return $this
    */
-  public function fromArray( array $array )
+  public function fromArray( array $array ): PropertyMapper
   {
     foreach ( $array as $key => $value )
     {
@@ -213,7 +215,7 @@ abstract class PropertyMapper
    * @param string|array $word
    * @return string|array
    */
-  private function camelize( $word )
+  private function toCamelCase($word )
   {
     return preg_replace_callback( '#(^|_)([a-z])#', function( array $matches )
     {

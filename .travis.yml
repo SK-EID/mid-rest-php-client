@@ -1,11 +1,16 @@
 language: php
+
+dist: bionic
+
 php:
   - '7.4'
   - '8.0'
 
-before_install:
+before_script:
   - composer install
-script: vendor/phpunit/phpunit/phpunit --coverage-clover=coverage.xml
+
+script:
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

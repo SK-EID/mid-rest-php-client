@@ -40,10 +40,10 @@ class AuthenticationRequestBuilder
     private ?string $relyingPartyUUID = null;
 
     /** @var ?string $phoneNumber */
-    private ?string $phoneNumber = null;
+    private string $phoneNumber;
 
     /** @var ?string $nationalIdentityNumber */
-    private ?string $nationalIdentityNumber = null;
+    private string $nationalIdentityNumber;
 
     /** @var ?MobileIdAuthenticationHashToSign $hashToSign */
     private ?MobileIdAuthenticationHashToSign $hashToSign = null;
@@ -128,6 +128,14 @@ class AuthenticationRequestBuilder
 
     private function validateParameters()
     {
+        if (!isset( $this->phoneNumber)) {
+            throw new MissingOrInvalidParameterException("phoneNumber must be set");
+        }
+
+        if (!isset( $this->nationalIdentityNumber)) {
+            throw new MissingOrInvalidParameterException("nationalIdentityNumber must be set");
+        }
+
 
         MidInputUtil::validateUserInput($this->phoneNumber, $this->nationalIdentityNumber);
 

@@ -32,12 +32,12 @@ use Sk\Mid\Exception\MidInvalidPhoneNumberException;
 class MidInputUtil
 {
 
-    public static function isPhoneNumberValid(?string $phoneNumber) : bool
+    public static function isPhoneNumberValid(string $phoneNumber) : bool
     {
         return preg_match("/^\+\d{8,30}$/", $phoneNumber);
     }
 
-    public static function isNationalIdentityNumberValid(?string $nationalIdentityNumber) : bool
+    public static function isNationalIdentityNumberValid(string $nationalIdentityNumber) : bool
     {
         $validator = new MidNationalIdentificationCodeValidator();
         return $validator->isValid($nationalIdentityNumber);

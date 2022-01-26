@@ -113,7 +113,7 @@ class MobileIdAuthenticationBuilder
         return $this;
     }
 
-    public function withCertificate(?array $certificate) : MobileIdAuthenticationBuilder
+    public function withCertificate(array $certificate) : MobileIdAuthenticationBuilder
     {
         $this->certificate = $certificate;
         return $this;

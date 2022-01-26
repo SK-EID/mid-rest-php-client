@@ -29,6 +29,7 @@ namespace Sk\Mid\Tests;
 
 use http\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
+use Sk\Mid\CertificateParser;
 use Sk\Mid\Exception\MidServiceUnavailableException;
 use Sk\Mid\Exception\MidSslException;
 use Sk\Mid\AuthenticationResponseValidator;
@@ -51,6 +52,7 @@ use Sk\Mid\Exception\MidUnauthorizedException;
 use Sk\Mid\Rest\Dao\Request\AuthenticationRequest;
 use Sk\Mid\Rest\Dao\Request\CertificateRequest;
 use Sk\Mid\MobileIdAuthenticationHashToSign;
+use Sk\Mid\Tests\Mock\TestData;
 use Sk\Mid\Util\MidInputUtil;
 
 class ReadmeTest extends TestCase
@@ -338,7 +340,9 @@ class ReadmeTest extends TestCase
             ->withTrustedCaCertificatesFolder(__DIR__ . "/test_numbers_ca_certificates/")
             ->build();
 
-        $authentication = MobileIdAuthentication::newBuilder()->build();
+        $authentication = MobileIdAuthentication::newBuilder()
+            ->withCertificate(CertificateParser::parseX509Certificate(TestData::AUTH_CERTIFICATE_EE))
+            ->build();
 
         $authenticationResult = $validator->validate($authentication);
 
