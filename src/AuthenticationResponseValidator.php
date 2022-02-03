@@ -32,13 +32,13 @@ use Sk\Mid\Rest\Dao\MidCertificate;
 use Sk\Mid\Util\Logger;
 use Sop\CryptoEncoding\PEM;
 use Sop\X509\Certificate\Certificate;
-use Sop\X509\CertificationPath\Exception\PathBuildingException;
-use Sop\X509\CertificationPath\Exception\PathValidationException;
+use UnexpectedValueException;
+
 
 class AuthenticationResponseValidator
 {
     /** @var Logger $logger */
-    private $logger;
+    private Logger $logger;
 
     /** @var array $certificatePath */
     private $trustedCaCertificates;
@@ -91,18 +91,23 @@ class AuthenticationResponseValidator
         return strcasecmp('OK', $authentication->getResult()) == 0;
     }
 
-    private function verifyCertificateExpiry(MidCertificate $authenticationCertificate )
+    private function verifyCertificateExpiry(MidCertificate $authenticationCertificate ): bool
     {
-        return $authenticationCertificate !== null && $authenticationCertificate->getValidTo() > time();
+        return $authenticationCertificate->getValidTo() > time();
     }
 
-    private function verifyCertificateTrusted($certificate)
+    private function verifyCertificateTrusted($certificate): bool
     {
         foreach ($this->trustedCaCertificates as $trustedCaCertificate) {
             $cert = Certificate::fromPEM(PEM::fromString($certificate['certificateAsString']));
             $ca = Certificate::fromPEM(PEM::fromString($trustedCaCertificate));
-            if ($cert->verify($ca->tbsCertificate()->subjectPublicKeyInfo())) {
-                return true;
+
+            try {
+                if ($cert->verify($ca->tbsCertificate()->subjectPublicKeyInfo())) {
+                    return true;
+                }
+            } catch (UnexpectedValueException $e) {
+                continue;
             }
         }
         return false;
