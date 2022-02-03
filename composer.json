@@ -5,7 +5,7 @@
   "license": "MIT",
 
   "require": {
-    "php": ">=7.4",
+    "php": ">=7.4||~8",
     "ext-openssl": "*",
     "ext-curl": "*",
     "ext-json": "*",
