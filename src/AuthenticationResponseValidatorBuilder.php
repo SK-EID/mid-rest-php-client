@@ -44,6 +44,7 @@ class AuthenticationResponseValidatorBuilder
     public function withTrustedCaCertificatesFolder(string $trustedCertsPath) : AuthenticationResponseValidatorBuilder
     {
         foreach (array_diff(scandir($trustedCertsPath), array('.', '..')) as $file) {
+            if (!is_file($trustedCertsPath.$file)) continue;
             $caCertificate = file_get_contents($trustedCertsPath.$file);
             $caCert = Certificate::fromPEM(PEM::fromString($caCertificate));
             $this->trustedCaCertificates[] = $caCert;
