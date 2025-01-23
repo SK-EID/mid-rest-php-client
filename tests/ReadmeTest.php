@@ -105,7 +105,7 @@ class ReadmeTest extends TestCase
                 ->withRelyingPartyName($this->config['relyingPartyName'])
                 ->withHostUrl($this->config['hostUrl'])
                 ->withLongPollingTimeoutSeconds(60)
-                ->withSslPinnedPublicKeys("sha256//Rhm2BxU8LheLZP664D3J4yIZCjkU1EQDRJnrMRggwTU=;sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
+                ->withSslPinnedPublicKeys("sha256//Fnjp3/Yi4oPFBG+GtDV2ZVJEPcVVJA5r/T7QK+VXPpM=;sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
                 ->build();
 
 
@@ -232,7 +232,7 @@ class ReadmeTest extends TestCase
                 ->withRelyingPartyUUID($this->config['relyingPartyUUID'])
                 ->withRelyingPartyName($this->config['relyingPartyName'])
                 ->withHostUrl($this->config['hostUrl'])
-                ->withSslPinnedPublicKeys("sha256//Rhm2BxU8LheLZP664D3J4yIZCjkU1EQDRJnrMRggwTU=;sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
+                ->withSslPinnedPublicKeys("sha256//Fnjp3/Yi4oPFBG+GtDV2ZVJEPcVVJA5r/T7QK+VXPpM=;sha256//k/w7/9MIvdN6O/rE1ON+HjbGx9PRh/zSnNJ61pldpCs=;sha256//some-future-ssl-host-key")
                 ->build();
 
         $request = CertificateRequest::newBuilder()
