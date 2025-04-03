@@ -9,7 +9,7 @@
     "ext-openssl": "*",
     "ext-curl": "*",
     "ext-json": "*",
-    "sop/x509": "*"
+    "sop/x509": "0.7.1"
   },
   "require-dev": {
     "phpunit/phpunit": "9.*"
