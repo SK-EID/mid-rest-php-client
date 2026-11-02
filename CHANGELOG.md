@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.3.0] - Unreleased
+
+### Security
+- README now contains a security notice about PHP2Shell (CVE-2026-109618, CVE-2026-109619).
+  The vulnerabilities are in the PHP runtime, not in this library: run the library on PHP 8.4.27 or later.
+
+### Changed
+- minimal PHP version lifted to 8.4 (PHP 7.4 - 8.1 no longer receive security fixes).
+  Integrators on patched PHP 8.2 or 8.3 can keep using version 1.2.1
+- tests run on PHP 8.4 and 8.5
+
+### Fixed
+- PHP 8.4/8.5 deprecation warnings (implicitly nullable parameters, ReflectionProperty::setAccessible())
+
 ## [1.2] - 2022-01-??
 
 ### Changed

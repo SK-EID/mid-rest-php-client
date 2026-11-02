@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2021 SK ID Solutions AS
+ * Copyright (C) 2018 - 2026 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -138,7 +138,7 @@ class MidCertificate extends PropertyMapper
    * @param AuthenticationCertificateSubject $subject
    * @return $this
    */
-  public function setSubject( AuthenticationCertificateSubject $subject = null )
+  public function setSubject( ?AuthenticationCertificateSubject $subject = null )
   {
     $this->subject = $subject;
     return $this;
@@ -174,7 +174,7 @@ class MidCertificate extends PropertyMapper
    * @param AuthenticationCertificateIssuer $issuer
    * @return $this
    */
-  public function setIssuer( AuthenticationCertificateIssuer $issuer = null )
+  public function setIssuer( ?AuthenticationCertificateIssuer $issuer = null )
   {
     $this->issuer = $issuer;
     return $this;
@@ -390,7 +390,7 @@ class MidCertificate extends PropertyMapper
    * @param AuthenticationCertificateExtensions $extensions
    * @return $this
    */
-  public function setExtensions( AuthenticationCertificateExtensions $extensions = null )
+  public function setExtensions( ?AuthenticationCertificateExtensions $extensions = null )
   {
     $this->extensions = $extensions;
     return $this;

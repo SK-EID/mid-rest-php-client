@@ -3,7 +3,7 @@
  * #%L
  * Mobile ID sample PHP client
  * %%
- * Copyright (C) 2018 - 2021 SK ID Solutions AS
+ * Copyright (C) 2018 - 2026 SK ID Solutions AS
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -77,7 +77,7 @@ class SessionStatusPoller
         return $this->fetchFinalSessionStatus($sessionId, $longPollSeconds);
     }
 
-    public function fetchFinalSessionStatus(string $sessionId, int $longPollSeconds = null) : SessionStatus
+    public function fetchFinalSessionStatus(string $sessionId, ?int $longPollSeconds = null) : SessionStatus
     {
         $sessionStatus = $this->pollForFinalSessionStatus($sessionId, $longPollSeconds);
         $this->validateResult($sessionStatus);

@@ -1,12 +1,34 @@
 # Mobile-ID (MID) PHP Rest Client
-[![Tests](https://github.com/SK-EID/mid-rest-php-client/actions/workflows/tests.yaml/badge.svg)](https://github.com/SK-EID/mid-rest-php-client/actions/workflows/tests.yaml)
+[![Tests](https://github.com/SK-EID/mid-rest-php-client/actions/workflows/test.yaml/badge.svg)](https://github.com/SK-EID/mid-rest-php-client/actions/workflows/test.yaml)
 [![Coverage Status](https://img.shields.io/codecov/c/github/SK-EID/mid-rest-php-client.svg)](https://codecov.io/gh/SK-EID/mid-rest-php-client)
 [![License: MIT](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
+
+> [!WARNING]
+> **Security Notice!** Critical vulnerabilities CVE-2026-109618 and CVE-2026-109619 have been identified in PHP and may allow unauthenticated remote code execution in applications serving web requests. These vulnerabilities are in the PHP runtime and not in the Mobile-ID PHP client library itself.
+>
+> Integrators using this library should ensure that their applications run on a patched and supported PHP version. As of October 21, 2026, the vulnerabilities are fixed in PHP 8.2.35, 8.3.36, 8.4.27 and 8.5.12. PHP 8.1 and earlier are no longer supported by the PHP project, although vendors may provide backported security fixes.
+>
+> We strongly recommend upgrading to a currently supported PHP version and applying all available security updates. PHP 8.4.27 or later is recommended.
 
 ## Running locally
 
 Run `composer install` to get all the dependencies.
 Then you can run tests `php vendor/phpunit/phpunit/phpunit`
+
+### Running tests in Docker
+
+Run this in the project folder (use `8.5-cli` instead of `8.4-cli` to test with PHP 8.5).
+The command works in bash (Linux, macOS) and PowerShell.
+
+```bash
+docker run --rm -v "${PWD}:/app" -w /app -e COMPOSER_ALLOW_SUPERUSER=1 php:8.4-cli bash -c '
+  apt-get update -qq \
+  && apt-get install -y -qq libgmp-dev libicu-dev unzip > /dev/null \
+  && docker-php-ext-install gmp intl > /dev/null \
+  && curl -sS https://getcomposer.org/installer | php -- --quiet --install-dir=/usr/local/bin --filename=composer \
+  && composer install --no-interaction --no-progress \
+  && vendor/bin/phpunit'
+```
 
 ## Demo application 
 
@@ -22,7 +44,8 @@ there no library like [DigiDoc4J](https://github.com/open-eid/digidoc4j) exists 
 
 ## Requirements
  
-* PHP 7.4 or later
+* PHP 8.4.27 or later. Keep PHP up to date with the security updates of your PHP vendor.
+  Integrators that are still on PHP 8.2 or 8.3 (patched to 8.2.35 or 8.3.36 or later) can keep using version 1.2.1 of this library.
 * [PHP must be compiled with GMP support by using the --with-gmp option](https://www.php.net/manual/en/gmp.installation.php)
  
 ## Installation
